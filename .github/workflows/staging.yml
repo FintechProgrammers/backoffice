@@ -162,7 +162,7 @@ jobs:
                       DirectoryIndex index.php index.pl index.cgi index.html index.xhtml index.htm
                   </IfModule>
               </VirtualHost>" > /etc/apache2/sites-available/000-default.conf
-            sudo a2enmod rewrit e
+            sudo a2enmod rewrite
             service apache2 restart
 
   run-after-hooks:
