@@ -127,15 +127,15 @@ jobs:
           ACTIVE_RELEASE_PATH: ${{ matrix.server.path }}/current
           STORAGE_PATH: ${{ matrix.server.path }}/storage
           BASE_PATH: ${{ matrix.server.path }}
-          LARAVEL_ENV: ${{ vars.LARAVEL_ENV }}
+          STAGE_ENV: ${{ vars.STAGE_ENV }}
         with:
           host: ${{ matrix.server.ip }}
           username: ${{ matrix.server.username }}
           password: ${{ matrix.server.password }}
           port: ${{ matrix.server.port }}
-          envs: GITHUB_SHA,RELEASE_PATH,ACTIVE_RELEASE_PATH,STORAGE_PATH,BASE_PATH,ENV_PATH,LARAVEL_ENV
+          envs: GITHUB_SHA,RELEASE_PATH,ACTIVE_RELEASE_PATH,STORAGE_PATH,BASE_PATH,ENV_PATH,STAGE_ENV
           script: |
-            printf "%s" "$LARAVEL_ENV" > "${BASE_PATH}/.env"
+            printf "%s" "$STAGE_ENV" > "${BASE_PATH}/.env"
             ln -s -f ${BASE_PATH}/.env $RELEASE_PATH
             ln -s -f $STORAGE_PATH $RELEASE_PATH
             ln -s -n -f $RELEASE_PATH $ACTIVE_RELEASE_PATH
