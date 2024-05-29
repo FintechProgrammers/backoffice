@@ -25,6 +25,17 @@ class User extends Authenticatable
     protected $primaryKey = 'id';
     // public $incrementing = false;
 
+    // Define the required fields for the user model and the related userInfo model
+    protected $userRequiredFields = [
+        'name',
+        'email',
+        'username',
+    ];
+
+    protected $userInfoRequiredFields = [
+        'country_code',
+    ];
+
     /**
      * Define the route model binding key for a given model.
      */
@@ -63,6 +74,41 @@ class User extends Authenticatable
         } while (self::where('referral_code', $code)->exists());
 
         return $code;
+    }
+
+    /**
+     * Calculate the profile completion percentage.
+     *
+     * @return float The percentage of profile completion.
+     */
+    public function getProfileCompletionPercentageAttribute()
+    {
+        $filledFields = 0;
+
+        // Check fields in User model
+        foreach ($this->userRequiredFields as $field) {
+            if (!empty($this->$field)) {
+                $filledFields++;
+            }
+        }
+
+        // Check fields in UserInfo model
+        $userInfo = $this->userProfile;
+        if ($userInfo) {
+            foreach ($this->userInfoRequiredFields as $field) {
+                if (!empty($userInfo->$field)) {
+                    $filledFields++;
+                }
+            }
+        }
+
+        // Total required fields
+        $totalFields = count($this->userRequiredFields) + count($this->userInfoRequiredFields);
+        if ($totalFields === 0) {
+            return 100; // If no required fields are defined, consider profile as fully complete
+        }
+
+        return ($filledFields / $totalFields) * 100;
     }
 
 

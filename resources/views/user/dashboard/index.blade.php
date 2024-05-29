@@ -27,7 +27,21 @@
         @include('user.dashboard._profile-card')
         @include('user.dashboard._activities')
     </div>
-    </div>
+    @include('profile.partials._profile-modal')
 @endsection
 @push('scripts')
+    @if (Auth::user()->profile_completion_percentage !== 100)
+        <script>
+            showProfileModal()
+        </script>
+    @endif
+    <script>
+        showProfileModal()
+        function showProfileModal() {
+            var myModal = new bootstrap.Modal(document.getElementById('profileUpdateModal'), {
+                keyboard: false
+            });
+            myModal.show();
+        }
+    </script>
 @endpush

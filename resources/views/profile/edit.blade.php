@@ -1,29 +1,44 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
+@extends('layouts.user.app')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-profile-information-form')
-                </div>
+@section('title','Profile')
+
+@section('content')
+<div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
+    <div>
+        <p class="fw-semibold fs-18 mb-0">Profile</p>
+    </div>
+</div>
+<div class="row mb-5">
+    <div class="col-xl-12">
+        <div class="card custom-card">
+            <div class="card-header d-sm-flex d-block">
+                <ul class="nav nav-tabs nav-tabs-header mb-0 d-sm-flex d-block" role="tablist">
+                    <li class="nav-item m-1">
+                        <a class="nav-link active" data-bs-toggle="tab" role="tab" aria-current="page"
+                            href="#personal-info" aria-selected="true">Personal Information</a>
+                    </li>
+                    <li class="nav-item m-1">
+                        <a class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" href="#security"
+                            aria-selected="true">Security</a>
+                    </li>
+                </ul>
             </div>
-
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-password-form')
-                </div>
-            </div>
-
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.delete-user-form')
+            <div class="card-body">
+                <div class="tab-content">
+                    <div class="tab-pane show active" id="personal-info" role="tabpanel">
+                        @include('admin.profile.partials._personal-profile')
+                    </div>
+                    <div class="tab-pane p-0" id="security" role="tabpanel">
+                        @include('admin.profile.partials._security')
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</x-app-layout>
+
+</div>
+@endsection
+@push('scripts')
+    @include('profile.scripts._update-profile-image')
+    @include('profile.scripts._change-password')
+@endpush

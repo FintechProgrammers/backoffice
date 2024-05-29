@@ -3,7 +3,7 @@
         <div class="d-flex align-items-top justify-content-between mb-4">
             <div>
                 <span class="d-block fs-15 fw-semibold">My Profile</span>
-                <span class="d-block fs-12 text-muted">67% Completed - <a href="{{ route('profile.edit') }}"
+                <span class="d-block fs-12 text-muted">{{ Auth::user()->profile_completion_percentage }}% Completed - <a href="{{ route('profile.edit') }}"
                         class="text-center text-primary">Click Here<i
                             class="bi bi-box-arrow-up-right fs-10 ms-2 align-middle"></i></a></span>
             </div>
