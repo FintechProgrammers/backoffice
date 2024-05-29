@@ -29,7 +29,7 @@
                 </div>
                 <div class="mt-2">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                        <input class="form-check-input" type="checkbox" name="remember" value="1" id="defaultCheck1">
                         <label class="form-check-label text-muted fw-normal" for="defaultCheck1">
                             {{ __('Remember me') }}
                         </label>
@@ -85,7 +85,7 @@
                     displayMessage(response.message, "success")
 
                     setTimeout(function() {
-                        location.href = response.route
+                        location.href = response.data.route
                     }, 2000); // 2000 milliseconds = 2 seconds
 
                 },

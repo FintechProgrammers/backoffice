@@ -49,6 +49,9 @@ class User extends Authenticatable
 
         static::creating(function ($user) {
             $user->referral_code = static::generateReferralCode();
+        });
+
+        static::created(function ($user) {
             UserInfo::create(['user_id' => $user->id]);
         });
     }

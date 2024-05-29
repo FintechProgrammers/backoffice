@@ -39,6 +39,9 @@
             </div>
         </div>
     </form>
+    <div class="text-center">
+        <p class="fs-12 text-muted mt-3"><a href="{{ route('login') }}" class="text-primary">{{ __('Sign In') }}</a></p>
+    </div>
 @endsection
 @push('scripts')
     <script>
