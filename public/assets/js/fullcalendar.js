@@ -1,7 +1,7 @@
 (function () {
     "use strict";
     //_____Calendar Events Intialization
-  
+
     // sample calendar events data
     var curYear = moment().format('YYYY');
     var curMonth = moment().format('MM');
@@ -129,22 +129,22 @@
         title: 'My Rest Day'
       }]
     };
-  
-  
+
+
     //________ FullCalendar
-    var containerEl = document.getElementById('external-events');
-    new FullCalendar.Draggable(containerEl, {
-      itemSelector: '.fc-event',
-      eventData: function (eventEl) {
-        return {
-          title: eventEl.innerText.trim(),
-          title: eventEl.innerText,
-          className: eventEl.className + ' overflow-hidden '
-        }
-      }
-    });
+    // var containerEl = document.getElementById('external-events');
+    // new FullCalendar.Draggable(containerEl, {
+    //   itemSelector: '.fc-event',
+    //   eventData: function (eventEl) {
+    //     return {
+    //       title: eventEl.innerText.trim(),
+    //       title: eventEl.innerText,
+    //       className: eventEl.className + ' overflow-hidden '
+    //     }
+    //   }
+    // });
     var calendarEl = document.getElementById('calendar2');
-  
+
     var calendar = new FullCalendar.Calendar(calendarEl, {
       headerToolbar: {
         left: 'prev,next today',
@@ -158,7 +158,7 @@
       selectable: true,
       selectMirror: true,
       droppable: true, // this allows things to be dropped onto the calendar
-  
+
       select: function (arg) {
         var title = prompt('Event Title:');
         if (title) {
@@ -176,18 +176,17 @@
           arg.event.remove()
         }
       },
-  
+
       editable: true,
       dayMaxEvents: true, // allow "more" link when too many events
       eventSources: [sptCalendarEvents, sptBirthdayEvents, sptHolidayEvents, sptOtherEvents,],
-  
+
     });
     calendar.render();
 
     // for activity scroll
-    var myElement1 = document.getElementById('full-calendar-activity');
-    new SimpleBar(myElement1, { autoHide: true });
-  
-  
+    // var myElement1 = document.getElementById('full-calendar-activity');
+    // new SimpleBar(myElement1, { autoHide: true });
+
+
   })();
-  

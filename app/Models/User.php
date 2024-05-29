@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -40,6 +41,25 @@ class User extends Authenticatable
     public function getProfilePictureAttribute(): string
     {
         return !empty($this->profile_image) ? $this->profile_image : url('/') . '/assets/images/avatar.svg';
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            $user->referral_code = static::generateReferralCode();
+            UserInfo::create(['user_id' => $user->id]);
+        });
+    }
+
+    public static function generateReferralCode()
+    {
+        do {
+            $code = Str::random(10);
+        } while (self::where('referral_code', $code)->exists());
+
+        return $code;
     }
 
 

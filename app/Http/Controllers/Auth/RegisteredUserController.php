@@ -8,6 +8,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
@@ -17,9 +18,9 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration view.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
-        return view('auth.register');
+        return view('auth.register', ['request' => $request]);
     }
 
     /**
@@ -27,24 +28,52 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'referral_code' => ['nullable', 'string', 'exists:' . User::class],
+            'username' => ['required', 'string', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        try {
+            DB::beginTransaction();
 
-        event(new Registered($user));
+            $parent = null;
 
-        Auth::login($user);
+            // Check if referral code is not empty then assign parent to the person registering.
+            if ($request->filled('referral_code')) {
+                // get user that has code
+                $parent = User::where('referral_code', $request->referral_code)->value('id');
 
-        return redirect(route('dashboard', absolute: false));
+                if (empty($parent)) {
+                    return $this->sendError('The referral code you entered is not valid.');
+                }
+            }
+
+            $user = User::create([
+                'name' => $request->name,
+                'username' => $request->username,
+                'email' => $request->email,
+                'parent_id' => $parent,
+                'password' => Hash::make($request->password),
+            ]);
+
+            DB::commit();
+
+            event(new Registered($user));
+
+            Auth::login($user);
+
+            $route = route('dashboard', absolute: false);
+
+            return $this->sendResponse(['route' => $route], "You have been registered successfully", 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            logger($e);
+            return $this->sendError(serviceDownMessage(), [], 500);
+        }
     }
 }

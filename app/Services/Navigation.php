@@ -59,7 +59,7 @@ class Navigation
             (object) [
                 'name'      => 'Supports',
                 'icon'      => 'las la-headset',
-                'routes'    => ['admin.support.subjects.index','admin.support.tickets.index'],
+                'routes'    => ['admin.support.subjects.index', 'admin.support.tickets.index'],
                 'hasPermission' => true,
                 'subMenu'   => (object) [
                     (object) [
@@ -91,5 +91,13 @@ class Navigation
 
     public static function clientNavigation()
     {
+        return [
+            (object) [
+                'name'  => 'Dashboard',
+                'route' => 'admin.dashboard.index',
+                'icon'  => 'bx bx-home',
+                'hasPermission' => true
+            ],
+        ];
     }
 }
