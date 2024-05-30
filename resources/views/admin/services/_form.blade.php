@@ -4,7 +4,7 @@
         placeholder="Enter service name" name="name">
 </div>
 <div class="mb-3">
-    <label for="form-text" class="form-label fs-14 text-dark">Price</label>
+    <label for="form-text" class="form-label fs-14 text-dark">Price ($)</label>
     <input type="number" step="any" class="form-control" id="form-text"
         value="{{ isset($service) ? $service->price : '' }}" placeholder="Enter service price" name="price">
 </div>
@@ -13,7 +13,8 @@
         <div class="mb-3">
             <label for="form-text" class="form-label fs-14 text-dark">Duration</label>
             <input type="number" class="form-control" id="form-text" placeholder="Enter duration"
-                value="{{ isset($service) ? convertDaysToUnit($service->duration, $service->duration_unit) : '' }}" name="duration">
+                value="{{ isset($service) ? convertDaysToUnit($service->duration, $service->duration_unit) : '' }}"
+                name="duration">
         </div>
     </div>
     <div class="col-lg-6">
@@ -27,6 +28,21 @@
             </select>
         </div>
     </div>
+</div>
+<div class="mb-3">
+    <label for="form-text" class="form-label fs-14 text-dark">Products</label>
+    <div class="row" data-bs-spy="scroll" data-bs-offset="0" data-bs-smooth-scroll="true" tabindex="0">
+        @foreach ($products as $key => $item)
+            <div class="col-xl-12">
+                <div class="custom-toggle-switch d-flex align-items-center mb-4">
+                    <input id="toggleswitch{{ $key }}" name="products[]" value="{{ $item->id }}" @checked(isset($serviceProducts) && isset($service) && in_array($item->id,$serviceProducts)) type="checkbox">
+                    <label for="toggleswitch{{ $key }}"
+                        class="label-primary"></label><span class="ms-3">{{ ucfirst($item->name) }}</span>
+                </div>
+            </div>
+        @endforeach
+    </div>
+    <small>{{ __('Select product the package is serviced for') }}</small>
 </div>
 <div class="mb-3">
     <label for="form-text" class="form-label fs-14 text-dark">Description</label>

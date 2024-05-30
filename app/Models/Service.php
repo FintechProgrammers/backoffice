@@ -24,4 +24,9 @@ class Service extends Model
     {
         return 'uuid';
     }
+
+    function serviceProduct()
+    {
+        return $this->hasMany(ServiceProduct::class);
+    }
 }

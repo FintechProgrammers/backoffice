@@ -62,16 +62,6 @@
             },
             success: function(result) {
                 modalBody.empty().html(result);
-
-                // const select2 = modalBody.find('#select')
-
-                // if (select2) {
-                //     select2.select2({
-                //         allowClear: true,
-                //         // dir: "ltr"
-                //     });
-                // }
-
             },
             error: function(jqXHR, testStatus, error) {
                 console.log(jqXHR.responseText, testStatus, error);
