@@ -34,6 +34,12 @@ class Navigation
                 ]
             ],
             (object) [
+                'name'  => 'Products',
+                'route' => 'admin.product.index',
+                'icon'  => 'bx bx-box',
+                'hasPermission' => true
+            ],
+            (object) [
                 'name'      => 'Business Plan',
                 'icon'      => 'bx bx-briefcase',
                 'routes'    => ['admin.package.index'],
@@ -96,6 +102,12 @@ class Navigation
                 'name'  => 'Dashboard',
                 'route' => 'dashboard',
                 'icon'  => 'bx bx-home',
+                'hasPermission' => true
+            ],
+            (object) [
+                'name'  => 'Services',
+                'route' => 'service.index',
+                'icon'  => 'bx bx-briefcase',
                 'hasPermission' => true
             ],
             (object) [

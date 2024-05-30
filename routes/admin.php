@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\CommisionPlanController;
 use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\RankController;
 use App\Http\Controllers\Admin\RoleController;
@@ -71,6 +72,19 @@ Route::middleware('admin.auth')->group(function () {
         Route::post('/publish/{service}', 'publish')->name('publish');
         Route::post('/draft/{service}', 'draft')->name('draft');
         Route::post('/delete/{service}', 'destroy')->name('delete');
+    });
+
+    Route::controller(ProductController::class)->prefix('product')->name('product.')->group(function () {
+        Route::get('', 'index')->name('index');
+        Route::get('/filter', 'filter')->name('filter');
+        Route::get('/create', 'create')->name('create');
+        Route::post('', 'store')->name('store');
+        Route::get('/show/{product}', 'show')->name('show');
+        Route::get('/edit/{product}', 'edit')->name('edit');
+        Route::patch('/update/{product}', 'update')->name('update');
+        Route::post('/publish/{product}', 'publish')->name('publish');
+        Route::post('/draft/{product}', 'draft')->name('draft');
+        Route::post('/delete/{product}', 'destroy')->name('delete');
     });
 
     Route::controller(RoleController::class)->prefix('roles')->name('roles.')->group(function () {
