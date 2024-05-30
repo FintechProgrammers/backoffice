@@ -43,3 +43,8 @@
         <td colspan="6" class="text-center"><span class="text-warning">no data available</span></td>
     </tr>
 @endforelse
+<tr style="border: none;">
+    <td colspan="6" style="border: none;">
+        {{ $tickets->links('vendor.pagination.custom') }}
+    </td>
+</tr>

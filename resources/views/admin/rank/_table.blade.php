@@ -36,3 +36,8 @@
         <td colspan="2" class="text-center"><span class="text-warning">no data available</span></td>
     </tr>
 @endforelse
+<tr style="border: none;">
+    <td colspan="2" style="border: none;">
+        {{ $ranks->links('vendor.pagination.custom') }}
+    </td>
+</tr>

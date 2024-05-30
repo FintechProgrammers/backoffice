@@ -20,7 +20,7 @@ class ServiceManagement extends Controller
 
     function filter()
     {
-        $data['services'] = Service::get();
+        $data['services'] = Service::paginate(50);
 
         return view('admin.services._table', $data);
     }
