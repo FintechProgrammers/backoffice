@@ -26,10 +26,10 @@
             <div class="card-body">
                 <div class="tab-content">
                     <div class="tab-pane show active" id="personal-info" role="tabpanel">
-                        @include('admin.profile.partials._personal-profile')
+                        @include('profile.partials._personal-profile')
                     </div>
                     <div class="tab-pane p-0" id="security" role="tabpanel">
-                        @include('admin.profile.partials._security')
+                        @include('profile.partials._security')
                     </div>
                 </div>
             </div>
@@ -41,4 +41,5 @@
 @push('scripts')
     @include('profile.scripts._update-profile-image')
     @include('profile.scripts._change-password')
+    @include('profile.scripts._update-profile')
 @endpush

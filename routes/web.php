@@ -16,6 +16,8 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function () {
         Route::get('/','edit')->name('edit');
         Route::patch('/','update')->name('update');
+        Route::post('update-profile-image', 'updateProfile')->name('update.image');
+        Route::post('update-password', 'updatePassword')->name('update.password');
         Route::delete('/profile','destroy')->name('destroy');
     });
 });

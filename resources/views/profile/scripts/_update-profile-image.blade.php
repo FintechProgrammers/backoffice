@@ -26,7 +26,7 @@
 
             const button = $(this).find('button');
             const spinner = button.find('.spinner-border');
-            const buttonText = button.find('#text'); // Corrected the typo here
+            const buttonText = button.find('#text');
 
             // Send AJAX request
             $.ajax({
@@ -44,14 +44,12 @@
                     // Handle success response
 
                     $('#profileImageForm')[0].reset();
-
                     displayMessage(response.message, "success");
 
                     setTimeout(function() {
-
                         spinner.hide();
                         buttonText.show();
-                        button.attr('disabled', false); // Enable the button again
+                        button.attr('disabled', false);
                     }, 2000); // 2000 milliseconds = 2 seconds
                 },
                 error: function(xhr, status, error) {
@@ -77,7 +75,7 @@
                             });
                         });
                     } else if (xhr.status === 419) {
-                        location.reload()
+                        location.reload();
                     } else {
                         // Handle other error statuses
                         displayMessage(xhr.responseJSON.message, "error");

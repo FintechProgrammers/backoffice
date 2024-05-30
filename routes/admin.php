@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdministrativeUserController;
 use App\Http\Controllers\Admin\Auth\AdminForgotPasswordController;
 use App\Http\Controllers\Admin\Auth\AdminResetPasswordController;
 use App\Http\Controllers\Admin\CommisionPlanController;
+use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\ProfileController;
@@ -135,4 +136,6 @@ Route::middleware('admin.auth')->group(function () {
         Route::post('update-password', 'updatePassword')->name('update.password');
         Route::get('logout', 'logout')->name('logout');
     });
+
+    Route::get('update-countries', [CountryController::class, 'updateCountriesTableWithFlags']);
 });

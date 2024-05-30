@@ -22,6 +22,11 @@
 <script src="{{ asset('assets/js/custom.js') }}"></script>
 
 <script>
+    $('.country-select').select2({
+        placeholder: "Select",
+        dir: "ltr"
+    });
+
     $('input[name="datepicker"]').daterangepicker({
         autoUpdateInput: false,
         locale: {

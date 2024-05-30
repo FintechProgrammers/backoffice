@@ -91,17 +91,17 @@
     /* header theme toggle */
 
     /* Choices JS */
-    document.addEventListener("DOMContentLoaded", function () {
-        var genericExamples = document.querySelectorAll("[data-trigger]");
-        for (let i = 0; i < genericExamples.length; ++i) {
-            var element = genericExamples[i];
-            new Choices(element, {
-                allowHTML: true,
-                placeholderValue: "This is a placeholder set in the config",
-                searchPlaceholderValue: "Search",
-            });
-        }
-    });
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     var genericExamples = document.querySelectorAll("[data-trigger]");
+    //     for (let i = 0; i < genericExamples.length; ++i) {
+    //         var element = genericExamples[i];
+    //         new Choices(element, {
+    //             allowHTML: true,
+    //             placeholderValue: "This is a placeholder set in the config",
+    //             searchPlaceholderValue: "Search",
+    //         });
+    //     }
+    // });
     /* Choices JS */
 
     /* footer year */
@@ -288,61 +288,61 @@ headerbtn1.forEach((button) => {
 /* for notifications dropdown */
 
 
-const values = [
-    {
-        value: "1",
-        label:
-            '<img class="avatar avatar-xs avatar-rounded" src="../assets/images/flags/us_flag.jpg" alt=""> <span class="mx-1">United States</span>',
-        id: 1,
-    },
-    {
-        value: "2",
-        label:
-            '<img class="avatar avatar-xs avatar-rounded" src="../assets/images/flags/spain_flag.jpg"  alt=""> <span class="ms-1">Spain</span>',
-        id: 2,
-    },
-    {
-        value: "3",
-        label:
-            '<img class="avatar avatar-xs avatar-rounded" src="../assets/images/flags/french_flag.jpg" alt=""> <span class="ms-1">France</span>',
-        id: 3,
-    },
-    {
-        value: "4",
-        label:
-            '<img class="avatar avatar-xs avatar-rounded" src="../assets/images/flags/germany_flag.jpg" alt=""> <span class="ms-1">Germany</span>',
-        id: 4,
-    },
-    {
-        value: "5",
-        label:
-            '<img class="avatar avatar-xs avatar-rounded" src="../assets/images/flags/italy_flag.jpg" alt=""> <span class="ms-1">Italy</span>',
-        id: 5,
-    },
-    {
-        value: "6",
-        label:
-            '<img class="avatar avatar-xs avatar-rounded" src="../assets/images/flags/russia_flag.jpg" alt=""> <span class="ms-1">Netherlands</span>',
-        id: 6,
-    },
-    {
-        value: "7",
-        label:
-            '<img class="avatar avatar-xs avatar-rounded" src="../assets/images/flags/argentina_flag.jpg" alt=""> <span class="ms-1">Argentina</span>',
-        id: 7,
-    },
-    {
-        value: "8",
-        label:
-            '<img class="avatar avatar-xs avatar-rounded" src="../assets/images/flags/argentina_flag.jpg" alt=""> <span class="ms-1">Argentina</span>',
-        id: 8,
-    },
-];
-const elements = document.querySelectorAll(".choices-images");
-elements.forEach(function (element) {
-    const choices = new Choices(element, {
-        choices: values,
-    });
+// const values = [
+//     {
+//         value: "1",
+//         label:
+//             '<img class="avatar avatar-xs avatar-rounded" src="../assets/images/flags/us_flag.jpg" alt=""> <span class="mx-1">United States</span>',
+//         id: 1,
+//     },
+//     {
+//         value: "2",
+//         label:
+//             '<img class="avatar avatar-xs avatar-rounded" src="../assets/images/flags/spain_flag.jpg"  alt=""> <span class="ms-1">Spain</span>',
+//         id: 2,
+//     },
+//     {
+//         value: "3",
+//         label:
+//             '<img class="avatar avatar-xs avatar-rounded" src="../assets/images/flags/french_flag.jpg" alt=""> <span class="ms-1">France</span>',
+//         id: 3,
+//     },
+//     {
+//         value: "4",
+//         label:
+//             '<img class="avatar avatar-xs avatar-rounded" src="../assets/images/flags/germany_flag.jpg" alt=""> <span class="ms-1">Germany</span>',
+//         id: 4,
+//     },
+//     {
+//         value: "5",
+//         label:
+//             '<img class="avatar avatar-xs avatar-rounded" src="../assets/images/flags/italy_flag.jpg" alt=""> <span class="ms-1">Italy</span>',
+//         id: 5,
+//     },
+//     {
+//         value: "6",
+//         label:
+//             '<img class="avatar avatar-xs avatar-rounded" src="../assets/images/flags/russia_flag.jpg" alt=""> <span class="ms-1">Netherlands</span>',
+//         id: 6,
+//     },
+//     {
+//         value: "7",
+//         label:
+//             '<img class="avatar avatar-xs avatar-rounded" src="../assets/images/flags/argentina_flag.jpg" alt=""> <span class="ms-1">Argentina</span>',
+//         id: 7,
+//     },
+//     {
+//         value: "8",
+//         label:
+//             '<img class="avatar avatar-xs avatar-rounded" src="../assets/images/flags/argentina_flag.jpg" alt=""> <span class="ms-1">Argentina</span>',
+//         id: 8,
+//     },
+// ];
+// const elements = document.querySelectorAll(".choices-images");
+// elements.forEach(function (element) {
+//     const choices = new Choices(element, {
+//         choices: values,
+//     });
 
 
-});
+// });
