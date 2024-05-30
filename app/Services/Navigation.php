@@ -94,8 +94,14 @@ class Navigation
         return [
             (object) [
                 'name'  => 'Dashboard',
-                'route' => 'admin.dashboard.index',
+                'route' => 'dashboard',
                 'icon'  => 'bx bx-home',
+                'hasPermission' => true
+            ],
+            (object) [
+                'name'  => 'Tickets',
+                'route' => 'tickets.index',
+                'icon'  => 'las la-headset',
                 'hasPermission' => true
             ],
         ];

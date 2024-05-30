@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.user.app')
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('assets/libs/glightbox/css/glightbox.min.css') }}">
@@ -12,7 +12,7 @@
     </div>
     <div class="row">
         <div class="col-lg-3">
-            @include('admin.support._ticket_sidemenu')
+            @include('user.support._ticket_side')
         </div>
         <div class="col-lg-9">
             <div class="card" style="height: 400px">
@@ -27,7 +27,7 @@
 
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('admin.support.tickets.replies', $ticket->uuid) }}" method="POST"
+                    <form action="{{ route('tickets.reply', $ticket->uuid) }}" method="POST"
                         enctype="multipart/form-data" id="replyForm">
                         @csrf
                         <h6>Write a Reply</h6>
@@ -151,7 +151,7 @@
             const table = $('#repliesBody')
 
             $.ajax({
-                url: '/admin/support/tickets/replies/{{ $ticket->uuid }}',
+                url: '/tickets/replies/{{ $ticket->uuid }}',
                 type: 'GET',
                 beforeSend: function() {
                     table.html(`
