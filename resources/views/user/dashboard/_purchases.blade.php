@@ -1,24 +1,7 @@
 <div class="card custom-card">
     <div class="card-header justify-content-between">
         <div class="card-title">
-            Orders
-        </div>
-        <div class="d-flex flex-wrap">
-            <div class="me-3 my-1">
-                <input class="form-control form-control-sm" type="text" placeholder="Search Here"
-                    aria-label=".form-control-sm example">
-            </div>
-            <div class="dropdown m-1">
-                <a href="javascript:void(0);" class="btn btn-primary btn-sm btn-wave waves-effect waves-light"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    Sort By<i class="ri-arrow-down-s-line align-middle ms-1 d-inline-block"></i>
-                </a>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a class="dropdown-item" href="javascript:void(0);">New</a></li>
-                    <li><a class="dropdown-item" href="javascript:void(0);">Popular</a></li>
-                    <li><a class="dropdown-item" href="javascript:void(0);">Relevant</a></li>
-                </ul>
-            </div>
+            Package History
         </div>
     </div>
     <div class="card-body">

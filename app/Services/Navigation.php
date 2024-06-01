@@ -116,6 +116,30 @@ class Navigation
                 'icon'  => 'las la-headset',
                 'hasPermission' => true
             ],
+            (object) [
+                'name'  => 'Withdrawals',
+                'route' => 'tickets.index',
+                'icon'  => 'bx bx-wallet-alt',
+                'hasPermission' => true
+            ],
+            (object) [
+                'name'  => 'Sales',
+                'route' => 'tickets.index',
+                'icon'  => 'bx bx-bar-chart-alt-2',
+                'hasPermission' => true
+            ],
+            (object) [
+                'name'  => 'Package History',
+                'route' => 'tickets.index',
+                'icon'  => 'bx bx-cart-alt',
+                'hasPermission' => true
+            ],
+            (object) [
+                'name'  => 'Rank History',
+                'route' => 'tickets.index',
+                'icon'  => 'bx bx-medal',
+                'hasPermission' => true
+            ],
         ];
     }
 }

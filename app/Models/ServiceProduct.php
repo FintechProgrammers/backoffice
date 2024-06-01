@@ -16,4 +16,9 @@ class ServiceProduct extends Model
      */
     protected $guarded = [];
 
+    function product()
+    {
+        return $this->belongsTo(Product::class,'product_id');
+    }
+
 }
