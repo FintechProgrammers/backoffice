@@ -150,7 +150,7 @@ class SupportController extends Controller
             DB::rollBack();
             logger($e);
 
-            return response()->json(['success' => false, 'message' => serviceDownMessage(), 500]);
+            return response()->json(['success' => false, 'message' => serviceDownMessage()],500);
         }
     }
 

@@ -64,6 +64,7 @@ class User extends Authenticatable
 
         static::created(function ($user) {
             UserInfo::create(['user_id' => $user->id]);
+            Wallet::create(['user_id' => $user->id, 'amount' => 0]);
         });
     }
 

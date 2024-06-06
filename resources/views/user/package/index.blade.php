@@ -1,49 +1,47 @@
 @extends('layouts.user.app')
 
-@section('title', 'Plans')
+@section('title', 'Package')
 
 @section('content')
     <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
         <div>
-            <p class="fw-semibold fs-18 mb-0">Services</p>
+            <p class="fw-semibold fs-18 mb-0">Packages</p>
         </div>
     </div>
-    <div class="card custom-card overflow-hidden shadow-none">
-        <div class="card-body p-0">
-            <form action="">
-                @csrf
-                <div class="row">
-                    @foreach ($services as $item)
-                        <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-12 border-end border-inline-end-dashed">
-                            <div class="p-4">
-                                <div class="py-4 d-flex flex-column align-items-center text-center">
-                                    <h6 class="fw-semibold text-center">{{ ucfirst($item->name) }}</h6>
-                                    <div class="mt-3">
-                                        <p class="fs-25 fw-semibold mb-0">${{ $item->price }}</p>
-                                        <p class="text-muted fs-11 fw-semibold mb-0">
-                                            {{ convertDaysToUnit($item->duration, $item->duration_unit) . ' ' . $item->duration_unit }}
-                                        </p>
-                                    </div>
-                                </div>
-                                <ul class="list-unstyled text-center fs-12 px-3 pt-3 mb-0">
-                                    @foreach ($item->serviceProduct as $product)
-                                        <li class="mb-3">
-                                            <span class="text-muted">
-                                                {{ ucfirst($product->product->name) }}
-                                            </span>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                                <div class="d-grid">
-                                    <button class="btn btn-primary-light btn-wave">Get Started</button>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-
-
+    <div class="row">
+        @forelse ($services as $item)
+            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-12">
+                <div class="card custom-card product-card">
+                    <div class="card-body">
+                        <a href="{{ route('package.details',$item->uuid) }}" class="product-image">
+                            <img src="{{ $item->image }}" class="card-img mb-3" alt="...">
+                        </a>
+                        {{-- <div class="product-icons">
+                            <a href="#" class="cart"><i class="ri-shopping-cart-line"></i></a>
+                            <a href="#" class="view">
+                                <i class="ri-eye-line"></i>
+                            </a>
+                        </div> --}}
+                        <p class="product-name fw-semibold mb-0 d-flex align-items-center justify-content-between">
+                            {{ $item->name }}</p>
+                        <p class="product-description fs-11 text-muted mb-2">{{ limitWords($item->description) }}</p>
+                        <p class="mb-1 fw-semibold fs-16 d-flex align-items-center justify-content-between">
+                            <span>${{ $item->price }} for <span
+                                    class="text-muted ms-1 d-inline-block op-6">{{ convertDaysToUnit($item->duration, $item->duration_unit) . ' ' . $item->duration_unit }}</span></span>
+                        <p class="fs-11 text-success fw-semibold mb-3 d-flex align-items-center">
+                            <i class="ti ti-discount-2 fs-16 me-1"></i>
+                            @if ($item->serviceProduct->isNotEmpty())
+                                {{ $item->serviceProduct->pluck('product.name')->implode(', ') }}
+                            @else
+                                No products available.
+                            @endif
+                        </p>
+                        <a class="btn btn-primary btn-sm" href="{{ route('package.details',$item->uuid) }}">{{ __('Purchase') }}</a>
+                    </div>
                 </div>
-            </form>
-        </div>
+            </div>
+        @empty
+        @endforelse
+
     </div>
 @endsection

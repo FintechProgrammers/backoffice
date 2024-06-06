@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StripeController;
+use App\Http\Controllers\User\AmbassedorController;
 use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\User\ServiceController;
 use App\Http\Controllers\User\SupportController;
@@ -26,8 +28,10 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/delete/{ticket}', 'destroy')->name('delete');
     });
 
-    Route::controller(ServiceController::class)->prefix('service')->name('service.')->group(function () {
+    Route::controller(ServiceController::class)->prefix('package')->name('package.')->group(function () {
         Route::get('', 'index')->name('index');
+        Route::get('/{service}', 'show')->name('details');
+        Route::post('/purcahse/{service}', 'purchase')->name('purchase');
     });
 
     Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function () {
@@ -37,7 +41,21 @@ Route::middleware(['auth'])->group(function () {
         Route::post('update-password', 'updatePassword')->name('update.password');
         Route::delete('/profile', 'destroy')->name('destroy');
     });
+
+    Route::controller(AmbassedorController::class)->prefix('ambassedor')->name('ambassedor.')->group(function () {
+        Route::get('payment/confirm', 'index')->name('payment.confirm');
+        Route::post('payment/process', 'pay')->name('payment.process');
+    });
+
+    Route::controller(StripeController::class)->prefix('stripe')->name('stripe.')->group(function () {
+        Route::get('abassador/payment/success', 'abassedorPaymentSuccess')->name('abassador.payment.success');
+        Route::get('success', 'success')->name('success');
+        Route::get('cancel', 'cancel')->name('cancel');
+    });
 });
 
+Route::prefix('webhook')->group(function () {
+    Route::post('/stripe', [StripeController::class, 'webhook']);
+});
 
 require __DIR__ . '/auth.php';

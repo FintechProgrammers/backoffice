@@ -86,12 +86,12 @@ class Navigation
                 'icon'  => 'las la-bezier-curve',
                 'hasPermission' => true
             ],
-            // (object) [
-            //     'name'  => 'Settings',
-            //     'route' => 'admin.dashboard.index',
-            //     'icon'  => 'las la-cogs',
-            //     'hasPermission' => true
-            // ],
+            (object) [
+                'name'  => 'Settings',
+                'route' => 'admin.settings.index',
+                'icon'  => 'las la-cogs',
+                'hasPermission' => true
+            ],
         ];
     }
 
@@ -105,8 +105,8 @@ class Navigation
                 'hasPermission' => true
             ],
             (object) [
-                'name'  => 'Services',
-                'route' => 'service.index',
+                'name'  => 'packages',
+                'route' => 'package.index',
                 'icon'  => 'bx bx-briefcase',
                 'hasPermission' => true
             ],
@@ -120,13 +120,13 @@ class Navigation
                 'name'  => 'Withdrawals',
                 'route' => 'tickets.index',
                 'icon'  => 'bx bx-wallet-alt',
-                'hasPermission' => true
+                'hasPermission' => auth()->user()->is_ambassador ?? false
             ],
             (object) [
                 'name'  => 'Sales',
                 'route' => 'tickets.index',
                 'icon'  => 'bx bx-bar-chart-alt-2',
-                'hasPermission' => true
+                'hasPermission' => auth()->user()->is_ambassador ?? false
             ],
             (object) [
                 'name'  => 'Package History',
@@ -138,7 +138,7 @@ class Navigation
                 'name'  => 'Rank History',
                 'route' => 'tickets.index',
                 'icon'  => 'bx bx-medal',
-                'hasPermission' => true
+                'hasPermission' => auth()->user()->is_ambassador ?? false
             ],
         ];
     }

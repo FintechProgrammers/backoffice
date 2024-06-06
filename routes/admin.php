@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\RankController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\ServiceManagement;
+use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\SupportController;
 use App\Http\Controllers\Admin\UserManagementController;
 use Illuminate\Routing\Router;
@@ -149,6 +150,11 @@ Route::middleware('admin.auth')->group(function () {
         Route::post('update-profile-image', 'updateProfile')->name('update.image');
         Route::post('update-password', 'updatePassword')->name('update.password');
         Route::get('logout', 'logout')->name('logout');
+    });
+
+    Route::controller(SettingsController::class)->prefix('settings')->name('settings.')->group(function () {
+        Route::get('', 'index')->name('index');
+        Route::post('/store', 'store')->name('store');
     });
 
     Route::get('update-countries', [CountryController::class, 'updateCountriesTableWithFlags']);

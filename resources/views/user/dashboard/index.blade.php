@@ -317,4 +317,5 @@
         }
         /* Revenue Analytics Chart */
     </script>
+    @include('user.dashboard.scripts._process_ambassedor_payment')
 @endpush

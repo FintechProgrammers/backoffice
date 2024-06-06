@@ -44,6 +44,7 @@ class ServiceManagement extends Controller
             'description' => 'nullable',
             'products' => 'required|array',
             'products.*' => 'required|exists:products,id',
+            'image' => 'required|image',
         ]);
 
         // Handle validation errors
@@ -54,6 +55,11 @@ class ServiceManagement extends Controller
         try {
 
             DB::beginTransaction();
+
+            if ($request->hasFile('image')) {
+                $imageUrl = uploadFile($request->file('image'), "uploads/packages", "do_spaces");
+                $request->merge(['image_url' => $imageUrl]);
+            }
 
             $service = Service::create($this->prepareData($request));
 
@@ -97,7 +103,7 @@ class ServiceManagement extends Controller
             'price' => 'required|numeric',
             'duration' => 'required|numeric',
             'duration_unit' => 'required|string',
-            'description' => 'nullable'
+            'description' => 'nullable',
         ]);
 
         // Handle validation errors
@@ -108,6 +114,13 @@ class ServiceManagement extends Controller
         try {
 
             DB::beginTransaction();
+
+            if ($request->hasFile('image')) {
+                $imageUrl = uploadFile($request->file('image'), "uploads/packages", "do_spaces");
+                $request->merge(['image_url' => $imageUrl]);
+            } else {
+                $request->merge(['image_url' => $service->image_url]);
+            }
 
             $service->update($this->prepareData($request));
 
@@ -173,7 +186,8 @@ class ServiceManagement extends Controller
             'duration_unit' => $request->duration_unit,
             'auto_renewal' => $request->auto_renewal === "on" ? true : false,
             'is_published' => $request->is_published === "on" ? true : false,
-            'description' => $request->description
+            'description' => $request->description,
+            'image_url'  => $request->image_url,
         ];
     }
 

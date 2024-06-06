@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Settings;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -240,5 +241,24 @@ if (!function_exists('sendToLog')) { /* send to log" */
         //         throw $th;
         //     }
         // }
+    }
+}
+
+
+if (!function_exists('limitWords')) {
+    function limitWords($string, $limit = 100)
+    {
+        $words = explode(' ', $string);
+        if (count($words) > $limit) {
+            return implode(' ', array_slice($words, 0, $limit)) . '...';
+        }
+        return $string;
+    }
+}
+
+if (!function_exists('systemSettings')) {
+    function systemSettings()
+    {
+        return Settings::first();
     }
 }
