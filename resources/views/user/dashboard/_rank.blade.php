@@ -1,5 +1,22 @@
 @if (Auth::user()->is_ambassador)
-    <div class="card custom-card crm-highlight-card">
+    @if (!empty(Auth::user()->rank))
+        <div class="card custom-card card-bg-primary">
+            <div class="card-body">
+                <div class="d-flex align-items-center w-100">
+                    <div class="me-2">
+                        <span class="avatar avatar-rounded">
+                            <img src="{{ Auth::user()->rank->file_url }}" alt="img">
+                        </span>
+                    </div>
+                    <div class="">
+                        <div class="fs-15 fw-semibold text-uppercase">{{ Auth::user()->rank->name }}</div>
+                        <p class="mb-0 text-fixed-white op-7 fs-12"> Current Rank</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+    {{-- <div class="card custom-card crm-highlight-card">
         <div class="card-body">
             <div class="d-flex align-items-center justify-content-between">
                 <div>
@@ -7,7 +24,8 @@
                     <span class="d-block fs-12 text-fixed-white"><span class="op-7">You have completed</span> <span
                             class="fw-semibold text-warning">48%</span> <span class="op-7">of the given target,
                             you can also check your status</span>.</span>
-                    <span class="d-block fw-semibold mt-1"><a class="text-fixed-white" href="javascript:void(0);"><u>Click
+                    <span class="d-block fw-semibold mt-1"><a class="text-fixed-white"
+                            href="javascript:void(0);"><u>Click
                                 here</u></a></span>
                 </div>
                 <div>
@@ -15,7 +33,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 @else
     <div class="card custom-card upgrade-card text-fixed-white">
         <div class="card-body text-fixed-white">

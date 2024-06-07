@@ -16,13 +16,17 @@
     <div class="row">
         <div class="col-xxl-3 col-xl-3 col-lg-12">
             @include('user.dashboard._rank')
-            @include('user.dashboard._package')
             @include('user.dashboard._account')
+            @include('user.dashboard._package')
         </div>
         <div class="col-xxl-6 col-xl-6 col-lg-12">
             <x-user.dashboard.stats-component />
-            @include('user.dashboard._revenue-stats')
-            @include('user.dashboard._purchases')
+            @if (Auth::user()->is_ambassador)
+                @include('user.dashboard._revenue-stats')
+            @endif
+            @if (!empty(auth()->user()->subscriptions))
+                @include('user.dashboard._purchases')
+            @endif
         </div>
         <div class="col-xxl-3 col-xl-3 col-lg-12">
             @include('user.dashboard._profile-card')

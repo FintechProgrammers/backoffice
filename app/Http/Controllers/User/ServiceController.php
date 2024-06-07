@@ -22,9 +22,10 @@ class ServiceController extends Controller
         return view('user.package.details', $data);
     }
 
-    function purchase(Service $service, StripeService $stripeService)
+    function purchase(Request $request,Service $service, StripeService $stripeService)
     {
         try {
+            $user = $request->user();
 
             $data = [
                 'currency' => 'usd',
@@ -32,15 +33,13 @@ class ServiceController extends Controller
                 'product_data' => [
                     'name' => $service->name
                 ],
-                'success_url' => route('stripe.success'),
+                'customer_email' => $user->email,
+                'metadata' => ['user_id' => $user->id, 'service_id'=>$service->id],
+                'success_url' => route('stripe.service.payment.Success').'?session_id={CHECKOUT_SESSION_ID}',
                 'cancel_url' => route('stripe.cancel')
             ];
 
             $response = $stripeService->processCheckout($data);
-
-            logger($response);
-
-            dd($response);
 
             return $this->sendResponse(['route' => $response->url], "Success");
         } catch (\Exception $e) {

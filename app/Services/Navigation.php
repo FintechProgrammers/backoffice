@@ -129,7 +129,7 @@ class Navigation
                 'hasPermission' => auth()->user()->is_ambassador ?? false
             ],
             (object) [
-                'name'  => 'Package History',
+                'name'  => 'Subscriptions',
                 'route' => 'tickets.index',
                 'icon'  => 'bx bx-cart-alt',
                 'hasPermission' => true

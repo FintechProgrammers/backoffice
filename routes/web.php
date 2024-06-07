@@ -49,6 +49,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::controller(StripeController::class)->prefix('stripe')->name('stripe.')->group(function () {
         Route::get('abassador/payment/success', 'abassedorPaymentSuccess')->name('abassador.payment.success');
+        Route::get('service/payment/success', 'subscriptionSuccess')->name('service.payment.Success');
         Route::get('success', 'success')->name('success');
         Route::get('cancel', 'cancel')->name('cancel');
     });

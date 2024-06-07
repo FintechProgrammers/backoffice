@@ -112,6 +112,30 @@ class User extends Authenticatable
         return ($filledFields / $totalFields) * 100;
     }
 
+    function bonuWallet()
+    {
+        return $this->hasOne(Bonus::class, 'user_id', 'id');
+    }
+
+    function wallet()
+    {
+        return $this->hasOne(Wallet::class, 'user_id', 'id');
+    }
+
+    function activities()
+    {
+        return $this->hasMany(UserActivities::class, 'user_id', 'id')->latest();
+    }
+
+    function subscriptions()
+    {
+        return $this->hasMany(UserSubscription::class, 'user_id', 'id')->latest();
+    }
+
+    function rank()
+    {
+        return $this->hasOne(Rank::class,'id', 'rank_id');
+    }
 
     /**
      * The attributes that should be hidden for serialization.
