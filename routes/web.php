@@ -4,8 +4,11 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\User\AmbassedorController;
 use App\Http\Controllers\User\DashboardController;
+use App\Http\Controllers\User\SalesController;
 use App\Http\Controllers\User\ServiceController;
+use App\Http\Controllers\User\SubscriptionController;
 use App\Http\Controllers\User\SupportController;
+use App\Http\Controllers\WithdrawalController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -52,6 +55,21 @@ Route::middleware(['auth'])->group(function () {
         Route::get('service/payment/success', 'subscriptionSuccess')->name('service.payment.Success');
         Route::get('success', 'success')->name('success');
         Route::get('cancel', 'cancel')->name('cancel');
+    });
+
+    Route::controller(SubscriptionController::class)->prefix('subscription')->name('subscription.')->group(function () {
+        Route::get('', 'index')->name('index');
+    });
+
+    Route::controller(SalesController::class)->prefix('sales')->name('sales.')->group(function () {
+        Route::get('', 'index')->name('index');
+    });
+
+    Route::controller(WithdrawalController::class)->prefix('withdrawal')->name('withdrawal.')->group(function () {
+        Route::get('', 'index')->name('index');
+        Route::get('/filter', 'filter')->name('filter');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/store', 'store')->name('store');
     });
 });
 

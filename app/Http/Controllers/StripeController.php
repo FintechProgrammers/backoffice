@@ -9,7 +9,7 @@ use App\Models\User;
 use App\Models\UserActivities;
 use App\Models\UserSubscription;
 use App\Services\StripeService;
-use Carbon\Carbon;
+use App\Services\SubscriptionService;
 use Illuminate\Http\Request;
 
 class StripeController extends Controller
@@ -93,26 +93,16 @@ class StripeController extends Controller
                 return redirect()->route('stripe.cancel');
             }
 
-
-            $startDate = Carbon::now();
-            $endDate = Carbon::now()->addDays($service->duration);
+            $subscriptionService = new SubscriptionService();
 
             $userSubscription = UserSubscription::where('user_id', $user->id)->where('service_id', $service->id)->first();
 
             if ($userSubscription) {
                 if (!$userSubscription->is_active) {
-                    $userSubscription->update([
-                        'start_date' => Carbon::now(),
-                        'end_date' => Carbon::now()->addDays($service->duration),
-                        'is_active' => true
-                    ]);
+
+                    $subscriptionService->updateSubscription($service, $userSubscription);
 
                     $message = "You have successfully renewed the {$service->name} service.";
-
-                    UserActivities::create([
-                        'user_id' => $user->id,
-                        'log'  => "Renewed subscription for {$service->name} service."
-                    ]);
                 } else {
                     $data['title'] = "Payment Successful";
                     $data['message'] = "Your subscription is active";
@@ -122,21 +112,10 @@ class StripeController extends Controller
                     return view('user.stripe.success', $data);
                 }
             } else {
-                UserSubscription::create([
-                    'user_id' => $user->id,
-                    'service_id' => $service->id,
-                    'reference'  => generateReference(),
-                    'start_date' => $startDate,
-                    'end_date' => $endDate,
-                    'is_active' => true
-                ]);
+
+                $subscriptionService->createSubscription($service, $user);
 
                 $message = "You have successfully subscribed to the {$service->name} service.";
-
-                UserActivities::create([
-                    'user_id' => $user->id,
-                    'log'  => "Subscribed to {$service->name} service."
-                ]);
             }
 
             $data['title'] = "Payment Successful";
@@ -166,8 +145,6 @@ class StripeController extends Controller
         $payload = @file_get_contents('php://input');
         $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
         $event = null;
-
-        logger($payload);
 
         try {
             $data = [

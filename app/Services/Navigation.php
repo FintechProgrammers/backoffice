@@ -118,28 +118,28 @@ class Navigation
             ],
             (object) [
                 'name'  => 'Withdrawals',
-                'route' => 'tickets.index',
+                'route' => 'withdrawal.index',
                 'icon'  => 'bx bx-wallet-alt',
                 'hasPermission' => auth()->user()->is_ambassador ?? false
             ],
             (object) [
                 'name'  => 'Sales',
-                'route' => 'tickets.index',
+                'route' => 'sales.index',
                 'icon'  => 'bx bx-bar-chart-alt-2',
                 'hasPermission' => auth()->user()->is_ambassador ?? false
             ],
             (object) [
                 'name'  => 'Subscriptions',
-                'route' => 'tickets.index',
+                'route' => 'subscription.index',
                 'icon'  => 'bx bx-cart-alt',
                 'hasPermission' => true
             ],
-            (object) [
-                'name'  => 'Rank History',
-                'route' => 'tickets.index',
-                'icon'  => 'bx bx-medal',
-                'hasPermission' => auth()->user()->is_ambassador ?? false
-            ],
+            // (object) [
+            //     'name'  => 'Rank History',
+            //     'route' => 'tickets.index',
+            //     'icon'  => 'bx bx-medal',
+            //     'hasPermission' => auth()->user()->is_ambassador ?? false
+            // ],
         ];
     }
 }

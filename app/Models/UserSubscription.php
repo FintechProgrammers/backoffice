@@ -21,4 +21,9 @@ class UserSubscription extends Model
     {
         return $this->belongsTo(Service::class, 'service_id');
     }
+
+    protected $casts = [
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
+    ];
 }

@@ -77,14 +77,22 @@
                             <img src="{{ $package->image }}" alt="" class="img-fluid rounded bg-light">
                         </a>
                     </div>
-                    <div class="d-grid">
-                        <button class="btn btn-success mb-2" id="purchase" data-url="{{ route('package.purchase', $package->uuid) }}">
-                            <div class="spinner-border" style="display: none" role="status">
-                                <span class="sr-only">Loading...</span>
-                            </div>
-                            <span id="text">{{ __('Purchase Now') }}</span>
-                        </button>
-                    </div>
+                    @if (in_array($package->id, Auth::user()->subscriptions()->pluck('service_id')->toArray()))
+                        <div class="d-grid">
+                            <a class="btn btn-primary disabled" tabindex="-1" role="button"
+                                aria-disabled="true">Subscribed</a>
+                        </div>
+                    @else
+                        <div class="d-grid">
+                            <button class="btn btn-success mb-2" id="purchase"
+                                data-url="{{ route('package.purchase', $package->uuid) }}">
+                                <div class="spinner-border" style="display: none" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                                <span id="text">{{ __('Purchase Now') }}</span>
+                            </button>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -103,8 +111,8 @@
             $.ajax({
                 url: $(this).data('url'),
                 type: 'POST',
-                data:{
-                    _token :  '{{ csrf_token() }}',
+                data: {
+                    _token: '{{ csrf_token() }}',
                 },
                 beforeSend: function() {
                     buttonTest.hide()

@@ -21,7 +21,7 @@
                                 <span class="text-success fw-semibold">{{ optional($item->service)->name }}</span>
                             </td>
                             <td>
-                                {{ $item->created_at->format('jS,M Y H:i A') }}
+                                {{ $item->end_date->format('jS,M Y H:i A') }}
                             </td>
                             <td>
                                 @if ($item->is_active)
@@ -29,7 +29,6 @@
                                 @else
                                     <span class="badge bg-warning-transparent">Expired</span>
                                 @endif
-
                             </td>
                         </tr>
                     @empty

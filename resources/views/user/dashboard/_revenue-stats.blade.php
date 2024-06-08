@@ -6,7 +6,7 @@
     </div>
     <div class="card-body">
         <div class="content-wrapper">
-            <div id="crm-revenue-analytics"></div>
+            <canvas id="chartjs-line" class="chartjs-chart"></canvas>
         </div>
     </div>
 </div>

@@ -37,6 +37,7 @@
 @endsection
 @push('scripts')
     <script src="{{ asset('assets/libs/apexcharts/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/chart.js/chart.min.js') }}"></script>
     @if (Auth::user()->profile_completion_percentage < 100)
         <script>
             showProfileModal()
@@ -50,7 +51,7 @@
             myModal.show();
         }
     </script>
-    <script>
+    {{-- <script>
         /* Revenue Analytics Chart */
         var options = {
             series: [{
@@ -320,6 +321,35 @@
             });
         }
         /* Revenue Analytics Chart */
+    </script> --}}
+    <script>
+        Chart.defaults.borderColor = "rgba(142, 156, 173,0.1)", Chart.defaults.color = "#8c9097";
+        const labels = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+        ];
+        const data = {
+            labels: labels,
+            datasets: [{
+                label: 'Sales Analytics',
+                backgroundColor: 'rgb(132, 90, 223)',
+                borderColor: 'rgb(132, 90, 223)',
+                data: [0, 10, 5, 2, 20, 30, 45],
+            }]
+        };
+        const config = {
+            type: 'line',
+            data: data,
+            options: {}
+        };
+        const myChart = new Chart(
+            document.getElementById('chartjs-line'),
+            config
+        );
     </script>
     @include('user.dashboard.scripts._process_ambassedor_payment')
 @endpush
