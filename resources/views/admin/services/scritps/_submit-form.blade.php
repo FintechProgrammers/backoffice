@@ -1,5 +1,25 @@
 <script>
     $(document).ready(function() {
+        $('#modalBody').on('change', '#photo', function(event) {
+            event.preventDefault();
+
+            const contentBody = $('#modalBody').find('#photoContent');
+
+            var file = event.target.files[0];
+
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var content = e.target.result;
+                    contentBody.html(
+                        `<img src="${content}" class="img-fluid rounded" alt="Uploaded Image" width="150px" height="50px">`
+                    );
+                }
+                reader.readAsDataURL(file);
+            } else {
+                contentBody.text('No file selected');
+            }
+        });
         $('#modalBody').on('submit', 'form', function(event) {
             event.preventDefault(); // Prevent default form submission
 
@@ -7,10 +27,9 @@
             $('.error-message').remove();
 
             // Serialize form data
-            var formData = $(this).serialize();
+            var formData = new FormData(this);
 
             const button = $(this).find('button')
-
             const spinner = button.find('.spinner-border')
             const buttonTest = button.find('#text')
 
@@ -19,6 +38,8 @@
                 url: $(this).attr('action'),
                 type: 'POST',
                 data: formData,
+                processData: false,
+                contentType: false,
                 beforeSend: function() {
                     buttonTest.hide()
                     spinner.show()
@@ -62,7 +83,7 @@
                     } else {
                         // Handle other error statuses
                         // console.log(xhr.responseJSON)
-                        displayMessage(xhr.responseJSON.message,"error")
+                        displayMessage(xhr.responseJSON.message, "error")
                     }
                 }
             });

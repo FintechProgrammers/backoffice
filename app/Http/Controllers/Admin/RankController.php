@@ -18,7 +18,7 @@ class RankController extends Controller
 
     function filter(Request $request)
     {
-        $data['ranks']  = Rank::get();
+        $data['ranks']  = Rank::paginate(50);
 
         return view('admin.rank._table', $data);
     }

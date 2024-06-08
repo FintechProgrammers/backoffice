@@ -1,7 +1,8 @@
 <h6 class="fw-semibold mb-3 text-center">
     Photo :
 </h6>
-<form method="POST" action="{{ route('admin.profile.update.image') }}" enctype="multipart/form-data" class="d-flex flex-column align-items-center">
+<form method="POST" action="{{ route('profile.update.image') }}" enctype="multipart/form-data" id="profileImageForm"
+    class="d-flex flex-column align-items-center">
     @csrf
     <div class="d-flex flex-column align-items-center">
         <div class="mb-3">
@@ -15,6 +16,13 @@
                 <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
-        <button type="submit" class="btn btn-primary">Upload</button>
+        <div class="col-xl-12 d-grid mt-2">
+            <button class="btn btn-primary" type="submit">
+                <div class="spinner-border" style="display: none" role="status">
+                    <span class="sr-only">Uploading..</span>
+                </div>
+                <span id="text">{{ __('Upload') }}</span>
+            </button>
+        </div>
     </div>
 </form>

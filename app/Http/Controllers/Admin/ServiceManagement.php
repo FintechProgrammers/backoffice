@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use App\Models\Service;
+use App\Models\ServiceProduct;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,14 +22,16 @@ class ServiceManagement extends Controller
 
     function filter()
     {
-        $data['services'] = Service::get();
+        $data['services'] = Service::paginate(50);
 
         return view('admin.services._table', $data);
     }
 
     function create()
     {
-        return view('admin.services.create');
+        $data['products'] = Product::get();
+
+        return view('admin.services.create', $data);
     }
 
     function store(Request $request)
@@ -37,7 +41,10 @@ class ServiceManagement extends Controller
             'price' => 'required|numeric',
             'duration' => 'required|numeric',
             'duration_unit' => 'required|string',
-            'description' => 'nullable'
+            'description' => 'nullable',
+            'products' => 'required|array',
+            'products.*' => 'required|exists:products,id',
+            'image' => 'required|image',
         ]);
 
         // Handle validation errors
@@ -49,7 +56,19 @@ class ServiceManagement extends Controller
 
             DB::beginTransaction();
 
-            Service::create($this->prepareData($request));
+            if ($request->hasFile('image')) {
+                $imageUrl = uploadFile($request->file('image'), "uploads/packages", "do_spaces");
+                $request->merge(['image_url' => $imageUrl]);
+            }
+
+            $service = Service::create($this->prepareData($request));
+
+            foreach ($request->products as $product) {
+                ServiceProduct::create([
+                    'service_id' => $service->id,
+                    'product_id' => $product
+                ]);
+            }
 
             DB::commit();
 
@@ -64,6 +83,8 @@ class ServiceManagement extends Controller
     function edit(Service $service)
     {
         $data['service'] = $service;
+        $data['products'] = Product::get();
+        $data['serviceProducts'] = ServiceProduct::where('service_id', $service->id)->pluck('product_id')->toArray();
 
         return view('admin.services.edit', $data);
     }
@@ -82,7 +103,7 @@ class ServiceManagement extends Controller
             'price' => 'required|numeric',
             'duration' => 'required|numeric',
             'duration_unit' => 'required|string',
-            'description' => 'nullable'
+            'description' => 'nullable',
         ]);
 
         // Handle validation errors
@@ -94,7 +115,23 @@ class ServiceManagement extends Controller
 
             DB::beginTransaction();
 
+            if ($request->hasFile('image')) {
+                $imageUrl = uploadFile($request->file('image'), "uploads/packages", "do_spaces");
+                $request->merge(['image_url' => $imageUrl]);
+            } else {
+                $request->merge(['image_url' => $service->image_url]);
+            }
+
             $service->update($this->prepareData($request));
+
+            ServiceProduct::where('service_id', $service->id)->delete();
+
+            foreach ($request->products as $product) {
+                ServiceProduct::create([
+                    'service_id' => $service->id,
+                    'product_id' => $product
+                ]);
+            }
 
             DB::commit();
 
@@ -126,6 +163,8 @@ class ServiceManagement extends Controller
 
     function destroy(Service $service)
     {
+        ServiceProduct::where('service_id', $service->id)->delete();
+
         $service->delete();
 
         return response()->json(['success' => false, 'message' => 'Service deleted successfully.']);
@@ -147,7 +186,8 @@ class ServiceManagement extends Controller
             'duration_unit' => $request->duration_unit,
             'auto_renewal' => $request->auto_renewal === "on" ? true : false,
             'is_published' => $request->is_published === "on" ? true : false,
-            'description' => $request->description
+            'description' => $request->description,
+            'image_url'  => $request->image_url,
         ];
     }
 

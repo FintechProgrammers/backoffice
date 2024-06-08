@@ -13,6 +13,8 @@
 
 <script src="{{ asset('assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
 
+@include('partials.scripts._copy-scripts')
+
 <script>
     function displayMessage(message, type) {
         const Toast = swal.mixin({

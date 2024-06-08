@@ -34,6 +34,12 @@ class Navigation
                 ]
             ],
             (object) [
+                'name'  => 'Products',
+                'route' => 'admin.product.index',
+                'icon'  => 'bx bx-box',
+                'hasPermission' => true
+            ],
+            (object) [
                 'name'      => 'Business Plan',
                 'icon'      => 'bx bx-briefcase',
                 'routes'    => ['admin.package.index'],
@@ -59,7 +65,7 @@ class Navigation
             (object) [
                 'name'      => 'Supports',
                 'icon'      => 'las la-headset',
-                'routes'    => ['admin.support.subjects.index','admin.support.tickets.index'],
+                'routes'    => ['admin.support.subjects.index', 'admin.support.tickets.index'],
                 'hasPermission' => true,
                 'subMenu'   => (object) [
                     (object) [
@@ -80,16 +86,60 @@ class Navigation
                 'icon'  => 'las la-bezier-curve',
                 'hasPermission' => true
             ],
-            // (object) [
-            //     'name'  => 'Settings',
-            //     'route' => 'admin.dashboard.index',
-            //     'icon'  => 'las la-cogs',
-            //     'hasPermission' => true
-            // ],
+            (object) [
+                'name'  => 'Settings',
+                'route' => 'admin.settings.index',
+                'icon'  => 'las la-cogs',
+                'hasPermission' => true
+            ],
         ];
     }
 
     public static function clientNavigation()
     {
+        return [
+            (object) [
+                'name'  => 'Dashboard',
+                'route' => 'dashboard',
+                'icon'  => 'bx bx-home',
+                'hasPermission' => true
+            ],
+            (object) [
+                'name'  => 'packages',
+                'route' => 'package.index',
+                'icon'  => 'bx bx-briefcase',
+                'hasPermission' => true
+            ],
+            (object) [
+                'name'  => 'Tickets',
+                'route' => 'tickets.index',
+                'icon'  => 'las la-headset',
+                'hasPermission' => true
+            ],
+            (object) [
+                'name'  => 'Withdrawals',
+                'route' => 'withdrawal.index',
+                'icon'  => 'bx bx-wallet-alt',
+                'hasPermission' => auth()->user()->is_ambassador ?? false
+            ],
+            (object) [
+                'name'  => 'Sales',
+                'route' => 'sales.index',
+                'icon'  => 'bx bx-bar-chart-alt-2',
+                'hasPermission' => auth()->user()->is_ambassador ?? false
+            ],
+            (object) [
+                'name'  => 'Subscriptions',
+                'route' => 'subscription.index',
+                'icon'  => 'bx bx-cart-alt',
+                'hasPermission' => true
+            ],
+            // (object) [
+            //     'name'  => 'Rank History',
+            //     'route' => 'tickets.index',
+            //     'icon'  => 'bx bx-medal',
+            //     'hasPermission' => auth()->user()->is_ambassador ?? false
+            // ],
+        ];
     }
 }

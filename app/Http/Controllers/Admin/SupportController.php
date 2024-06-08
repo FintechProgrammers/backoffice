@@ -30,7 +30,7 @@ class SupportController extends Controller
 
     function tickets(Request $rquest)
     {
-        $data['tickets'] = Ticket::withTrashed()->latest()->get();
+        $data['tickets'] = Ticket::withTrashed()->latest()->paginate(50);
 
         return view('admin.support._table', $data);
     }

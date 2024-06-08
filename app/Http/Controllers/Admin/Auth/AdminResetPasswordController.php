@@ -11,18 +11,15 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
+use Illuminate\View\View;
+
 
 class AdminResetPasswordController extends Controller
 {
 
-    function index(Request $request)
+    function index(Request $request): View
     {
-        $data = [
-            'email' => $request->email,
-            'token' => $request->route('token')
-        ];
-
-        return view('admin.auth.reset-password', $data);
+        return view('admin.auth.reset-password', ['request' => $request]);
     }
     /**
      * Handle the incoming request.
@@ -54,7 +51,7 @@ class AdminResetPasswordController extends Controller
             );
 
             return $status === Password::PASSWORD_RESET
-                ? response()->json(['message' => __($status),'route' => route('admin.login')])
+                ? response()->json(['message' => __($status), 'route' => route('admin.login')])
                 : response()->json(['message' => __($status)], 400);
         } catch (\Exception $e) {
             logger($e);

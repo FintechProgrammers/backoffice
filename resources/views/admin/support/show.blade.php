@@ -109,6 +109,8 @@
                     spinner.hide()
                     buttonTest.show()
 
+                    $('#replyForm')[0].reset()
+
                     setTimeout(function() {
                         displayMessage(response.message, "success")
                     }, 2000); // 2000 milliseconds = 2 seconds

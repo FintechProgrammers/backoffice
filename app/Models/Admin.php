@@ -31,19 +31,19 @@ class Admin extends Authenticatable
         return !empty($this->profile_image) ? $this->profile_image : url('/') . '/assets/images/avatar.svg';
     }
 
-    public function sendPasswordResetNotification($token)
-    {
-        // dispatch(new \App\Jobs\Mail\AdminResetPasswordJob(['token' => $token, 'email' => $this->email]));
+    // public function sendPasswordResetNotification($token)
+    // {
+    //     // dispatch(new \App\Jobs\Mail\AdminResetPasswordJob(['token' => $token, 'email' => $this->email]));
 
-        $body = new AdminResetPassword($token);
+    //     $body = new AdminResetPassword($token);
 
-        $email = $this->email;
+    //     $email = $this->email;
 
-        $sent = sendMailByDriver('mailgun', $email, $body);
+    //     $sent = sendMailByDriver('mailgun', $email, $body);
 
-        // Send mail via send grid driver if mailgun fails
-        if (!$sent) {
-            sendMailByDriver('smtp', $email, $body);
-        }
-    }
+    //     // Send mail via send grid driver if mailgun fails
+    //     if (!$sent) {
+    //         sendMailByDriver('smtp', $email, $body);
+    //     }
+    // }
 }

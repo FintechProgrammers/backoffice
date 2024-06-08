@@ -21,7 +21,7 @@ class AdministrativeUserController extends Controller
 
     function filter(Request $request)
     {
-        $data['admins'] = Admin::where('id', '!=', 1)->where('id', '!=', Auth::guard('admin')->user()->id)->latest()->paginate(50);;
+        $data['admins'] = Admin::where('id', '!=', 1)->where('id', '!=', Auth::guard('admin')->user()->id)->latest()->paginate(50);
 
         return view('admin.admins._table', $data);
     }

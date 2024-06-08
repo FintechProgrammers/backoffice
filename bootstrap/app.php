@@ -21,6 +21,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin.guest' => AdminRedirectIfAuthenticated::class,
             'admin.auth' => AdminAuthenticate::class
+        ])->validateCsrfTokens(except: [
+            'webhook/*',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

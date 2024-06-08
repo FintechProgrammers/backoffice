@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Http\Requests\UpdatePasswordRequest;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -24,17 +28,83 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request)
     {
-        $request->user()->fill($request->validated());
+        try {
+            $user =  $request->user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+            $user->update([
+                'phone_number' => $request->phone_number,
+            ]);
+
+            $user->userProfile->update([
+                'country_code'  => $request->country,
+                'address'       => $request->address,
+                'city'          => $request->city,
+                'state'         => $request->state,
+            ]);
+
+            return $this->sendResponse([], 'Profile updated successfully.');
+        } catch (\Exception $e) {
+            logger($e);
+
+            return response()->json(['success' => false, 'message' => serviceDownMessage()], 500);
+        }
+    }
+
+    function updateProfile(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'image' => 'required|image|max:2048',
+        ]);
+
+        // Handle validation errors
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
         }
 
-        $request->user()->save();
+        try {
+            $user = $request->user();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+            // Check if there's an existing file and delete it
+            if ($user->profile_image) {
+                deleteFile($user->profile_image);
+            }
+
+            $image = uploadFile($request->file('image'), "uploads/profile", "do_spaces");
+
+            $user->update([
+                'profile_image'  => $image
+            ]);
+
+            return response()->json(['success' => false, 'message' => 'Successfully uploaded.']);
+        } catch (\Exception $e) {
+            logger($e);
+
+            return response()->json(['success' => false, 'message' => serviceDownMessage(), 500]);
+        }
+    }
+
+    function updatePassword(UpdatePasswordRequest $request)
+    {
+        try {
+            $user = $request->user();
+
+            // check if current password is valid
+            if (!Hash::check($request->current_password, $user->password)) {
+                return response()->json(['success' => false, 'message' => 'Invalid current password'], 401);
+            }
+
+            $user->update([
+                'password'  => Hash::make($request->password)
+            ]);
+
+            return response()->json(['success' => true, 'message' => 'Password updated successfully']);
+        } catch (\Exception $e) {
+            logger($e);
+
+            return response()->json(['success' => false, 'message' => serviceDownMessage()], 500);
+        }
     }
 
     /**

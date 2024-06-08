@@ -26,71 +26,30 @@
                                 <thead>
                                     <tr>
                                         <th scope="col" class="text-center">S.no</th>
-                                        <th scope="col">Product Name</th>
-                                        <th scope="col">Category</th>
-                                        <th scope="col">Stock</th>
-                                        <th scope="col">Total Sales</th>
+                                        <th scope="col">Service Name</th>
+                                        <th scope="col">Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody class="top-selling">
                                     <tr>
-                                        <td class="text-center lh-1">
-                                            <span class="avatar avatar-md">
-                                                <img src="../assets/images/ecommerce/png/36.png"
-                                                    class="p-2 rounded-pill bg-light" alt="">
-                                            </span>
-                                        </td>
-                                        <td>Ethnic School bag for children (24L)</td>
-                                        <td>Bags</td>
-                                        <td><span class="badge badge-sm bg-success-transparent text-success">In Stock</span>
-                                        </td>
+                                        <td>1.</td>
+                                        <td>Cyborg</td>
                                         <td>
-                                            <span class="fw-semibold">5,093</span>
+                                            <span class="fw-semibold">$5,093</span>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="text-center lh-1">
-                                            <span class="avatar avatar-md">
-                                                <img src="../assets/images/ecommerce/png/38.png"
-                                                    class="p-2 rounded-pill bg-light" alt="">
-                                            </span>
-                                        </td>
-                                        <td>Leather jacket for men (S,M,L,XL)</td>
-                                        <td>Clothing</td>
-                                        <td><span class="badge badge-sm bg-success-transparent text-success">In Stock</span>
-                                        </td>
+                                        <td>2.</td>
+                                        <td>Finix</td>
                                         <td>
-                                            <span class="fw-semibold">6,890</span>
+                                            <span class="fw-semibold">$5,093</span>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="text-center lh-1">
-                                            <span class="avatar avatar-md">
-                                                <img src="../assets/images/ecommerce/png/39.png"
-                                                    class="p-2 rounded-pill bg-light" alt="">
-                                            </span>
-                                        </td>
-                                        <td>Childrens Teddy toy of high quality</td>
-                                        <td>Toys</td>
-                                        <td><span class="badge badge-sm bg-danger-transparent text-danger">Out Of
-                                                Stock</span></td>
+                                        <td>3.</td>
+                                        <td>Digital Pro</td>
                                         <td>
-                                            <span class="fw-semibold">5,423</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-center lh-1">
-                                            <span class="avatar avatar-md">
-                                                <img src="../assets/images/ecommerce/png/40.png"
-                                                    class="p-2 rounded-pill bg-light" alt="">
-                                            </span>
-                                        </td>
-                                        <td>Orange smart watch with square dial (24mm)</td>
-                                        <td>Fashion</td>
-                                        <td><span class="badge badge-sm bg-danger-transparent text-danger">Out Of
-                                                Stock</span></td>
-                                        <td>
-                                            <span class="fw-semibold">10,234</span>
+                                            <span class="fw-semibold">$5,093</span>
                                         </td>
                                     </tr>
                                 </tbody>

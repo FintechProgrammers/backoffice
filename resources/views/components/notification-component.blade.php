@@ -13,51 +13,52 @@
         <div class="p-3">
             <div class="d-flex align-items-center justify-content-between">
                 <p class="mb-0 fs-17 fw-semibold">Notifications</p>
-                <span class="badge bg-secondary-transparent" id="notifiation-data">{{ count($notifications) }} Unread</span>
+                <span class="badge bg-secondary-transparent" id="notifiation-data">{{ count($notifications) }}
+                    Unread</span>
             </div>
         </div>
         <div class="dropdown-divider"></div>
-        @if (count($notifications) > 0)
-            <ul class="list-unstyled mb-0" id="header-notification-scroll">
-                @foreach ($notifications as $item)
-                    <li class="dropdown-item">
-                        <div class="d-flex align-items-start">
-                            <div class="pe-2">
-                                <span class="avatar avatar-md bg-primary-transparent avatar-rounded"><i
-                                        class="ti ti-gift fs-18"></i></span>
+        <ul class="list-unstyled mb-0" id="header-notification-scroll">
+            @forelse ($notifications as $item)
+                <li class="dropdown-item">
+                    <div class="d-flex align-items-start">
+                        <div class="pe-2">
+                            <span class="avatar avatar-md bg-primary-transparent avatar-rounded"><i
+                                    class="ti ti-gift fs-18"></i></span>
+                        </div>
+                        <div class="flex-grow-1 d-flex align-items-center justify-content-between">
+                            <div>
+                                <p class="mb-0 fw-semibold"><a href="notifications.html">Your Order
+                                        Has Been Shipped</a></p>
+                                <span class="text-muted fw-normal fs-12 header-notification-text">Order
+                                    No: 123456 Has Shipped To Your Delivery Address</span>
                             </div>
-                            <div class="flex-grow-1 d-flex align-items-center justify-content-between">
-                                <div>
-                                    <p class="mb-0 fw-semibold"><a href="notifications.html">Your Order
-                                            Has Been Shipped</a></p>
-                                    <span class="text-muted fw-normal fs-12 header-notification-text">Order
-                                        No: 123456 Has Shipped To Your Delivery Address</span>
-                                </div>
-                                <div>
-                                    <a href="javascript:void(0);"
-                                        class="min-w-fit-content text-muted me-1 dropdown-item-close1"><i
-                                            class="ti ti-x fs-16"></i></a>
-                                </div>
+                            <div>
+                                <a href="javascript:void(0);"
+                                    class="min-w-fit-content text-muted me-1 dropdown-item-close1"><i
+                                        class="ti ti-x fs-16"></i></a>
                             </div>
                         </div>
-                    </li>
-                @endforeach
-            </ul>
-            <div class="p-3 empty-header-item1 border-top">
-                <div class="d-grid">
-                    <a href="#" class="btn btn-primary">View All</a>
-                </div>
+                    </div>
+                </li>
+            @empty
+                <li class="dropdown-item">
+                    <div class="p-5 empty-item1 d-none">
+                        <div class="text-center">
+                            <span class="avatar avatar-xl avatar-rounded bg-secondary-transparent">
+                                <i class="ri-notification-off-line fs-2"></i>
+                            </span>
+                            <h6 class="fw-semibold mt-3">No New Notifications</h6>
+                        </div>
+                    </div>
+                </li>
+            @endforelse
+        </ul>
+        <div class="p-3 empty-header-item1 border-top">
+            <div class="d-grid">
+                <a href="#" class="btn btn-primary">View All</a>
             </div>
-        @else
-            <div class="p-5 empty-item1 d-none">
-                <div class="text-center">
-                    <span class="avatar avatar-xl avatar-rounded bg-secondary-transparent">
-                        <i class="ri-notification-off-line fs-2"></i>
-                    </span>
-                    <h6 class="fw-semibold mt-3">No New Notifications</h6>
-                </div>
-            </div>
-        @endif
+        </div>
     </div>
     <!-- End::main-header-dropdown -->
 </div>

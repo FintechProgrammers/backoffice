@@ -26,7 +26,7 @@
         <div class="row justify-content-center align-items-center authentication authentication-basic h-100">
             <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-6 col-sm-8 col-12">
                 <div class="my-5 d-flex justify-content-center">
-                    <a href="index.html">
+                    <a href="{{ route('login') }}">
                         <img src="{{ asset('assets/images/logo-white.webp') }}" alt="logo"
                             class="desktop-logo">
                         <img src="{{ asset('assets/images/logo.png') }}" alt="logo"

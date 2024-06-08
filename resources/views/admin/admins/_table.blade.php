@@ -60,3 +60,8 @@
         <td colspan="5" class="text-center"><span class="text-warning">no data available</span></td>
     </tr>
 @endforelse
+<tr style="border: none;">
+    <td colspan="5" style="border: none;">
+        {{ $admins->links('vendor.pagination.custom') }}
+    </td>
+</tr>

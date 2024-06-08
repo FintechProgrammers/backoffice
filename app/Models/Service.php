@@ -24,4 +24,14 @@ class Service extends Model
     {
         return 'uuid';
     }
+
+    function serviceProduct()
+    {
+        return $this->hasMany(ServiceProduct::class);
+    }
+
+    public function getImageAttribute(): string
+    {
+        return !empty($this->image_url) ? $this->image_url : url('/') . '/assets/images/default.jpg';
+    }
 }
