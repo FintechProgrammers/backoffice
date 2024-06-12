@@ -63,6 +63,24 @@ class Navigation
                 ]
             ],
             (object) [
+                'name'  => 'Subscriptions',
+                'route' => 'admin.subscriptions.index',
+                'icon'  => 'bx bx-cart-alt',
+                'hasPermission' => true
+            ],
+            (object) [
+                'name'  => 'Sales',
+                'route' => 'admin.sales.index',
+                'icon'  => 'bx bx-bar-chart-alt-2',
+                'hasPermission' => true
+            ],
+            (object) [
+                'name'  => 'Withdrawals',
+                'route' => 'admin.withdrawals.index',
+                'icon'  => 'las la-wallet',
+                'hasPermission' => true
+            ],
+            (object) [
                 'name'      => 'Supports',
                 'icon'      => 'las la-headset',
                 'routes'    => ['admin.support.subjects.index', 'admin.support.tickets.index'],

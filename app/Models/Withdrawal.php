@@ -16,4 +16,12 @@ class Withdrawal extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
+    /**
+     * Define the route model binding key for a given model.
+     */
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
 }

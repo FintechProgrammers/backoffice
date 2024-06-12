@@ -11,10 +11,13 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\RankController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SalesController;
 use App\Http\Controllers\Admin\ServiceManagement;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\SubscriptionsController;
 use App\Http\Controllers\Admin\SupportController;
 use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\Admin\WithdrawalController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
@@ -143,6 +146,22 @@ Route::middleware('admin.auth')->group(function () {
         Route::get('/edit/{commission}', 'edit')->name('edit');
         Route::put('/update/{commission}', 'update')->name('update');
         Route::post('/delete/{commission}', 'destroy')->name('delete');
+    });
+
+    Route::controller(SalesController::class)->prefix('sales')->name('sales.')->group(function () {
+        Route::get('', 'index')->name('index');
+        Route::get('filter', 'filter')->name('filter');
+    });
+
+    Route::controller(SubscriptionsController::class)->prefix('subscriptions')->name('subscriptions.')->group(function () {
+        Route::get('', 'index')->name('index');
+        Route::get('filter', 'filter')->name('filter');
+    });
+
+    Route::controller(WithdrawalController::class)->prefix('withdrawals')->name('withdrawals.')->group(function () {
+        Route::get('', 'index')->name('index');
+        Route::get('filter', 'filter')->name('filter');
+        Route::get('/details/{withdrawal}', 'details')->name('details');
     });
 
     Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function () {
