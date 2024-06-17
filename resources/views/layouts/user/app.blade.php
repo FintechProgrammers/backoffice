@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" data-nav-layout="horizontal" data-theme-mode="light" data-header-styles="dark" data-menu-styles="dark" loader="disable" data-nav-style="menu-click" style="">
+<html lang="en" dir="ltr" data-nav-layout="vertical" data-theme-mode="light" data-header-styles="light"
+        data-menu-styles="dark" data-toggled="close">
 
 <head>
 

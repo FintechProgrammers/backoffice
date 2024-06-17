@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StripeController;
+use App\Http\Controllers\User\AcademyController;
 use App\Http\Controllers\User\AmbassedorController;
 use App\Http\Controllers\User\DashboardController;
+use App\Http\Controllers\User\ReportController;
 use App\Http\Controllers\User\SalesController;
 use App\Http\Controllers\User\ServiceController;
 use App\Http\Controllers\User\SubscriptionController;
@@ -70,6 +72,16 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/filter', 'filter')->name('filter');
         Route::get('/create', 'create')->name('create');
         Route::post('/store', 'store')->name('store');
+    });
+
+    Route::controller(AcademyController::class)->prefix('academy')->name('academy.')->group(function(){
+        Route::get('','index')->name('index');
+    });
+
+    Route::controller(ReportController::class)->prefix('report')->name('report.')->group(function(){
+        Route::get('bonuses','bonuses')->name('bonuses');
+        Route::get('ranks','ranks')->name('ranks');
+        Route::get('packages','packages')->name('packages');
     });
 });
 

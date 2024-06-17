@@ -31,16 +31,46 @@ class StatsComponent extends Component
 
         $stats = [
             (object) [
-                'title' => 'Subscriptions',
+                'title' => 'Active Subscriptions',
+                'value' => number_format($packages),
+                'color' => 'bg-success',
+                'icon' => 'bx bx-cube-alt',
+                'show' => true,
+            ],
+            (object) [
+                'title' => 'Total Subscriptions',
                 'value' => number_format($packages),
                 'color' => 'bg-primary',
-                'icon' => 'bx bx-cart',
+                'icon' => 'bx bx-doughnut-chart',
+                'show' => true,
             ],
             (object) [
                 'title' => 'Tickets',
                 'value' => number_format($ticketsCount),
                 'color' => 'bg-warning',
                 'icon' => 'bx bx-support',
+                'show' => true,
+            ],
+            (object) [
+                'title' => 'Sales',
+                'value' => '$4,000',
+                'color' => 'bg-primary',
+                'icon' => 'bx bx-line-chart',
+                'show' => Auth::user()->is_ambassador ?? false,
+            ],
+            (object) [
+                'title' => 'Withdrawals',
+                'value' => '$12,000',
+                'color' => 'bg-danger',
+                'icon' => 'bx bx-log-out',
+                'show' => Auth::user()->is_ambassador ?? false,
+            ],
+            (object) [
+                'title' => 'Total Earnings',
+                'value' => '$34,000',
+                'color' => 'bg-success',
+                'icon' => 'bx bx-wallet',
+                'show' => Auth::user()->is_ambassador ?? false,
             ],
         ];
 

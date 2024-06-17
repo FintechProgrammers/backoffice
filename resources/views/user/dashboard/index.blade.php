@@ -12,25 +12,29 @@
             <span class="fs-semibold text-muted">Track your sales activity, leads and deals here.</span>
         </div>
     </div>
-
+    @include('user.dashboard._package')
     <div class="row">
-        <div class="col-xxl-3 col-xl-3 col-lg-12">
-            @include('user.dashboard._rank')
+        <div class="col-lg-12">
             @include('user.dashboard._account')
-            @include('user.dashboard._package')
         </div>
-        <div class="col-xxl-6 col-xl-6 col-lg-12">
-            <x-user.dashboard.stats-component />
+        <div class="col-lg-3">
+            @include('user.dashboard._rank')
+            @include('user.dashboard._profile-card')
             @if (Auth::user()->is_ambassador)
-                @include('user.dashboard._revenue-stats')
+                @include('user.dashboard._activities')
             @endif
+        </div>
+        <div class="col-lg-9">
+            <x-user.dashboard.stats-component />
             @if (!empty(auth()->user()->subscriptions))
                 @include('user.dashboard._purchases')
             @endif
-        </div>
-        <div class="col-xxl-3 col-xl-3 col-lg-12">
-            @include('user.dashboard._profile-card')
-            @include('user.dashboard._activities')
+            @if (Auth::user()->is_ambassador)
+                @include('user.dashboard._revenue-stats')
+            @else
+                @include('user.dashboard._activities')
+            @endif
+
         </div>
     </div>
     @include('profile.partials._profile-modal')
@@ -38,6 +42,8 @@
 @push('scripts')
     <script src="{{ asset('assets/libs/apexcharts/apexcharts.min.js') }}"></script>
     <script src="{{ asset('assets/libs/chart.js/chart.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/swiper/swiper-bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/js/swiper.js') }}"></script>
     @if (Auth::user()->profile_completion_percentage < 100)
         <script>
             showProfileModal()
@@ -50,6 +56,11 @@
             });
             myModal.show();
         }
+
+        var myElement1 = document.getElementById('recent-activity');
+        new SimpleBar(myElement1, {
+            autoHide: true
+        });
     </script>
     {{-- <script>
         /* Revenue Analytics Chart */
