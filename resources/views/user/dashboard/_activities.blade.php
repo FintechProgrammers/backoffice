@@ -6,7 +6,7 @@
     </div>
     <div class="card-body">
         <div>
-            <ul class="list-unstyled mb-0 crm-recent-activity">
+            <ul class="list-unstyled mb-0 crm-recent-activity" id="recent-activity">
                 @foreach (Auth::user()->activities as $item)
                     <li class="crm-recent-activity-content">
                         <div class="d-flex align-items-top">

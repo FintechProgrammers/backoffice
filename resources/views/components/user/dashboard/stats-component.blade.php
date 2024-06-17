@@ -1,6 +1,6 @@
 <div class="row">
     @foreach ($stats as $item)
-        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12">
+        <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-12 {{ !$item->show ? 'd-none':'' }}">
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="d-flex flex-wrap align-items-top gap-2">

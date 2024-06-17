@@ -123,27 +123,43 @@ class Navigation
                 'hasPermission' => true
             ],
             (object) [
-                'name'  => 'packages',
+                'name'  => 'Packages',
                 'route' => 'package.index',
                 'icon'  => 'bx bx-briefcase',
                 'hasPermission' => true
             ],
             (object) [
-                'name'  => 'Tickets',
-                'route' => 'tickets.index',
-                'icon'  => 'las la-headset',
-                'hasPermission' => true
+                'name'      => 'Account Report',
+                'icon'      => 'bx bx-file-blank',
+                'routes'    => ['admin.package.index'],
+                'hasPermission' => true,
+                'subMenu'   => (object) [
+                    (object) [
+                        'name'  => 'Sales History',
+                        'route' => 'sales.index',
+                        'hasPermission' => auth()->user()->is_ambassador ?? false
+                    ],
+                    (object) [
+                        'name'  => 'Rank History',
+                        'route' => 'report.ranks',
+                        'hasPermission' => auth()->user()->is_ambassador ?? false
+                    ],
+                    (object) [
+                        'name'  => 'Bonus History',
+                        'route' => 'report.bonuses',
+                        'hasPermission' => auth()->user()->is_ambassador ?? false
+                    ],
+                    (object) [
+                        'name'  => 'Package History',
+                        'route' => 'report.packages',
+                        'hasPermission' => auth()->user()->is_ambassador ?? false
+                    ]
+                ]
             ],
             (object) [
                 'name'  => 'Withdrawals',
                 'route' => 'withdrawal.index',
                 'icon'  => 'bx bx-wallet-alt',
-                'hasPermission' => auth()->user()->is_ambassador ?? false
-            ],
-            (object) [
-                'name'  => 'Sales',
-                'route' => 'sales.index',
-                'icon'  => 'bx bx-bar-chart-alt-2',
                 'hasPermission' => auth()->user()->is_ambassador ?? false
             ],
             (object) [
@@ -153,11 +169,23 @@ class Navigation
                 'hasPermission' => true
             ],
             // (object) [
-            //     'name'  => 'Rank History',
-            //     'route' => 'tickets.index',
-            //     'icon'  => 'bx bx-medal',
-            //     'hasPermission' => auth()->user()->is_ambassador ?? false
+            //     'name'  => 'Delta Streaming',
+            //     'route' => 'subscription.index',
+            //     'icon'  => 'bx bxs-video',
+            //     'hasPermission' => true
             // ],
+            (object) [
+                'name'  => 'Delta Academy',
+                'route' => 'academy.index',
+                'icon'  => 'bx bxs-graduation',
+                'hasPermission' => true
+            ],
+            (object) [
+                'name'  => 'Tickets',
+                'route' => 'tickets.index',
+                'icon'  => 'las la-headset',
+                'hasPermission' => true
+            ]
         ];
     }
 }
