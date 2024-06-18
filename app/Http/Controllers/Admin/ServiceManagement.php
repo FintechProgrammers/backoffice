@@ -116,6 +116,7 @@ class ServiceManagement extends Controller
             DB::beginTransaction();
 
             if ($request->hasFile('image')) {
+                deleteFile($service->image_url);
                 $imageUrl = uploadFile($request->file('image'), "uploads/packages", "do_spaces");
                 $request->merge(['image_url' => $imageUrl]);
             } else {

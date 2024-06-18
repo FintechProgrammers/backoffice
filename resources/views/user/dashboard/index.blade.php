@@ -12,8 +12,10 @@
             <span class="fs-semibold text-muted">Track your sales activity, leads and deals here.</span>
         </div>
     </div>
-    @include('user.dashboard._package')
     <div class="row">
+        <div class="col-lg-12">
+            @include('user.dashboard._benner')
+        </div>
         <div class="col-lg-12">
             @include('user.dashboard._account')
         </div>

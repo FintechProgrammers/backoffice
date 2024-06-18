@@ -41,7 +41,9 @@
                 </div>
             </div>
         @empty
-
+        <div class="col-lg-12">
+            <x-no-datacomponent title="no package available" />
+        </div>
         @endforelse
 
     </div>

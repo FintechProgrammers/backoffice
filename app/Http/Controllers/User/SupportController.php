@@ -86,6 +86,7 @@ class SupportController extends Controller
                 'support_subject_id' => $subject->id,
                 'user_id' => $user->id,
                 'ticket_code' => rand(100000, 999999),
+                'status' => 'open'
             ]);
 
             $message = TicketReply::create([
@@ -150,7 +151,7 @@ class SupportController extends Controller
             DB::rollBack();
             logger($e);
 
-            return response()->json(['success' => false, 'message' => serviceDownMessage()],500);
+            return response()->json(['success' => false, 'message' => serviceDownMessage()], 500);
         }
     }
 
