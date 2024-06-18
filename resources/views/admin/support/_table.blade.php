@@ -4,7 +4,8 @@
             #{{ $item->ticket_code }}
         </td>
         <td>
-            <x-profile-component name="{{ optional($item->user)->name }}" email="{{ optional($item->user)->email }}" image="{{ optional($item->user)->profile_picture }}" />
+            <x-profile-component name="{{ optional($item->user)->name }}" email="{{ optional($item->user)->email }}"
+                image="{{ optional($item->user)->profile_picture }}" />
         </td>
         <td>
             {{ optional($item->subject)->name }}
@@ -30,10 +31,17 @@
                 <li class="mb-0">
                     <a href="{{ route('admin.support.tickets.show', $item->uuid) }}" class="dropdown-item">Details</a>
                 </li>
+                @if ($item->status == 'open' || $item->status == 'pending')
+                    <li class="mb-0">
+                        <a href="#" data-url="{{ route('admin.support.tickets.close', $item->uuid) }}"
+                            data-action="you want to close ticket" class="dropdown-item btn-action">Close
+                            Ticket</a>
+                    </li>
+                @endif
                 <li class="mb-0">
                     <a href="javascript:void(0);" class="dropdown-item btn-action"
                         data-url="{{ route('admin.support.tickets.delete', $item->uuid) }}"
-                        data-action="you want to delete {{ $item->name }}">Delete</a>
+                        data-action="you want to delete ticket">Delete</a>
                 </li>
             </ul>
         </td>

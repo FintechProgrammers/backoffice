@@ -105,10 +105,22 @@ class Navigation
                 'hasPermission' => true
             ],
             (object) [
-                'name'  => 'Settings',
-                'route' => 'admin.settings.index',
-                'icon'  => 'las la-cogs',
-                'hasPermission' => true
+                'name'      => 'Settings',
+                'icon'      => 'las la-cogs',
+                'routes'    => ['admin.settings.index','admin.banner.index'],
+                'hasPermission' => true,
+                'subMenu'   => (object) [
+                    (object) [
+                        'name'  => 'System Settings',
+                        'route' => 'admin.settings.index',
+                        'hasPermission' => true
+                    ],
+                    (object) [
+                        'name'  => 'Banners',
+                        'route' => 'admin.banner.index',
+                        'hasPermission' => true
+                    ],
+                ]
             ],
         ];
     }

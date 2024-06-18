@@ -1,11 +1,11 @@
-@if (!empty($services))
+@if (!empty($banners))
     <div class="card custom-card" style="background: transparent">
         <div class="card-body ">
             <div class="swiper swiper-navigation" style="height: 250px">
                 <div class="swiper-wrapper">
-                    @foreach ($services as $item)
+                    @foreach ($banners as $item)
                     <div class="swiper-slide"><img style="object-fit: cover"
-                        src="{{ $item->image_url }}"
+                        src="{{ $item->file_url }}"
                         alt=""></div>
                     @endforeach
                 </div>

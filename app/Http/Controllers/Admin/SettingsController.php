@@ -15,6 +15,8 @@ class SettingsController extends Controller
 
     function store(Request $request)
     {
+
+        // setup payment methods
         $data = [
             'withdrawal_is_active'      => $request->withdrawal_is_active === "on" ? true : false,
             'minimum_withdrawal_amount' => $request->has('minimum_withdrawal_amount') ? $request->minimum_withdrawal_amount : 0,

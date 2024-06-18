@@ -22,7 +22,7 @@ class ProfileController extends Controller
     function updateProfile(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
         ]);
 
         // Handle validation errors
@@ -48,7 +48,7 @@ class ProfileController extends Controller
         } catch (\Exception $e) {
             logger($e);
 
-            return response()->json(['success' => false, 'message' => serviceDownMessage(), 500]);
+            return response()->json(['success' => false, 'message' => serviceDownMessage()],500);
         }
     }
 
@@ -70,7 +70,7 @@ class ProfileController extends Controller
         } catch (\Exception $e) {
             logger($e);
 
-            return response()->json(['success' => false, 'message' => serviceDownMessage(), 500]);
+            return response()->json(['success' => false, 'message' => serviceDownMessage()],500);
         }
     }
 

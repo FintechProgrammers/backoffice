@@ -275,6 +275,15 @@ class SupportController extends Controller
         return view('admin.support._replies', $data);
     }
 
+    function closeTicket(Ticket $ticket)
+    {
+        $ticket->update([
+            'status' => 'closed',
+        ]);
+
+        return $this->sendResponse([], "Ticket closed successfully.");
+    }
+
     function deleteSubject(SupportSubject $subject)
     {
         $subject->delete();

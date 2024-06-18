@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdministrativeUserController;
 use App\Http\Controllers\Admin\Auth\AdminForgotPasswordController;
 use App\Http\Controllers\Admin\Auth\AdminResetPasswordController;
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\CommisionPlanController;
 use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -112,6 +113,7 @@ Route::middleware('admin.auth')->group(function () {
             Route::post('/replies/{ticket}', 'replyTicket')->name('replies.store');
             Route::post('/reply/{ticket}', 'replyTicket')->name('reply');
             Route::post('/update/{ticket}', 'update')->name('update');
+            Route::post('/close/{ticket}', 'closeTicket')->name('close');
             Route::post('/delete/{ticket}', 'deleteTicket')->name('delete');
         });
 
@@ -174,6 +176,18 @@ Route::middleware('admin.auth')->group(function () {
     Route::controller(SettingsController::class)->prefix('settings')->name('settings.')->group(function () {
         Route::get('', 'index')->name('index');
         Route::post('/store', 'store')->name('store');
+    });
+
+    Route::controller(BannerController::class)->prefix('banner')->name('banner.')->group(function(){
+        Route::get('','index')->name('index');
+        Route::get('/filter','filter')->name('filter');
+        Route::get('/create','create')->name('create');
+        Route::post('/store','store')->name('store');
+        Route::get('/edit/{banner}','edit')->name('edit');
+        Route::patch('/update/{banner}','update')->name('update');
+        Route::post('/publish/{banner}','publish')->name('publish');
+        Route::post('/unpublish/{banner}','unpublish')->name('unpublish');
+        Route::post('/delete/{banner}','destroy')->name('delete');
     });
 
     Route::get('update-countries', [CountryController::class, 'updateCountriesTableWithFlags']);
