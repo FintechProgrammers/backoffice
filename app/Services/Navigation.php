@@ -107,7 +107,7 @@ class Navigation
             (object) [
                 'name'      => 'Settings',
                 'icon'      => 'las la-cogs',
-                'routes'    => ['admin.settings.index','admin.banner.index'],
+                'routes'    => ['admin.settings.index', 'admin.banner.index'],
                 'hasPermission' => true,
                 'subMenu'   => (object) [
                     (object) [
@@ -118,6 +118,11 @@ class Navigation
                     (object) [
                         'name'  => 'Banners',
                         'route' => 'admin.banner.index',
+                        'hasPermission' => true
+                    ],
+                    (object) [
+                        'name'  => 'Providers',
+                        'route' => 'admin.provider.index',
                         'hasPermission' => true
                     ],
                 ]

@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\ProviderController;
 use App\Http\Controllers\Admin\RankController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SalesController;
@@ -178,17 +179,27 @@ Route::middleware('admin.auth')->group(function () {
         Route::post('/store', 'store')->name('store');
     });
 
-    Route::controller(BannerController::class)->prefix('banner')->name('banner.')->group(function(){
-        Route::get('','index')->name('index');
-        Route::get('/filter','filter')->name('filter');
-        Route::get('/create','create')->name('create');
-        Route::post('/store','store')->name('store');
-        Route::get('/edit/{banner}','edit')->name('edit');
-        Route::patch('/update/{banner}','update')->name('update');
-        Route::post('/publish/{banner}','publish')->name('publish');
-        Route::post('/unpublish/{banner}','unpublish')->name('unpublish');
-        Route::post('/delete/{banner}','destroy')->name('delete');
+    Route::controller(BannerController::class)->prefix('banner')->name('banner.')->group(function () {
+        Route::get('', 'index')->name('index');
+        Route::get('/filter', 'filter')->name('filter');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/store', 'store')->name('store');
+        Route::get('/edit/{banner}', 'edit')->name('edit');
+        Route::patch('/update/{banner}', 'update')->name('update');
+        Route::post('/publish/{banner}', 'publish')->name('publish');
+        Route::post('/unpublish/{banner}', 'unpublish')->name('unpublish');
+        Route::post('/delete/{banner}', 'destroy')->name('delete');
     });
 
     Route::get('update-countries', [CountryController::class, 'updateCountriesTableWithFlags']);
+
+    Route::controller(ProviderController::class)->prefix('provider')->name('provider.')->group(function () {
+        Route::get('', 'index')->name('index');
+        Route::get('filter', 'filter')->name('filter');
+        Route::post('/store', 'store')->name('store');
+        Route::get('/edit/{provider}', 'edit')->name('edit');
+        Route::put('/update/{provider}', 'update')->name('update');
+        Route::post('/enable/{provider}', 'enable')->name('enable');
+        Route::post('/disable/{provider}', 'disable')->name('disable');
+    });
 });

@@ -23,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin.auth' => AdminAuthenticate::class
         ])->validateCsrfTokens(except: [
             'webhook/*',
+            'ipn/*'
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

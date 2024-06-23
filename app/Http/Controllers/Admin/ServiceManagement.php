@@ -76,7 +76,7 @@ class ServiceManagement extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             logger($e);
-            return response()->json(['success' => false, 'message' => self::ERROR_RESPONSE], 500);
+            return response()->json(['success' => false, 'message' => serviceDownMessage()], 500);
         }
     }
 
@@ -140,7 +140,7 @@ class ServiceManagement extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             logger($e);
-            return response()->json(['success' => false, 'message' => self::ERROR_RESPONSE], 500);
+            return response()->json(['success' => false, 'message' => serviceDownMessage()], 500);
         }
     }
 

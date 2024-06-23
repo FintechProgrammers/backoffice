@@ -14,10 +14,6 @@ use Illuminate\Http\Request;
 
 class StripeController extends Controller
 {
-    function success()
-    {
-        return view('user.stripe.success');
-    }
 
     function abassedorPaymentSuccess(Request $request, StripeService $stripeService)
     {
@@ -53,20 +49,16 @@ class StripeController extends Controller
                 ]);
             }
 
-            $data['title'] = "Payment Successful";
-            $data['message'] = "Your account has been successfully upgraded to Ambassador status. You can now refer others and earn sales bonuses!";
-            $data['image'] = asset('assets/images/success.png');
-            $data['success'] = true;
+            $title = "Payment Successful";
+            $message = "Your account has been successfully upgraded to Ambassador status. You can now refer others and earn sales bonuses!";
 
-            return view('user.stripe.success', $data);
+            return redirect()->route('payment.success')->with(['message' => $message, 'success' => true, 'title' => $title]);
         }
 
-        $data['title'] = "Payment Awaiting Approval";
-        $data['message'] = "Your payment has been received and is awaiting approval";
-        $data['image'] = asset('assets/images/pending.png');
-        $data['success'] = false;
+        $title = "Payment Awaiting Approval";
+        $message = "Your payment has been received and is awaiting approval";
 
-        return view('user.stripe.success', $data);
+        return redirect()->route('payment.success')->with(['message' => $message, 'success' => false, 'title' => $title]);
     }
 
     function subscriptionSuccess(Request $request, StripeService $stripeService)
@@ -76,6 +68,9 @@ class StripeController extends Controller
         $session = $stripeService->retrieveSession($sessionId);
 
         if ($session->payment_status === 'paid') {
+
+            $title = "Payment Successful";
+            $success = true;
 
             $user = User::find($session->metadata->user_id);
 
@@ -104,12 +99,7 @@ class StripeController extends Controller
 
                     $message = "You have successfully renewed the {$service->name} service.";
                 } else {
-                    $data['title'] = "Payment Successful";
-                    $data['message'] = "Your subscription is active";
-                    $data['image'] = asset('assets/images/success.png');
-                    $data['success'] = true;
-
-                    return view('user.stripe.success', $data);
+                    $message = "Your subscription is active";
                 }
             } else {
 
@@ -117,26 +107,13 @@ class StripeController extends Controller
 
                 $message = "You have successfully subscribed to the {$service->name} service.";
             }
-
-            $data['title'] = "Payment Successful";
-            $data['message'] = $message;
-            $data['image'] = asset('assets/images/success.png');
-            $data['success'] = true;
-
-            return view('user.stripe.success', $data);
+        } else {
+            $title = "Payment Awaiting Approval";
+            $message = "Your payment has been received and is awaiting approval";
+            $success = false;
         }
 
-        $data['title'] = "Payment Awaiting Approval";
-        $data['message'] = "Your payment has been received and is awaiting approval";
-        $data['image'] = asset('assets/images/pending.png');
-        $data['success'] = false;
-
-        return view('user.stripe.success', $data);
-    }
-
-    function cancel()
-    {
-        return view('user.stripe.cancel');
+        return redirect()->route('payment.success')->with(['message' => $message, 'success' => $success, 'title' => $title]);
     }
 
     function webhook(Request $request, StripeService $stripeService)

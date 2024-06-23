@@ -31,7 +31,7 @@ class AmbassedorController extends Controller
             'customer_email' => $user->email,
             'metadata' => ['user_id' => $user->id],
             'success_url' => route('stripe.abassador.payment.success').'?session_id={CHECKOUT_SESSION_ID}',
-            'cancel_url' => route('stripe.cancel')
+            'cancel_url' => route('payment.cancel')
         ];
 
         $response = $stripeService->processCheckout($data);

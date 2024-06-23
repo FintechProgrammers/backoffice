@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\NowpaymentController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\User\AcademyController;
@@ -36,7 +38,7 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(ServiceController::class)->prefix('package')->name('package.')->group(function () {
         Route::get('', 'index')->name('index');
         Route::get('/{service}', 'show')->name('details');
-        Route::post('/purcahse/{service}', 'purchase')->name('purchase');
+        Route::post('/purchase/{service}', 'purchase')->name('purchase');
     });
 
     Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function () {
@@ -55,8 +57,6 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(StripeController::class)->prefix('stripe')->name('stripe.')->group(function () {
         Route::get('abassador/payment/success', 'abassedorPaymentSuccess')->name('abassador.payment.success');
         Route::get('service/payment/success', 'subscriptionSuccess')->name('service.payment.Success');
-        Route::get('success', 'success')->name('success');
-        Route::get('cancel', 'cancel')->name('cancel');
     });
 
     Route::controller(SubscriptionController::class)->prefix('subscription')->name('subscription.')->group(function () {
@@ -74,19 +74,29 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/store', 'store')->name('store');
     });
 
-    Route::controller(AcademyController::class)->prefix('academy')->name('academy.')->group(function(){
-        Route::get('','index')->name('index');
+    Route::controller(AcademyController::class)->prefix('academy')->name('academy.')->group(function () {
+        Route::get('', 'index')->name('index');
     });
 
-    Route::controller(ReportController::class)->prefix('report')->name('report.')->group(function(){
-        Route::get('bonuses','bonuses')->name('bonuses');
-        Route::get('ranks','ranks')->name('ranks');
-        Route::get('packages','packages')->name('packages');
+    Route::controller(ReportController::class)->prefix('report')->name('report.')->group(function () {
+        Route::get('bonuses', 'bonuses')->name('bonuses');
+        Route::get('ranks', 'ranks')->name('ranks');
+        Route::get('packages', 'packages')->name('packages');
+    });
+
+    Route::controller(PaymentController::class)->prefix('payment')->name('payment.')->group(function () {
+        Route::get('success', 'success')->name('success');
+        Route::get('cancel', 'cancel')->name('cancel');
     });
 });
 
-Route::prefix('webhook')->group(function () {
-    Route::post('/stripe', [StripeController::class, 'webhook']);
+Route::prefix('webhook')->name('webhook')->group(function () {
+    Route::post('/stripe', [StripeController::class, 'webhook'])->name('stripe');
 });
+
+Route::prefix('ipn')->name('ipn.')->group(function () {
+    Route::post('/nowpayment', [NowpaymentController::class, 'ipn'])->name('nowpayment');
+});
+
 
 require __DIR__ . '/auth.php';
