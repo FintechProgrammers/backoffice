@@ -12,6 +12,7 @@ use App\Http\Controllers\User\SalesController;
 use App\Http\Controllers\User\ServiceController;
 use App\Http\Controllers\User\SubscriptionController;
 use App\Http\Controllers\User\SupportController;
+use App\Http\Controllers\User\TeamController;
 use App\Http\Controllers\WithdrawalController;
 use Illuminate\Support\Facades\Route;
 
@@ -88,6 +89,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('success', 'success')->name('success');
         Route::get('cancel', 'cancel')->name('cancel');
     });
+
+    Route::get('team', [TeamController::class, 'index'])->name('team.index');
 });
 
 Route::prefix('webhook')->name('webhook')->group(function () {

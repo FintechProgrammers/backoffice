@@ -185,17 +185,11 @@ class Navigation
                 'icon'  => 'bx bx-cart-alt',
                 'hasPermission' => true
             ],
-            // (object) [
-            //     'name'  => 'Delta Streaming',
-            //     'route' => 'subscription.index',
-            //     'icon'  => 'bx bxs-video',
-            //     'hasPermission' => true
-            // ],
             (object) [
-                'name'  => 'Delta Academy',
-                'route' => 'academy.index',
-                'icon'  => 'bx bxs-graduation',
-                'hasPermission' => true
+                'name'  => 'Team',
+                'route' => 'team.index',
+                'icon'  => 'bx bx-sitemap',
+                'hasPermission' => auth()->user()->is_ambassador ?? false
             ],
             (object) [
                 'name'  => 'Tickets',
