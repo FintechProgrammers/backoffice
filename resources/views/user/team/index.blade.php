@@ -2,10 +2,6 @@
 
 @section('title', 'Team')
 
-@push('styles')
-    <link href="{{ asset('assets/css/tree.css') }}" rel="stylesheet">
-@endpush
-
 @section('content')
     <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
         <div>
