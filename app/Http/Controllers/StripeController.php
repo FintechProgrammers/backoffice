@@ -15,6 +15,55 @@ use Illuminate\Http\Request;
 class StripeController extends Controller
 {
 
+    function iniatePayment($service=null)
+    {
+        try {
+
+            $stripeService = new \App\Services\StripeService();
+
+            $user = auth()->user();
+
+            if (!empty($service)) {
+
+                $data = [
+                    'currency' => 'usd',
+                    'amount' => $service->price * 100,
+                    'product_data' => [
+                        'name' => $service->name
+                    ],
+                    'customer_email' => $user->email,
+                    'metadata' => ['user_id' => $user->id, 'service_id' => $service->id],
+                    'success_url' => route('stripe.service.payment.Success') . '?session_id={CHECKOUT_SESSION_ID}',
+                    'cancel_url' => route('payment.cancel')
+                ];
+
+                $response = $stripeService->processCheckout($data);
+
+                return $response->url;
+            } else {
+                $data = [
+                    'currency' => 'usd',
+                    'amount' => systemSettings()->ambassador_fee * 100,
+                    'product_data' => [
+                        'name' => "Ambassedor Account Setup"
+                    ],
+                    'customer_email' => $user->email,
+                    'metadata' => ['user_id' => $user->id],
+                    'success_url' => route('stripe.abassador.payment.success') . '?session_id={CHECKOUT_SESSION_ID}',
+                    'cancel_url' => route('payment.cancel')
+                ];
+
+                $response = $stripeService->processCheckout($data);
+
+                return $response->url;
+            }
+        } catch (\Exception $e) {
+            sendToLog($e);
+
+            return response()->json(['success' => false, 'message' => serviceDownMessage()], 500);
+        }
+    }
+
     function abassedorPaymentSuccess(Request $request, StripeService $stripeService)
     {
         $sessionId = $request->get('session_id');

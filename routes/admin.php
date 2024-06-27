@@ -195,6 +195,7 @@ Route::middleware('admin.auth')->group(function () {
 
     Route::controller(ProviderController::class)->prefix('provider')->name('provider.')->group(function () {
         Route::get('', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
         Route::get('filter', 'filter')->name('filter');
         Route::post('/store', 'store')->name('store');
         Route::get('/edit/{provider}', 'edit')->name('edit');

@@ -84,8 +84,9 @@
                         </div>
                     @else
                         <div class="d-grid">
-                            <button class="btn btn-success mb-2" id="purchase"
-                                data-url="{{ route('package.purchase', $package->uuid) }}">
+                            <button class="btn btn-success mb-2 trigerModal"
+                                data-url="{{ route('provider.payin', $package->uuid) }}" data-bs-toggle="modal"
+                                data-bs-target="#primaryModal" data-url="{{ route('package.purchase', $package->uuid) }}">
                                 <div class="spinner-border" style="display: none" role="status">
                                     <span class="sr-only">Loading...</span>
                                 </div>
@@ -99,41 +100,5 @@
     </div>
 @endsection
 @push('scripts')
-    <script>
-        $('#purchase').click(function(e) {
-            e.preventDefault();
-
-            const button = $(this)
-            const spinner = button.find('.spinner-border')
-            const buttonTest = button.find('#text')
-
-            // Send AJAX request
-            $.ajax({
-                url: $(this).data('url'),
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                },
-                beforeSend: function() {
-                    buttonTest.hide()
-                    spinner.show()
-                    button.attr('disabled', true)
-                },
-                success: function(response) {
-
-                    location.href = response.data.route
-
-                },
-                error: function(xhr, status, error) {
-                    spinner.hide()
-                    buttonTest.show()
-                    button.attr('disabled', false)
-                    // Handle error response
-                    // var errors = xhr.responseJSON.errors;
-
-                    displayMessage(xhr.responseJSON.message, "error")
-                }
-            });
-        })
-    </script>
+    @include('partials.scripts.initiate-payin')
 @endpush

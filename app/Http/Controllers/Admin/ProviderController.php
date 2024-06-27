@@ -100,7 +100,7 @@ class ProviderController extends Controller
             $provider->update([
                 'name'          => $request->name,
                 'image_url'     => $imageUrl,
-                'is_crypto'     => $request->is_crypt == 'on' ? true : false,
+                'is_crypto'     => $request->is_crypto == 'on' ? true : false,
                 // 'is_default'    => $request->is_default == 'on' ? true : false,
                 'can_payin'     => $request->can_payin == 'on' ? true : false,
                 'can_payout'    => $request->can_payout == 'on' ? true : false,

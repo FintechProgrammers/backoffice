@@ -21,6 +21,10 @@ class DashboardController extends Controller
     function statistics()
     {
 
+        $totalAmbassadors = User::where('is_ambassador',true)->count();
+
+        $totalcustomers = User::where('is_ambassador',false)->count();
+
         $totalUsers = User::count();
 
         $productsCount = Service::count();
@@ -29,7 +33,57 @@ class DashboardController extends Controller
 
         $ranks = Rank::count();
 
+        $totalSales = 0;
+
+        $revenueCount = 0;
+
+        $expenses = 0;
+
+        $withdrawalRequest = 0;
+
         return  [
+            (object) [
+                'title' => 'Sales',
+                'value' =>  "$".$totalSales,
+                'color' => 'text-bg-success',
+                'icon' => 'bx bx-chart',
+                'link' => null,
+            ],
+            (object) [
+                'title' => 'Revenue',
+                'value' =>  "$".$revenueCount,
+                'color' => 'text-bg-info',
+                'icon' => 'las la-money-bill-alt',
+                'link' => null,
+            ],
+            (object) [
+                'title' => 'Expenses',
+                'value' =>  "$".$expenses,
+                'color' => 'text-bg-danger',
+                'icon' => 'las la-money-bill-wave-alt',
+                'link' => null,
+            ],
+            (object) [
+                'title' => 'Withdrawal Request',
+                'value' => $withdrawalRequest,
+                'color' => 'text-bg-danger',
+                'icon' => 'las la-hand-holding-usd',
+                'link' => null,
+            ],
+            (object) [
+                'title' => 'Ambassadors',
+                'value' => $totalAmbassadors,
+                'color' => 'text-bg-warning',
+                'icon' => 'bi bi-people-fill',
+                'link' => null,
+            ],
+            (object) [
+                'title' => 'Customers',
+                'value' => $totalcustomers,
+                'color' => 'text-bg-info',
+                'icon' => 'las la-users',
+                'link' => null,
+            ],
             (object) [
                 'title' => 'Total Users',
                 'value' => $totalUsers,

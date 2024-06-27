@@ -32,7 +32,7 @@
                         <div class="d-flex align-items-top p-4 flex-wrap">
                             <div class="me-3 lh-1">
                                 <span class="avatar avatar-md avatar-rounded bg-white text-primary shadow-sm">
-                                    <i class="ti ti-coin fs-18"></i>
+                                    <i class="las la-medal fs-18"></i>
                                 </span>
                             </div>
                             <div class="flex-fill">
@@ -49,12 +49,12 @@
                         <div class="d-flex align-items-top p-4 flex-wrap">
                             <div class="me-3 lh-1">
                                 <span class="avatar avatar-md avatar-rounded bg-white text-primary shadow-sm">
-                                    <i class="bx bx-doughnut-chart fs-18"></i>
+                                    <i class="ri-wallet-2-line fs-18"></i>
                                 </span>
                             </div>
                             <div class="flex-fill">
-                                <h5 class="fw-semibold mb-1 text-fixed-white">10</h5>
-                                <p class="op-7 mb-0 fs-12">Subscriptions</p>
+                                <h5 class="fw-semibold mb-1 text-fixed-white">$15,800</h5>
+                                <p class="op-7 mb-0 fs-12">Commisions Wallet</p>
                             </div>
                         </div>
                     </div>
@@ -66,12 +66,12 @@
                         <div class="d-flex align-items-top p-4 flex-wrap">
                             <div class="me-3 lh-1">
                                 <span class="avatar avatar-md avatar-rounded bg-white text-primary shadow-sm">
-                                    <i class="bx bx-support fs-18"></i>
+                                    <i class="ri-wallet-2-line fs-18"></i>
                                 </span>
                             </div>
                             <div class="flex-fill">
-                                <h5 class="fw-semibold mb-1 text-fixed-white">3</h5>
-                                <p class="op-7 mb-0 fs-12">Tickets</p>
+                                <h5 class="fw-semibold mb-1 text-fixed-white">$3,000</h5>
+                                <p class="op-7 mb-0 fs-12">Lifetime Earnings</p>
                             </div>
                         </div>
                     </div>
@@ -113,7 +113,7 @@
                         <div class="d-flex align-items-top p-4 flex-wrap">
                             <div class="me-3 lh-1">
                                 <span class="avatar avatar-md avatar-rounded bg-white text-primary shadow-sm">
-                                    <i class="ti ti-coin fs-18"></i>
+                                    <i class="las la-medal fs-18"></i>
                                 </span>
                             </div>
                             <div class="flex-fill">
@@ -171,11 +171,11 @@
                     <div class="card-body p-3">
                         <div class="text-center">
                             <span class="avatar avatar-md bg-primary shadow-sm avatar-rounded mb-2">
-                                <i class="ri-bill-line fs-16"></i>
+                                <i class="bx bx-doughnut-chart fs-16"></i>
                             </span>
-                            <p class="fs-14 fw-semibold mb-2">Commisions Wallet</p>
+                            <p class="fs-14 fw-semibold mb-2">Subscriptions</p>
                             <div class="d-flex align-items-center justify-content-center flex-wrap">
-                                <h5 class="mb-0 fw-semibold">$15,800</h5>
+                                <h5 class="mb-0 fw-semibold">0</h5>
                             </div>
                         </div>
                     </div>
@@ -186,11 +186,11 @@
                     <div class="card-body p-3">
                         <div class="text-center">
                             <span class="avatar avatar-md bg-primary shadow-sm avatar-rounded mb-2">
-                                <i class="ri-wallet-2-line fs-16"></i>
+                                <i class="bx bx-support fs-16"></i>
                             </span>
-                            <p class="fs-14 fw-semibold mb-2">Lifetime Earnings</p>
+                            <p class="fs-14 fw-semibold mb-2">Tickets</p>
                             <div class="d-flex align-items-center justify-content-center flex-wrap">
-                                <h5 class="mb-0 fw-semibold">$15,800</h5>
+                                <h5 class="mb-0 fw-semibold">0</h5>
                             </div>
                         </div>
                     </div>

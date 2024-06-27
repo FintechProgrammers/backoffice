@@ -9,12 +9,12 @@
         <div>
             <p class="fw-semibold fs-18 mb-0">Manage Providers</p>
         </div>
-        <div class="btn-list mt-md-0 mt-2">
-            {{-- <button type="button" class="btn btn-primary btn-wave trigerModal"
-                data-url="{{ route('admin.package.create') }}" data-bs-toggle="modal" data-bs-target="#primaryModal">
-                <i class="las la-user-plus me-2 align-middle d-inline-block"></i>Create Package
-            </button> --}}
-        </div>
+        {{-- <div class="btn-list mt-md-0 mt-2">
+            <button type="button" class="btn btn-primary btn-wave trigerModal"
+                data-url="{{ route('admin.provider.create') }}" data-bs-toggle="modal" data-bs-target="#primaryModal">
+                <i class="las la-user-plus me-2 align-middle d-inline-block"></i>Create Provider
+            </button>
+        </div> --}}
     </div>
     <div class="row">
         <div class="col-xl-12">

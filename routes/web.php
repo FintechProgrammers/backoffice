@@ -7,6 +7,7 @@ use App\Http\Controllers\StripeController;
 use App\Http\Controllers\User\AcademyController;
 use App\Http\Controllers\User\AmbassedorController;
 use App\Http\Controllers\User\DashboardController;
+use App\Http\Controllers\User\ProviderController;
 use App\Http\Controllers\User\ReportController;
 use App\Http\Controllers\User\SalesController;
 use App\Http\Controllers\User\ServiceController;
@@ -91,6 +92,13 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('team', [TeamController::class, 'index'])->name('team.index');
+
+    Route::controller(ProviderController::class)->prefix('provider')->name('provider.')->group(function () {
+        Route::get('payin/{serviceId?}', 'payinProvider')->name('payin');
+        Route::get('payout', 'payoutProvider')->name('payout');
+        Route::get('/card/initiate', 'getDefaultCardProvider')->name('card.initiate');
+        Route::get('/crypto/initiate', 'getDefaultCryptoProvider')->name('crypto.initiate');
+    });
 });
 
 Route::prefix('webhook')->name('webhook')->group(function () {

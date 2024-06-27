@@ -32,6 +32,11 @@
                             </td>
                         </tr>
                     @empty
+                    <tr>
+                        <td colspan="3" class="text-center">
+                            <span class="text-warning">no subscription available</span>
+                        </td>
+                    </tr>
                     @endforelse
                 </tbody>
             </table>
