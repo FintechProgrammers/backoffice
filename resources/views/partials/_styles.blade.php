@@ -13,3 +13,5 @@
   <link rel="stylesheet" href="{{ asset('assets/libs/swiper/swiper-bundle.min.css') }}">
 
   <link rel="stylesheet" href="{{ asset('assets/libs/sweetalert2/sweetalert2.min.css') }}">
+
+  <link href="{{ asset('assets/css/tree.css') }}" rel="stylesheet">

@@ -36,14 +36,14 @@ class ServiceController extends Controller
                 'customer_email' => $user->email,
                 'metadata' => ['user_id' => $user->id, 'service_id'=>$service->id],
                 'success_url' => route('stripe.service.payment.Success').'?session_id={CHECKOUT_SESSION_ID}',
-                'cancel_url' => route('stripe.cancel')
+                'cancel_url' => route('payment.cancel')
             ];
 
             $response = $stripeService->processCheckout($data);
 
             return $this->sendResponse(['route' => $response->url], "Success");
         } catch (\Exception $e) {
-            logger($e);
+            sendToLog($e);
 
             return response()->json(['success' => false, 'message' => serviceDownMessage()], 500);
         }

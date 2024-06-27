@@ -12,33 +12,29 @@
             <span class="fs-semibold text-muted">Track your sales activity, leads and deals here.</span>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-12">
-            @include('user.dashboard._benner')
-        </div>
-        <div class="col-lg-12">
-            @include('user.dashboard._account')
-        </div>
-        <div class="col-lg-3">
-            @include('user.dashboard._rank')
-            @include('user.dashboard._profile-card')
-            @if (Auth::user()->is_ambassador)
+    @if (Auth::user()->is_ambassador)
+        @include('user.dashboard._abassedor-dashboard')
+    @else
+        <div class="row">
+            <div class="col-lg-12">
+                @include('user.dashboard._benner')
+            </div>
+            <div class="col-lg-12">
+                @include('user.dashboard._account')
+            </div>
+            <div class="col-lg-3">
+                @include('user.dashboard._rank')
+                @include('user.dashboard._profile-card')
+            </div>
+            <div class="col-lg-9">
+                <x-user.dashboard.stats-component />
+                @if (!empty(auth()->user()->subscriptions))
+                    @include('user.dashboard._purchases')
+                @endif
                 @include('user.dashboard._activities')
-            @endif
+            </div>
         </div>
-        <div class="col-lg-9">
-            <x-user.dashboard.stats-component />
-            @if (!empty(auth()->user()->subscriptions))
-                @include('user.dashboard._purchases')
-            @endif
-            @if (Auth::user()->is_ambassador)
-                @include('user.dashboard._revenue-stats')
-            @else
-                @include('user.dashboard._activities')
-            @endif
-
-        </div>
-    </div>
+    @endif
     @include('profile.partials._profile-modal')
 @endsection
 @push('scripts')

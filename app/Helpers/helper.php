@@ -3,6 +3,7 @@
 use App\Models\Settings;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Mail;
@@ -260,5 +261,88 @@ if (!function_exists('systemSettings')) {
     function systemSettings()
     {
         return Settings::first();
+    }
+}
+
+
+if (!function_exists('myReferrer')) {
+    function myReferrer($id)
+    {
+        $referrals = directReferrals($id);
+
+        $total = count($referrals);
+
+
+        if ($total < 2) {
+            return $id;
+        }
+
+        $firstChildTotalReferrals = 0;
+        $secondChildTotalReferrals = 0;
+        $firstchildId = 0;
+
+        foreach (directReferrals($id) as $key => $child) {
+
+            if ($key === 0) {
+                $childRef = directReferrals($child->id);
+                $totalChild = count($childRef);
+
+                if ($totalChild < 2) {
+                    return ($child->id);
+                }
+                $firstChildTotalReferrals = userDownlines($child->id);
+                $firstchildId = $child->id;
+                continue;
+            }
+
+            if ($key === 1) {
+                $childRef = directReferrals($child->id);
+                $totalChild = count($childRef);
+
+                if ($totalChild < 2) {
+                    return $child->id;
+                }
+
+                $secondChildTotalReferrals = userDownlines($child->id);
+            }
+
+            //Let's determine whose grandchild inherit the referral since all child have referred two
+
+            if ($firstChildTotalReferrals <= $secondChildTotalReferrals) {
+
+                return myReferrer($firstchildId);
+            } else {
+                return  myReferrer($child->id);
+            }
+        }
+    }
+}
+
+if (!function_exists('userDownlines')) {
+    function userDownlines($id)
+    {
+        $referrals = directReferrals($id);
+
+        $total = count($referrals);
+
+        foreach ($referrals as $child) {
+
+            if ($child->id === $id) {
+                continue; // To avoiding irresponsive recursion, continue if first user refered himself
+            }
+
+            $total += userDownlines($child->id);
+        }
+
+        return $total;
+    }
+}
+
+if (!function_exists('directReferrals')) {
+    function directReferrals($id)
+    {
+        $data = \App\Models\User::where('parent_id', $id)->where('is_ambassador',true)->get();
+
+        return $data;
     }
 }

@@ -107,7 +107,7 @@ class Navigation
             (object) [
                 'name'      => 'Settings',
                 'icon'      => 'las la-cogs',
-                'routes'    => ['admin.settings.index','admin.banner.index'],
+                'routes'    => ['admin.settings.index', 'admin.banner.index'],
                 'hasPermission' => true,
                 'subMenu'   => (object) [
                     (object) [
@@ -118,6 +118,11 @@ class Navigation
                     (object) [
                         'name'  => 'Banners',
                         'route' => 'admin.banner.index',
+                        'hasPermission' => true
+                    ],
+                    (object) [
+                        'name'  => 'Providers',
+                        'route' => 'admin.provider.index',
                         'hasPermission' => true
                     ],
                 ]
@@ -180,17 +185,11 @@ class Navigation
                 'icon'  => 'bx bx-cart-alt',
                 'hasPermission' => true
             ],
-            // (object) [
-            //     'name'  => 'Delta Streaming',
-            //     'route' => 'subscription.index',
-            //     'icon'  => 'bx bxs-video',
-            //     'hasPermission' => true
-            // ],
             (object) [
-                'name'  => 'Delta Academy',
-                'route' => 'academy.index',
-                'icon'  => 'bx bxs-graduation',
-                'hasPermission' => true
+                'name'  => 'Team',
+                'route' => 'team.index',
+                'icon'  => 'bx bx-sitemap',
+                'hasPermission' => auth()->user()->is_ambassador ?? false
             ],
             (object) [
                 'name'  => 'Tickets',
