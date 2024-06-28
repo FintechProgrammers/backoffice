@@ -11,6 +11,8 @@ use App\Models\UserSubscription;
 use App\Services\StripeService;
 use App\Services\SubscriptionService;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StripeController extends Controller
 {
@@ -39,6 +41,15 @@ class StripeController extends Controller
 
                 $response = $stripeService->processCheckout($data);
 
+                if (empty($response)) {
+                    sendToLog($response);
+
+                    return throw new HttpResponseException(response()->json([
+                        'success' => false,
+                        'message' => serviceDownMessage(),
+                    ], Response::HTTP_UNPROCESSABLE_ENTITY));
+                }
+
                 return $response->url;
             } else {
                 $data = [
@@ -55,12 +66,24 @@ class StripeController extends Controller
 
                 $response = $stripeService->processCheckout($data);
 
+                if (empty($response)) {
+                    sendToLog($response);
+
+                    return throw new HttpResponseException(response()->json([
+                        'success' => false,
+                        'message' => serviceDownMessage(),
+                    ], Response::HTTP_UNPROCESSABLE_ENTITY));
+                }
+
                 return $response->url;
             }
         } catch (\Exception $e) {
             sendToLog($e);
 
-            return response()->json(['success' => false, 'message' => serviceDownMessage()], 500);
+            return throw new HttpResponseException(response()->json([
+                'success' => false,
+                'message' => serviceDownMessage(),
+            ], Response::HTTP_UNPROCESSABLE_ENTITY));
         }
     }
 

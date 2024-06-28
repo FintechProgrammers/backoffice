@@ -86,7 +86,7 @@
                         <div class="d-grid">
                             <button class="btn btn-success mb-2 trigerModal"
                                 data-url="{{ route('provider.payin', $package->uuid) }}" data-bs-toggle="modal"
-                                data-bs-target="#primaryModal" data-url="{{ route('package.purchase', $package->uuid) }}">
+                                data-bs-target="#primaryModal">
                                 <div class="spinner-border" style="display: none" role="status">
                                     <span class="sr-only">Loading...</span>
                                 </div>

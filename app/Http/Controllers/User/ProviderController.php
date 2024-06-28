@@ -24,7 +24,6 @@ class ProviderController extends Controller
             $data['service'] = null;
         }
 
-
         return view('user.provider.payins', $data);
     }
 

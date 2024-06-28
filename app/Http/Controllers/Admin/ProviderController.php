@@ -133,4 +133,17 @@ class ProviderController extends Controller
 
         return $this->sendResponse([], "Disabled successfully.");
     }
+
+    function default(Provider $provider)
+    {
+        Provider::where('is_crypto', $provider->is_crypto)->where('can_payin', $provider->can_payin)->update([
+            'is_default' => false
+        ]);
+
+        $provider->update([
+            'is_default' => true
+        ]);
+
+        return $this->sendResponse([], "Set as default successfully.");
+    }
 }

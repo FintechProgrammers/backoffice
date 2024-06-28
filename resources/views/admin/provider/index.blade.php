@@ -25,6 +25,7 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
+                                <th class="text-center">Default</th>
                                 <th class="text-center">Handles Payin</th>
                                 <th class="text-center">Handles Payout</th>
                                 <th class="text-center">Handles Crypto</th>

@@ -19,11 +19,8 @@
             <div class="col-lg-12">
                 @include('user.dashboard._benner')
             </div>
-            <div class="col-lg-12">
-                @include('user.dashboard._account')
-            </div>
             <div class="col-lg-3">
-                @include('user.dashboard._rank')
+                @include('user.dashboard._upgrade')
                 @include('user.dashboard._profile-card')
             </div>
             <div class="col-lg-9">
@@ -360,5 +357,5 @@
             config
         );
     </script>
-    @include('user.dashboard.scripts._process_ambassedor_payment')
+    @include('partials.scripts.initiate-payin')
 @endpush

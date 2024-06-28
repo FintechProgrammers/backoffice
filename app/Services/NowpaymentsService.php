@@ -5,11 +5,8 @@ namespace App\Services;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 
-class Nowpayments
+class NowpaymentsService
 {
-    function __construct()
-    {
-    }
 
     function getMinimumAmount(array $data)
     {
@@ -37,7 +34,6 @@ class Nowpayments
 
     function createPayment(array $data)
     {
-
         $payload = [
             "price_amount" => $data['amount'],
             "price_currency" => "usd",
@@ -52,7 +48,6 @@ class Nowpayments
 
     function createPaymentByInvoice(array $data)
     {
-
         $payload = [
             "iid" => $data['invoice_id'],
             "pay_currency" => "btc",
@@ -74,7 +69,6 @@ class Nowpayments
 
     function validateAddress(array $data)
     {
-
         $payload = [
             "address" => $data['address'],
             "currency" => $data['currency'],
@@ -86,7 +80,6 @@ class Nowpayments
 
     function payout(array $data)
     {
-
         $payload = [
             "ipn_callback_url" => $data['ipn_callback_url'],
             "withdrawals"      => $data['withdrawals'],
@@ -99,7 +92,6 @@ class Nowpayments
 
     function verifyPayout(array $data)
     {
-
         $payload = [
             "verification_code" => $data["verification_code"]
         ];

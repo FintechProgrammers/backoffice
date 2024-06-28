@@ -202,5 +202,6 @@ Route::middleware('admin.auth')->group(function () {
         Route::put('/update/{provider}', 'update')->name('update');
         Route::post('/enable/{provider}', 'enable')->name('enable');
         Route::post('/disable/{provider}', 'disable')->name('disable');
+        Route::post('/default/{provider}', 'default')->name('default');
     });
 });

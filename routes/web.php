@@ -99,6 +99,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/card/initiate', 'getDefaultCardProvider')->name('card.initiate');
         Route::get('/crypto/initiate', 'getDefaultCryptoProvider')->name('crypto.initiate');
     });
+
+    Route::controller(NowpaymentController::class)->prefix('nowpayment')->name('nowpayment.')->group(function(){
+        Route::get('/c/eoeomomceome/{serviceId?}','create')->name('layout');
+    });
 });
 
 Route::prefix('webhook')->name('webhook')->group(function () {
@@ -106,7 +110,10 @@ Route::prefix('webhook')->name('webhook')->group(function () {
 });
 
 Route::prefix('ipn')->name('ipn.')->group(function () {
-    Route::post('/nowpayment', [NowpaymentController::class, 'ipn'])->name('nowpayment');
+    Route::controller(NowpaymentController::class)->prefix('nowpayment')->name('nowpayment.')->group(function(){
+        Route::post('service/payment/ipn','serviceIpn')->name('service');
+        Route::post('service/abassador/ipn','abassadorIpn')->name('abassador');
+    });
 });
 
 

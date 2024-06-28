@@ -4,6 +4,13 @@
             {{ $item->name }}
         </td>
         <td class="text-center">
+            @if ($item->is_default)
+                <span class="badge bg-blue">Yes</span>
+            @else
+                <span class="badge bg-danger">No</span>
+            @endif
+        </td>
+        <td class="text-center">
             @if ($item->can_payin)
                 <span class="badge bg-blue">Yes</span>
             @else
@@ -42,16 +49,24 @@
                         data-url="{{ route('admin.provider.edit', $item->uuid) }}" data-bs-toggle="modal"
                         data-bs-target="#primaryModal">Edit</a>
                 </li>
+                @if (!$item->is_default)
+                    <li class="mb-0">
+                        <a href="javascript:void(0);" class="dropdown-item btn-action"
+                            data-url="{{ route('admin.provider.default', $item->uuid) }}"
+                            data-action="Set as {{ $item->name }} as Default">Set as Default</a>
+                    </li>
+                @endif
                 @if ($item->is_active)
                     <li class="mb-0">
                         <a href="javascript:void(0);" class="dropdown-item btn-action text-danger"
                             data-url="{{ route('admin.provider.disable', $item->uuid) }}"
-                            data-action="disable">Disable</a>
+                            data-action="disable {{ $item->name }}">Disable</a>
                     </li>
                 @else
                     <li class="mb-0">
                         <a href="javascript:void(0);" class="dropdown-item btn-action"
-                            data-url="{{ route('admin.provider.enable', $item->uuid) }}" data-action="enable">Enable</a>
+                            data-url="{{ route('admin.provider.enable', $item->uuid) }}"
+                            data-action="enable {{ $item->name }}">Enable</a>
                     </li>
                 @endif
             </ul>
