@@ -341,8 +341,59 @@ if (!function_exists('userDownlines')) {
 if (!function_exists('directReferrals')) {
     function directReferrals($id)
     {
-        $data = \App\Models\User::where('parent_id', $id)->where('is_ambassador',true)->get();
+        $data = \App\Models\User::where('parent_id', $id)->where('is_ambassador', true)->get();
 
         return $data;
+    }
+}
+
+if (!function_exists('currentCycle')) {
+    function currentCycle()
+    {
+        $cycle = \App\Models\Cycle::where('is_active', true)->first();
+
+        return $cycle->id;
+    }
+}
+
+if (!function_exists('debitWallet')) {
+    function debitWallet($amount)
+    {
+        $wallet = \App\Models\Wallet::where('user_id', auth()->user()->id)->first();
+
+        $wallet->update([
+            'amount' => $wallet->amount - $amount,
+        ]);
+    }
+}
+
+if (!function_exists('refundWallet')) {
+    function refundWallet($amount)
+    {
+        $wallet = \App\Models\Wallet::where('user_id', auth()->user()->id)->first();
+
+        $wallet->update([
+            'amount' => $wallet->amount + $amount,
+        ]);
+    }
+}
+
+if (!function_exists('getWeekStartAndEnd')) {
+    function getWeekStartAndEnd()
+    {
+        $now = new DateTimeImmutable();
+        $dayOfWeek = $now->format('w'); // 0 (Sunday) to 6 (Saturday)
+
+        // Adjust to Monday as the beginning of the week
+        $weekStart = $now->sub(new DateInterval('P' . ($dayOfWeek ? $dayOfWeek - 1 : 6) . 'D'));
+        $weekStart->setTime(0, 0); // Set time to 00:00
+
+        $weekEnd = $weekStart->add(new DateInterval('P6D'));
+        $weekEnd->setTime(23, 59, 59); // Set time to 23:59:59
+
+        return [
+            'week_start' => $weekStart->format('Y-m-d H:i:s'),
+            'week_end' => $weekEnd->format('Y-m-d H:i:s'),
+        ];
     }
 }

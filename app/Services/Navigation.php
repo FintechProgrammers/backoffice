@@ -156,11 +156,11 @@ class Navigation
                         'route' => 'sales.index',
                         'hasPermission' => auth()->user()->is_ambassador ?? false
                     ],
-                    (object) [
-                        'name'  => 'Rank History',
-                        'route' => 'report.ranks',
-                        'hasPermission' => auth()->user()->is_ambassador ?? false
-                    ],
+                    // (object) [
+                    //     'name'  => 'Rank History',
+                    //     'route' => 'report.ranks',
+                    //     'hasPermission' => auth()->user()->is_ambassador ?? false
+                    // ],
                     (object) [
                         'name'  => 'Bonus History',
                         'route' => 'report.bonuses',

@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\Auth\AdminResetPasswordController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\CommisionPlanController;
 use App\Http\Controllers\Admin\CountryController;
+use App\Http\Controllers\Admin\CycleController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\ProductController;
@@ -205,3 +206,5 @@ Route::middleware('admin.auth')->group(function () {
         Route::post('/default/{provider}', 'default')->name('default');
     });
 });
+
+Route::get('/start-cycle',[CycleController::class,'runCycle']);

@@ -122,6 +122,21 @@ class User extends Authenticatable
         return $this->hasOne(Wallet::class, 'user_id', 'id');
     }
 
+    function withdrawals()
+    {
+        return $this->hasMany(Withdrawal::class, 'user_id', 'id')->latest();
+    }
+
+    function getTotalWithdrawalsAmountAttribute()
+    {
+        return number_format($this->withdrawals()->where('status', 'completed')->sum('amount'), 2, '.', ',');
+    }
+
+    function getTotalPendingWithdrawalsAmountAttribute()
+    {
+        return number_format($this->withdrawals()->where('status', 'pending')->sum('amount'), 2, '.', ',');
+    }
+
     function activities()
     {
         return $this->hasMany(UserActivities::class, 'user_id', 'id')->latest();
@@ -134,7 +149,16 @@ class User extends Authenticatable
 
     function rank()
     {
-        return $this->hasOne(Rank::class,'id', 'rank_id');
+        return $this->hasOne(Rank::class, 'id', 'rank_id');
+    }
+
+    public function highestRank()
+    {
+        return $this->hasOne(RankHistory::class)
+            ->selectRaw('MAX(ranks.creteria) AS highest_criteria')
+            ->join('ranks', function ($join) {
+                $join->on('rank_histories.rank_id', '=', 'ranks.id');
+            });
     }
 
     /**

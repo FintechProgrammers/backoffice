@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-lg-3">
         @include('user.dashboard._profile-card')
-        <div class="card custom-card text-fixed-white">
+        {{-- <div class="card custom-card text-fixed-white">
             <div class="card-body p-3">
                 <div class="text-center">
                     <div class="flex-fill">
@@ -21,7 +21,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
         @include('user.dashboard._activities')
     </div>
     <div class="col-lg-9">
@@ -36,7 +36,13 @@
                                 </span>
                             </div>
                             <div class="flex-fill">
-                                <h5 class="fw-semibold mb-1 text-fixed-white">Delta 3000</h5>
+                                <h5 class="fw-semibold mb-1 text-fixed-white">
+                                    @if (!empty(Auth::user()->highestRank->highest_criteria))
+                                        {{ Auth::user()->highestRank->highest_criteria }}
+                                    @else
+                                        <small class="text-muted">no rank</small>
+                                    @endif
+                                </h5>
                                 <p class="op-7 mb-0 fs-12">Highest Rank</p>
                             </div>
                         </div>
@@ -53,7 +59,9 @@
                                 </span>
                             </div>
                             <div class="flex-fill">
-                                <h5 class="fw-semibold mb-1 text-fixed-white">$15,800</h5>
+                                <h5 class="fw-semibold mb-1 text-fixed-white">
+                                    ${{ number_format($walletBalance, 2, '.', ',') }}
+                                </h5>
                                 <p class="op-7 mb-0 fs-12">Commisions Wallet</p>
                             </div>
                         </div>
@@ -70,7 +78,8 @@
                                 </span>
                             </div>
                             <div class="flex-fill">
-                                <h5 class="fw-semibold mb-1 text-fixed-white">$3,000</h5>
+                                <h5 class="fw-semibold mb-1 text-fixed-white">
+                                    ${{ number_format($lifeTimeEarnings, 2, '.', ',') }}</h5>
                                 <p class="op-7 mb-0 fs-12">Lifetime Earnings</p>
                             </div>
                         </div>
@@ -86,7 +95,9 @@
                             <div class="flex-fill">
                                 <p class="mb-0 text-muted">Current Circle Direct Volumn</p>
                                 <div class="d-flex align-items-center">
-                                    <span class="fs-5 fw-semibold">10.0000 BV</span>
+                                    <span
+                                        class="fs-5 fw-semibold">{{ number_format($currenctCirlceDirectVolume, 2, '.', ',') }}
+                                        BV</span>
                                 </div>
                             </div>
                         </div>
@@ -100,7 +111,8 @@
                             <div class="flex-fill">
                                 <p class="mb-0 text-muted">Current Cycle Commissions</p>
                                 <div class="d-flex align-items-center">
-                                    <span class="fs-5 fw-semibold">$21,520</span>
+                                    <span
+                                        class="fs-5 fw-semibold">${{ number_format($currenctCirlceCommisions, 2, '.', ',') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -117,7 +129,13 @@
                                 </span>
                             </div>
                             <div class="flex-fill">
-                                <h5 class="fw-semibold mb-1 text-fixed-white">Delta 3000</h5>
+                                <h5 class="fw-semibold mb-1 text-fixed-white">
+                                    @if (empty(Auth::user()->rank))
+                                        {{ Auth::user()->rank->name }}
+                                    @else
+                                        <small class="text-muted">no rank</small>
+                                    @endif
+                                </h5>
                                 <p class="op-7 mb-0 fs-12">Current Rank</p>
                             </div>
                         </div>
@@ -132,7 +150,7 @@
                         <div class="text-center">
                             <p class="fs-14 fw-semibold mb-2">Current Week Remaining Time</p>
                             <div class="d-flex align-items-center justify-content-center flex-wrap mb-2">
-                                <div class="clock">
+                                <div class="clock" id="countdown-timer">
                                     <div class="clock-segment">
                                         <span class="clock-number" id="days">00</span>
                                         <span class="clock-label">Days</span>
@@ -157,8 +175,9 @@
                                     <h6 class="mb-0">Week 2</h6>
                                 </div>
                                 <div class="progress progress-xs">
-                                    <div class="progress-bar bg-success" role="progressbar" style="width: 24%"
-                                        aria-valuenow="24" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div class="progress-bar bg-success" role="progressbar" id="progress-bar"
+                                        style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                    </div>
                                 </div>
                             </div>
                         </div>

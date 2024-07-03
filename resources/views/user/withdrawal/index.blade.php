@@ -8,9 +8,9 @@
             <p class="fw-semibold fs-18 mb-0">{{ __('Withdrawals') }}</p>
         </div>
         <div class="btn-list mt-md-0 mt-2">
-            <button type="button" class="btn btn-primary btn-wave trigerModal" data-url="{{ route('withdrawal.create') }}"
-                data-bs-toggle="modal" data-bs-target="#primaryModal">{{ __('Make Withdrawal') }}
-            </button>
+            <a type="button" class="btn btn-primary btn-wave"
+               href="{{ route('withdrawal.create') }}">{{ __('Make Withdrawal') }}
+            </a>
         </div>
     </div>
     <div class="card custom-card">

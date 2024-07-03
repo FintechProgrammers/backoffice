@@ -1,6 +1,6 @@
 <script>
     $(document).ready(function() {
-        $('#modalBody').on('submit', 'form', function(event) {
+        $('.payoutForm').on('submit',function(event) {
             event.preventDefault(); // Prevent default form submission
 
             // Remove any existing error messages
@@ -26,10 +26,6 @@
                 },
                 success: function(response) {
                     // Handle success response
-                    loadTable()
-
-                    $('#primaryModal').modal('hide')
-
                     spinner.hide()
                     buttonTest.show()
 
@@ -49,7 +45,7 @@
                         $.each(errors, function(field, messages) {
                             // Find the corresponding field
                             var fieldInput = $('[name="' + field + '"]');
-                            var fieldContainer = fieldInput.closest('.mb-3');
+                            var fieldContainer = fieldInput.closest('.form-group');
 
                             // Append error messages under the field container
                             $.each(messages, function(index, message) {

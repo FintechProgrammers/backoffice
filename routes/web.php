@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\NowpaymentController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PayoutController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\User\AcademyController;
@@ -24,6 +25,7 @@ Route::get('/', function () {
 Route::middleware(['auth'])->group(function () {
     Route::controller(DashboardController::class)->prefix('dashboard')->group(function () {
         Route::get('/', 'index')->name('dashboard');
+        Route::get('/week-clock', 'weekClock')->name('week.clock');
     });
 
     Route::controller(SupportController::class)->prefix('tickets')->name('tickets.')->group(function () {
@@ -100,8 +102,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/crypto/initiate', 'getDefaultCryptoProvider')->name('crypto.initiate');
     });
 
-    Route::controller(NowpaymentController::class)->prefix('nowpayment')->name('nowpayment.')->group(function(){
-        Route::get('/c/eoeomomceome/{serviceId?}','create')->name('layout');
+    Route::controller(NowpaymentController::class)->prefix('nowpayment')->name('nowpayment.')->group(function () {
+        Route::get('/c/eoeomomceome/{serviceId?}', 'create')->name('layout');
+    });
+
+    Route::controller(PayoutController::class)->prefix('payout')->name('payout.')->group(function () {
+        Route::post('/crypto/{provider}', 'crypto')->name('crypto');
+        Route::post('/bank-transfer/{provider}', 'bankTransfer')->name('bank.transfer');
     });
 });
 
@@ -110,9 +117,10 @@ Route::prefix('webhook')->name('webhook')->group(function () {
 });
 
 Route::prefix('ipn')->name('ipn.')->group(function () {
-    Route::controller(NowpaymentController::class)->prefix('nowpayment')->name('nowpayment.')->group(function(){
-        Route::post('service/payment/ipn','serviceIpn')->name('service');
-        Route::post('service/abassador/ipn','abassadorIpn')->name('abassador');
+    Route::controller(NowpaymentController::class)->prefix('nowpayment')->name('nowpayment.')->group(function () {
+        Route::post('service/payment', 'serviceIpn')->name('service');
+        Route::post('abassador/payment', 'abassadorIpn')->name('abassador');
+        Route::post('payout', 'payoutIpn')->name('payout');
     });
 });
 

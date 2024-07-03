@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\WithdrawalRequest;
+use App\Models\Provider;
 use App\Models\UserActivities;
 use App\Models\Withdrawal;
 use Illuminate\Http\Request;
@@ -25,7 +26,10 @@ class WithdrawalController extends Controller
 
     function create()
     {
-        return view('user.withdrawal.create');
+        $data['cryptoProvider'] = Provider::where('is_active', true)->where('is_crypto', true)->where('can_payout', true)->where('is_default', true)->first();
+        $data['bankTransferProvider'] = Provider::where('is_active', true)->where('is_crypto',false)->where('can_payout', true)->where('is_default', true)->first();
+
+        return view('user.withdrawal.create',$data);
     }
 
     function store(WithdrawalRequest $request)

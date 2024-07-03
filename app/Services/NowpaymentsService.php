@@ -29,7 +29,7 @@ class NowpaymentsService
             "cancel_url" => route('payment.cancel')
         ];
 
-       return  self::handle('/v1/invoice', "POST", $payload);
+        return  self::handle('/v1/invoice', "POST", $payload);
     }
 
     function createPayment(array $data)
@@ -43,7 +43,7 @@ class NowpaymentsService
             "order_description" =>  $data['description']
         ];
 
-      return  self::handle('/v1/payment', "POST", $payload);
+        return  self::handle('/v1/payment', "POST", $payload);
     }
 
     function createPaymentByInvoice(array $data)
@@ -59,12 +59,12 @@ class NowpaymentsService
             "payout_currency" =>  "usdttrc20"
         ];
 
-       return self::handle('/v1/invoice-payment', "POST", $payload);
+        return self::handle('/v1/invoice-payment', "POST", $payload);
     }
 
     function balance()
     {
-      return  self::handle('/v1/balance', "GET");
+        return  self::handle('/v1/balance', "GET");
     }
 
     function validateAddress(array $data)
@@ -75,19 +75,24 @@ class NowpaymentsService
             "extra_id" => null
         ];
 
-       return self::handle('/v1/payout/validate-address', "POST", $payload);
+        return self::handle('/v1/payout/validate-address', "POST", $payload);
     }
 
     function payout(array $data)
     {
         $payload = [
-            "ipn_callback_url" => $data['ipn_callback_url'],
-            "withdrawals"      => $data['withdrawals'],
+            // "ipn_callback_url" => $data['ipn_callback_url'],
+            "withdrawals"      => [
+                'address'   => $data['address'],
+                'amount'    => $data['amount'],
+                'currency'  => $data['currency'],
+                "ipn_callback_url" => $data['ipn_callback_url']
+            ],
         ];
 
         $token = self::authenticate();
 
-       return self::handle('/v1/payout', "POST", $payload, $token);
+        return self::handle('/v1/payout', "POST", $payload, $token);
     }
 
     function verifyPayout(array $data)
@@ -98,17 +103,17 @@ class NowpaymentsService
 
         $token = self::authenticate();
 
-       return  self::handle('/v1/payout/5000000191/verify', "POST", $payload, $token);
+        return  self::handle('/v1/payout/5000000191/verify', "POST", $payload, $token);
     }
 
     function availablecurrencies()
     {
-        return self::handle('/v1/full-currencies',"GET");
+        return self::handle('/v1/full-currencies', "GET");
     }
 
     function merchanteCoin()
     {
-        return self::handle('/v1/merchant/coins',"GET");
+        return self::handle('/v1/merchant/coins', "GET");
     }
 
     function authenticate()
@@ -165,7 +170,22 @@ class NowpaymentsService
         } catch (\Exception $e) {
             sendToLog($e);
 
-            return $e->getMessage();
+            $responseString = $e->getMessage();
+
+            // Find the position of the first curly brace
+            $bracePosition = strpos($responseString, '{');
+
+            if ($bracePosition !== false) {
+                // Extract the JSON string
+                $jsonString = substr($responseString, $bracePosition);
+
+                // Decode the JSON string
+                $responseArray = json_decode($jsonString, true);
+
+                return $responseArray;
+            }
+
+            return [];
         }
     }
 }
