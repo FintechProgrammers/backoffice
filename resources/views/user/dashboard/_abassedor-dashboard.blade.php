@@ -130,7 +130,7 @@
                             </div>
                             <div class="flex-fill">
                                 <h5 class="fw-semibold mb-1 text-fixed-white">
-                                    @if (empty(Auth::user()->rank))
+                                    @if (!empty(Auth::user()->rank))
                                         {{ Auth::user()->rank->name }}
                                     @else
                                         <small class="text-muted">no rank</small>
