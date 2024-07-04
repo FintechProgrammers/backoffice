@@ -53,6 +53,7 @@ Route::middleware('admin.auth')->group(function () {
         Route::post('/suspend/{user}', 'suspend')->name('suspend');
         Route::post('/activate/{user}', 'activate')->name('activate');
         Route::post('/delete/{user}', 'destroy')->name('delete');
+        Route::post('/make-ambassador/{user}', 'makeAmbassador')->name('mark.ambassador');
     });
 
     Route::controller(AdministrativeUserController::class)->prefix('admins')->name('admins.')->group(function () {

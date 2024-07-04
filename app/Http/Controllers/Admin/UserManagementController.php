@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bonus;
 use App\Models\User;
 use App\Models\UserInfo;
 use Carbon\Carbon;
@@ -116,6 +117,20 @@ class UserManagementController extends Controller
         ]);
 
         return response()->json(['success' => true, 'message' => 'Activated successfully.']);
+    }
+
+    function makeAmbassador(User $user)
+    {
+        $user->update([
+            'is_ambassador' => true,
+        ]);
+
+        Bonus::create([
+            'user_id' => $user->id,
+            'amount' => 0
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Ambassador Activated successfully.']);
     }
 
     function destroy(User $user)
