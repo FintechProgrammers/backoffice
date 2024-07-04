@@ -101,7 +101,7 @@
 
         const value = $(this).val();
 
-        if(value === '') {
+        if (value === '') {
             $('#canvasBody form button[type="submit"]').prop('disabled', true);
             return;
         }
@@ -114,6 +114,18 @@
 
         $('#canvasBody form button[type="submit"]').prop('disabled', false);
     });
+
+    $('body').on('change', '#canvasBody form #switch-lg', function(e) {
+        e.preventDefault();
+
+        if ($(this).is(":checked")) {
+            // Show the block of content
+            $("#requirementBlock").show();
+        } else {
+            // Hide the block of content
+            $("#requirementBlock").hide();
+        }
+    })
 
 
     // Function to check if any radio button is checked and enable/disable the submit button

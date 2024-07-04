@@ -34,10 +34,10 @@ class CommisionPlanController extends Controller
             'name' => 'required|string',
             'commission_percentage' => 'required|integer',
             'commission_type' => 'required',
-            'direct_bv'  => 'nullable|numeric|required_if:commission_type,secondary',
-            'sponsored_bv' => 'nullable|numeric|required_if:commission_type,secondary',
-            'sponsored_count' => 'nullable|numeric|required_if:commission_type,secondary',
-            'level'   => 'nullable|numeric|required_if:commission_type,secondary'
+            'level'   => 'nullable|numeric|required_if:commission_type,indirect',
+            'direct_bv'  => 'nullable|numeric|required_if:has_requirement,on',
+            'sponsored_bv' => 'nullable|numeric|required_if:has_requirement,on',
+            'sponsored_count' => 'nullable|numeric|required_if:has_requirement,on',
         ]);
 
         // Handle validation errors
@@ -56,12 +56,14 @@ class CommisionPlanController extends Controller
                 'is_direct'  => $request->commission_type == 'direct' ? true : false,
             ]);
 
-            LevelRequirement::create([
-                'commission_level_id' => $commission->id,
-                'direct_bv'   => $request->direct_bv,
-                'sponsored_bv' => $request->sponsored_bv,
-                'sponsored_count' => $request->sponsored_count,
-            ]);
+            if ($request->has_requirement === 'on') {
+                LevelRequirement::create([
+                    'commission_level_id' => $commission->id,
+                    'direct_bv'   => $request->direct_bv,
+                    'sponsored_bv' => $request->sponsored_bv,
+                    'sponsored_count' => $request->sponsored_count,
+                ]);
+            }
 
             DB::commit();
 
@@ -97,10 +99,10 @@ class CommisionPlanController extends Controller
             'name' => 'required|string',
             'commission_percentage' => 'required|integer',
             'commission_type' => 'required',
-            'direct_bv'  => 'nullable|numeric|required_if:commission_type,secondary',
-            'sponsored_bv' => 'nullable|numeric|required_if:commission_type,secondary',
-            'sponsored_count' => 'nullable|numeric|required_if:commission_type,secondary',
-            'level'   => 'nullable|numeric|required_if:commission_type,secondary'
+            'level'   => 'nullable|numeric|required_if:commission_type,indirect',
+            'direct_bv'  => 'nullable|numeric|required_if:has_requirement,on',
+            'sponsored_bv' => 'nullable|numeric|required_if:has_requirement,on',
+            'sponsored_count' => 'nullable|numeric|required_if:has_requirement,on',
         ]);
 
         // Handle validation errors
@@ -119,11 +121,14 @@ class CommisionPlanController extends Controller
                 'is_direct'  => $request->commission_type == 'direct' ? true : false,
             ]);
 
-            LevelRequirement::where('commission_level_id', $commission->id)->update([
-                'direct_bv'   => $request->direct_bv,
-                'sponsored_bv' => $request->sponsored_bv,
-                'sponsored_count' => $request->sponsored_count,
-            ]);
+            if($request->has_requirement === 'on')
+            {
+                LevelRequirement::where('commission_level_id', $commission->id)->update([
+                    'direct_bv'   => $request->direct_bv,
+                    'sponsored_bv' => $request->sponsored_bv,
+                    'sponsored_count' => $request->sponsored_count,
+                ]);
+            }
 
             DB::commit();
 

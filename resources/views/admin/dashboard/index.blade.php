@@ -14,7 +14,7 @@
         @endforeach
     </div>
     <div class="row">
-        <div class="col-xxl-6 col-xl-6">
+        <div class="col-xxl-12 col-xl-12">
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-header">
@@ -52,52 +52,52 @@
                 </div>
             </div>
         </div>
-        <div class="col-xxl-6 col-xl-6">
+        <div class="col-xl-4">
             <div class="card custom-card">
-                <div class="card-header justify-content-between">
-                    <div class="card-title">Earnings</div>
-                    <div class="dropdown">
-                        <a href="javascript:void(0);" class="p-2 fs-12 text-muted" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            View All<i class="ri-arrow-down-s-line align-middle ms-1 d-inline-block"></i>
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a class="dropdown-item" href="javascript:void(0);">Download</a></li>
-                            <li><a class="dropdown-item" href="javascript:void(0);">Import</a></li>
-                            <li><a class="dropdown-item" href="javascript:void(0);">Export</a></li>
-                        </ul>
-                    </div>
+                <div class="card-header">
+                    <div class="card-title">Active User</div>
                 </div>
                 <div class="card-body">
-                    <div class="row ps-lg-5 mb-4 pb-4 gy-sm-0 gy-3">
-                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4">
-                            <div class="mb-1 earning first-half ms-3">First Half</div>
-                            <div class="mb-0">
-                                <span class="mt-1 fs-16 fw-semibold">$51.94k</span>
-                                <span class="text-success"><i class="fa fa-caret-up mx-1"></i>
-                                    <span
-                                        class="badge bg-success-transparent text-success px-1 py-2 fs-10">+0.9%</span></span>
-                            </div>
-                        </div>
-                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4">
-                            <div class="mb-1 earning top-gross ms-3">Top Gross</div>
-                            <div class="mb-0">
-                                <span class="mt-1 fs-16 fw-semibold">$18.32k</span>
-                                <span class="text-success"><i class="fa fa-caret-up mx-1"></i>
-                                    <span
-                                        class="badge bg-success-transparent text-success px-1 py-2 fs-10">+0.39%</span></span>
-                            </div>
-                        </div>
-                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4">
-                            <div class="mb-1 earning second-half ms-3">Second Half</div>
-                            <div class="mb-0">
-                                <span class="mt-1 fs-16 fw-semibold">$38k</span>
-                                <span class="text-danger"><i class="fa fa-caret-up mx-1"></i>
-                                    <span
-                                        class="badge bg-danger-transparent text-danger px-1 py-2 fs-10">-0.15%</span></span>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="activeUsersChart"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4">
+            <div class="card custom-card">
+                <div class="card-header">
+                    <div class="card-title">inactive Users</div>
+                </div>
+                <div class="card-body">
+                    <div id="inactiveUsersChart"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4">
+            <div class="card custom-card">
+                <div class="card-header">
+                    <div class="card-title">Ambassadors</div>
+                </div>
+                <div class="card-body">
+                    <div id="ambassadorsC"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xxl-6 col-xl-6">
+            <div class="card custom-card">
+                <div class="card-header">
+                    <div class="card-title">Sales Per Service</div>
+                </div>
+                <div class="card-body">
+                    <div id="sales-per-service"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xxl-6 col-xl-6">
+            <div class="card custom-card">
+                <div class="card-header">
+                    <div class="card-title">Sales</div>
+                </div>
+                <div class="card-body">
                     <div id="earnings"></div>
                 </div>
             </div>
@@ -232,5 +232,7 @@
     <script src="{{ asset('assets/libs/jsvectormap/maps/world-merc.js') }}"></script>
 
     @include('admin.dashboard.scripts._earning-charts')
+    @include('admin.dashboard.scripts._sales-per-service')
+    @include('admin.dashboard.scripts._avaerage_sub')
     @include('admin.dashboard.scripts._user-by_country-map')
 @endpush
