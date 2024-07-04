@@ -49,7 +49,7 @@
                         <div class="card-body p-0">
                             <div
                                 class="p-3 border-bottom border-block-end-dashed d-flex align-items-center justify-content-between">
-                                <div>
+                                {{-- <div>
                                     <ul class="nav nav-tabs mb-0 tab-style-6 justify-content-start" id="myTab"
                                         role="tablist">
                                         <li class="nav-item" role="presentation">
@@ -77,12 +77,33 @@
                                                     class="ri-exchange-box-line me-1 align-middle d-inline-block"></i>Gallery</button>
                                         </li>
                                     </ul>
-                                </div>
+                                </div> --}}
                             </div>
                             <div class="p-3">
-                                <div class="tab-content" id="myTabContent">
+                                {{-- <div class="tab-content" id="myTabContent">
                                     <div class="tab-pane show active fade p-0 border-0" id="activity-tab-pane"
                                         role="tabpanel" aria-labelledby="activity-tab" tabindex="0">
+                                    </div>
+                                </div> --}}
+                                <div class="mb-3">
+                                    <label for="form-text1" class="form-label fs-14 text-dark">Fullname</label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><i class="ri-user-line"></i></div>
+                                        <input type="text" class="form-control" name="fullname" id="form-text1" value="{{ $user->name }}" placeholder="Enter fullname">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="form-text1" class="form-label fs-14 text-dark">Username</label>
+                                    <div class="input-group">
+                                        <div class="input-group-text">@</div>
+                                        <input type="text" class="form-control" name="username" id="form-text1" value="{{ $user->username }}" placeholder="Enter username">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="form-text1" class="form-label fs-14 text-dark">Email</label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><i class="ri-mail-line"></i></div>
+                                        <input type="text" class="form-control" id="form-text1" name="email" value="{{ $user->email }}" placeholder="Enter email">
                                     </div>
                                 </div>
                             </div>

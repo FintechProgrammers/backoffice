@@ -26,9 +26,9 @@
                 <i class="bi bi-three-dots fs-22"></i>
             </a>
             <ul class="dropdown-menu" style="">
-                <li class="mb-0">
+                {{-- <li class="mb-0">
                     <a href="{{ route('admin.admins.show', $item->uuid) }}" class="dropdown-item">Profile</a>
-                </li>
+                </li> --}}
                 <li class="mb-0">
                     <a href="javascript:void(0);" class="dropdown-item trigerModal"
                         data-url="{{ route('admin.admins.edit', $item->uuid) }}" data-bs-toggle="modal"
