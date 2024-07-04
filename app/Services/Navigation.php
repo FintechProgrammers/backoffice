@@ -81,6 +81,12 @@ class Navigation
                 'hasPermission' => true
             ],
             (object) [
+                'name'  => 'Cycles',
+                'route' => 'admin.cycle.index',
+                'icon'  => 'las la-sync',
+                'hasPermission' => true
+            ],
+            (object) [
                 'name'      => 'Supports',
                 'icon'      => 'las la-headset',
                 'routes'    => ['admin.support.subjects.index', 'admin.support.tickets.index'],

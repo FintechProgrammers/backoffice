@@ -205,6 +205,9 @@ Route::middleware('admin.auth')->group(function () {
         Route::post('/disable/{provider}', 'disable')->name('disable');
         Route::post('/default/{provider}', 'default')->name('default');
     });
-});
 
-Route::get('/start-cycle',[CycleController::class,'runCycle']);
+    Route::controller(CycleController::class)->prefix('cycle')->name('cycle.')->group(function () {
+        Route::get('', 'index')->name('index');
+        Route::get('/start-cycle', 'runCycle')->name('start');
+    });
+});

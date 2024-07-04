@@ -12,7 +12,17 @@ class CycleController extends Controller
 
     function index()
     {
-        $data['cycle'] = Cycle::latest()->get();
+        $activeCycle = Cycle::where('is_active', true)->first();
+
+        $inactiveCycles = Cycle::where('is_active', false)
+            ->orderBy('created_at', 'desc') // Adjust 'created_at' if needed
+            ->get();
+
+        $cycles = collect([$activeCycle])->merge($inactiveCycles);
+
+        $data['cycles'] = $cycles;
+
+        return view('admin.circle.index', $data);
     }
 
     function runCycle()

@@ -41,7 +41,7 @@
                                     <li class="slide  {{ Route::currentRouteNamed($navigation->route) ? 'active' : '' }}"
                                         style="display: {{ $navigation->hasPermission ? 'block' : 'none' }}">
                                         <a href="{{ !empty($navigation->route) ? route($navigation->route) : '' }}"
-                                            class="side-menu__item">
+                                            class="side-menu__item {{ Route::currentRouteNamed($navigation->route) ? 'active' : '' }}">
                                             <i class="{{ $navigation->icon }} side-menu__icon"></i>
                                             <span class="side-menu__label">{{ $navigation->name }}</span>
                                         </a>
