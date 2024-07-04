@@ -31,27 +31,20 @@
                                     </tr>
                                 </thead>
                                 <tbody class="top-selling">
-                                    <tr>
-                                        <td>1.</td>
-                                        <td>Cyborg</td>
-                                        <td>
-                                            <span class="fw-semibold">$5,093</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2.</td>
-                                        <td>Finix</td>
-                                        <td>
-                                            <span class="fw-semibold">$5,093</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>3.</td>
-                                        <td>Digital Pro</td>
-                                        <td>
-                                            <span class="fw-semibold">$5,093</span>
-                                        </td>
-                                    </tr>
+                                    @if (count($topSellingServices) > 0)
+                                        @foreach ($topSellingServices as $key => $item)
+                                            <tr>
+                                                <td class="text-center">{{ $key + 1 }}</td>
+                                                <td>{{ $item->name }}</td>
+                                                <td><span class="fw-semibold">${{ number_format($item->totalSales, 2) }}</span>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan="3">No top-selling services found.</td>
+                                        </tr>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>

@@ -34,4 +34,14 @@ class Service extends Model
     {
         return !empty($this->image_url) ? $this->image_url : url('/') . '/assets/images/default.jpg';
     }
+
+    function sales()
+    {
+        return $this->hasMany(Sale::class, 'service_id', 'id');
+    }
+
+    function getTotalSalesAttribute()
+    {
+        return $this->sales()->sum('amount');
+    }
 }
