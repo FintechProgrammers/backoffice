@@ -202,7 +202,13 @@ class Navigation
                 'route' => 'tickets.index',
                 'icon'  => 'las la-headset',
                 'hasPermission' => true
-            ]
+            ],
+            (object) [
+                'name'  => 'Kyc',
+                'route' => 'kyc.index',
+                'icon'  => 'bx bx-file',
+                'hasPermission' => true
+            ],
         ];
     }
 }

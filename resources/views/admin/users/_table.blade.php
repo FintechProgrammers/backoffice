@@ -33,7 +33,7 @@
                     <li class="mb-0">
                         <a href="javascript:void(0);" class="dropdown-item btn-action"
                             data-url="{{ route('admin.users.mark.ambassador', $item->uuid) }}"
-                            data-action="Set user as Ambassador3">Set as Ambassador</a>
+                            data-action="Set user as Ambassador">Set as Ambassador</a>
                     </li>
                 @endif
                 @if ($item->status === 'suspended')

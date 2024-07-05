@@ -10,40 +10,48 @@
     </div>
     <div class="row">
         @forelse ($services as $item)
-            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-12">
-                <div class="card custom-card product-card">
-                    <div class="card-body">
-                        <a href="{{ route('package.details',$item->uuid) }}" class="product-image">
-                            <img src="{{ $item->image }}" class="card-img mb-3" alt="...">
-                        </a>
-                        {{-- <div class="product-icons">
-                            <a href="#" class="cart"><i class="ri-shopping-cart-line"></i></a>
-                            <a href="#" class="view">
-                                <i class="ri-eye-line"></i>
-                            </a>
-                        </div> --}}
-                        <p class="product-name fw-semibold mb-0 d-flex align-items-center justify-content-between">
-                            {{ $item->name }}</p>
-                        <p class="product-description fs-11 text-muted mb-2">{{ limitWords($item->description) }}</p>
-                        <p class="mb-1 fw-semibold fs-16 d-flex align-items-center justify-content-between">
-                            <span>${{ $item->price }} for <span
-                                    class="text-muted ms-1 d-inline-block op-6">{{ convertDaysToUnit($item->duration, $item->duration_unit) . ' ' . $item->duration_unit }}</span></span>
-                        <p class="fs-11 text-success fw-semibold mb-3 d-flex align-items-center">
-                            <i class="ti ti-discount-2 fs-16 me-1"></i>
-                            @if ($item->serviceProduct->isNotEmpty())
-                                {{ $item->serviceProduct->pluck('product.name')->implode(', ') }}
-                            @else
-                                No products available.
-                            @endif
-                        </p>
-                        <a class="btn btn-primary btn-sm" href="{{ route('package.details',$item->uuid) }}">{{ __('Purchase') }}</a>
+            <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12">
+                <div class="card custom-card">
+                    <div class="card-body p-3">
+                        <div class="mb-3 overflow-hidden position-relative">
+                            <img src="{{ $item->image }}" alt="img" class="nft-img img-fluid">
+                        </div>
+                        <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap">
+                            <div class="d-inline-flex align-items-start position-relative">
+                                <a href="{{ route('package.details', $item->uuid) }}" class="stretched-link"></a>
+                                <div class="flex-grow-1">
+                                    <span class="mb-0 d-block fs-14 fw-semibold">{{ $item->name }}</span>
+                                    <span class="fs-13 text-muted">
+                                        <i class="bi bi-patch-check-fill text-success ms-1 fs-15"></i>
+                                        @if ($item->serviceProduct->isNotEmpty())
+                                            {{ $item->serviceProduct->pluck('product.name')->implode(', ') }}
+                                        @else
+                                            No products available.
+                                        @endif
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-end flex-wrap gap-2">
+                            <div class="flex-fill">
+                                <p class="fs-14 mb-1 text-muted">
+                                    {{ convertDaysToUnit($item->duration, $item->duration_unit) . ' ' . $item->duration_unit }}
+                                </p>
+                                <div class="fs-16 mb-0 d-flex align-items-center fw-semibold">
+                                    ${{ $item->price }}
+                                </div>
+                            </div>
+                            <a href="{{ route('package.details', $item->uuid) }}"
+                                class="btn btn-primary-light btn-wave">{{ __('Purchase') }}</a>
+                        </div>
                     </div>
                 </div>
             </div>
+
         @empty
-        <div class="col-lg-12">
-            <x-no-datacomponent title="no package available" />
-        </div>
+            <div class="col-lg-12">
+                <x-no-datacomponent title="no package available" />
+            </div>
         @endforelse
 
     </div>

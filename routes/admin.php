@@ -54,6 +54,8 @@ Route::middleware('admin.auth')->group(function () {
         Route::post('/activate/{user}', 'activate')->name('activate');
         Route::post('/delete/{user}', 'destroy')->name('delete');
         Route::post('/make-ambassador/{user}', 'makeAmbassador')->name('mark.ambassador');
+        Route::get('/change-username/{user}', 'usernameForm')->name('change-username');
+        Route::post('/change-username/{user}', 'changeUsername')->name('change-username.post');
     });
 
     Route::controller(AdministrativeUserController::class)->prefix('admins')->name('admins.')->group(function () {

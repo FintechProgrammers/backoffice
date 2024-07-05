@@ -133,6 +133,31 @@ class UserManagementController extends Controller
         return response()->json(['success' => true, 'message' => 'Ambassador Activated successfully.']);
     }
 
+    function usernameForm(User $user)
+    {
+        $data['user'] = $user;
+
+        return view('admin.users._username_form', $data);
+    }
+
+    function changeUsername(Request $request, User $user)
+    {
+        $validator = Validator::make($request->all(), [
+            'username' => 'required|unique:users,username',
+        ]);
+
+        // Handle validation errors
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
+        }
+
+        $user->update([
+            'username' => $request->username
+        ]);
+
+        return $this->sendResponse([], "Username updated successfully");
+    }
+
     function destroy(User $user)
     {
 

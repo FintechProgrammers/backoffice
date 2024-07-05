@@ -1,7 +1,6 @@
 <script>
     $(document).ready(function() {
         $(document).on('click', '#table-body a.btn-action', function(e) {
-            console.log('hello')
             e.preventDefault();
 
             var actionUrl = $(this).data('url');

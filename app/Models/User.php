@@ -161,6 +161,11 @@ class User extends Authenticatable
             });
     }
 
+    function commissions()
+    {
+        return $this->hasMany(BonusHistory::class, 'user_id', 'id')->latest();
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

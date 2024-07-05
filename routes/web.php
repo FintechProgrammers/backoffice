@@ -8,6 +8,7 @@ use App\Http\Controllers\StripeController;
 use App\Http\Controllers\User\AcademyController;
 use App\Http\Controllers\User\AmbassedorController;
 use App\Http\Controllers\User\DashboardController;
+use App\Http\Controllers\User\KycController;
 use App\Http\Controllers\User\ProviderController;
 use App\Http\Controllers\User\ReportController;
 use App\Http\Controllers\User\SalesController;
@@ -109,6 +110,10 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(PayoutController::class)->prefix('payout')->name('payout.')->group(function () {
         Route::post('/crypto/{provider}', 'crypto')->name('crypto');
         Route::post('/bank-transfer/{provider}', 'bankTransfer')->name('bank.transfer');
+    });
+
+    Route::controller(KycController::class)->prefix('kyc')->name('kyc.')->group(function () {
+        Route::get('', 'index')->name('index');
     });
 });
 
