@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title','Users Management')
+@section('title','KYC Data')
 
 @push('styles')
 @endpush
@@ -8,13 +8,7 @@
 @section('content')
     <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
         <div>
-            <p class="fw-semibold fs-18 mb-0">User Management</p>
-        </div>
-        <div class="btn-list mt-md-0 mt-2">
-            <button type="button" class="btn btn-primary btn-wave trigerModal" data-url="{{ route('admin.users.create') }}"
-                data-bs-toggle="modal" data-bs-target="#primaryModal">
-                <i class="las la-user-plus me-2 align-middle d-inline-block"></i>Add User
-            </button>
+            <p class="fw-semibold fs-18 mb-0">KYC Management</p>
         </div>
     </div>
     <div class="card custom-card">
@@ -22,8 +16,8 @@
             <div class="row align-items-end ">
                 <div class="col-lg-2 mb-lg-0 mb-4">
                     <label for="searchInputSearch">Search</label>
-                        <input type="search" class="form-control" placeholder="Search by email,name and account type"
-                            id="search" aria-describedby="emailHelp">
+                    <input type="search" class="form-control" placeholder="Search by email,name and account type"
+                        id="search" aria-describedby="emailHelp">
                 </div>
                 <div class="col-lg-2 mb-lg-0 mb-4">
                     <label for="searchInputSearch">Account Type</label>
@@ -55,9 +49,9 @@
                 </div>
             </div>
         </div>
-        <hr/>
+        <hr />
         <div class="card-body">
-            <table  class="table table-bordered text-nowrap w-100">
+            <table class="table table-bordered text-nowrap w-100">
                 {{-- id="scroll-vertical" --}}
                 <thead>
                     <tr>
@@ -79,9 +73,6 @@
 @endsection
 @push('scripts')
     <!-- Datatables Cdn -->
-
-    @include('admin.users.scritps._load-table')
-    @include('admin.users.scritps._submit-form')
-    @include('admin.users.scritps._user_actions')
-
+    @include('admin.kyc.scritps._load-table')
+    @include('admin.kyc.scritps._actions')
 @endpush

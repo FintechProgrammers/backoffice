@@ -166,6 +166,11 @@ class User extends Authenticatable
         return $this->hasMany(BonusHistory::class, 'user_id', 'id')->latest();
     }
 
+    function kyc()
+    {
+        return $this->hasOne(UserKyc::class, 'user_id');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

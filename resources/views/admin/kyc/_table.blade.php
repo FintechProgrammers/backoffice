@@ -34,30 +34,7 @@
             </a>
             <ul class="dropdown-menu" style="">
                 <li class="mb-0">
-                    <a href="{{ route('admin.users.show', $item->uuid) }}" class="dropdown-item">Profile</a>
-                </li>
-                @if (!$item->is_ambassador)
-                    <li class="mb-0">
-                        <a href="javascript:void(0);" class="dropdown-item btn-action"
-                            data-url="{{ route('admin.users.mark.ambassador', $item->uuid) }}"
-                            data-action="Set user as Ambassador">Set as Ambassador</a>
-                    </li>
-                @endif
-                @if ($item->status === 'suspended')
-                    <li class="mb-0">
-                        <a href="javascript:void(0);" class="dropdown-item btn-action"
-                            data-url="{{ route('admin.users.activate', $item->uuid) }}"
-                            data-action="activate">Activate</a>
-                    </li>
-                @else
-                    <li class="mb-0">
-                        <a href="javascript:void(0);" class="dropdown-item btn-action"
-                            data-url="{{ route('admin.users.suspend', $item->uuid) }}" data-action="suspend">Suspend</a>
-                    </li>
-                @endif
-                <li class="mb-0">
-                    <a href="javascript:void(0);" class="dropdown-item btn-action"
-                        data-url="{{ route('admin.users.delete', $item->uuid) }}" data-action="delete">Delete</a>
+                    <a href="{{ route('admin.kyc.show', $item->uuid) }}" class="dropdown-item">Details</a>
                 </li>
             </ul>
         </td>

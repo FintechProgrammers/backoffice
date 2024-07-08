@@ -105,6 +105,12 @@ class Navigation
                 ]
             ],
             (object) [
+                'name'  => 'Kycs',
+                'route' => 'admin.kyc.index',
+                'icon'  => 'bx bx-file',
+                'hasPermission' => true
+            ],
+            (object) [
                 'name'  => 'Role Management',
                 'route' => 'admin.roles.index',
                 'icon'  => 'las la-bezier-curve',

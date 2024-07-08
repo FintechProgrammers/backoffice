@@ -114,6 +114,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::controller(KycController::class)->prefix('kyc')->name('kyc.')->group(function () {
         Route::get('', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::get('/load-data', 'loadContent')->name('load-data');
     });
 });
 

@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\CommisionPlanController;
 use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\CycleController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\KycController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProfileController;
@@ -212,5 +213,13 @@ Route::middleware('admin.auth')->group(function () {
     Route::controller(CycleController::class)->prefix('cycle')->name('cycle.')->group(function () {
         Route::get('', 'index')->name('index');
         Route::get('/start-cycle', 'runCycle')->name('start');
+    });
+
+    Route::controller(KycController::class)->prefix('kyc')->name('kyc.')->group(function () {
+        Route::get('', 'index')->name('index');
+        Route::get('/filter', 'filter')->name('filter');
+        Route::get('/{user}', 'show')->name('show');
+        Route::post('/approve/{kyc}','approve')->name('approve');
+        Route::post('/decline/{kyc}','decline')->name('decline');
     });
 });

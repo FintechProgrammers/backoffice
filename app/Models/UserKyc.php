@@ -29,4 +29,12 @@ class UserKyc extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+     /**
+     * Define the route model binding key for a given model.
+     */
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
 }
