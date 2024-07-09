@@ -48,7 +48,7 @@ class ProviderController extends Controller
         if ($provider->short_name == 'strip') {
             $stripController = new \App\Http\Controllers\StripeController();
 
-            $route = $stripController->iniatePayment($service);
+            $route = $stripController->payment($service);
         } else {
             return $this->sendError("Unable to complete your request at the momment", [], 400);
         }
@@ -77,7 +77,7 @@ class ProviderController extends Controller
         if ($provider->short_name == 'nowpayment') {
             $stripController = new \App\Http\Controllers\NowpaymentController();
 
-            $route = $stripController->iniatePayment($service);
+            $route = $stripController->payment($service);
         } else {
             return $this->sendError("Unable to complete your request at the momment", [], 400);
         }
@@ -87,5 +87,12 @@ class ProviderController extends Controller
 
     function payoutProvider()
     {
+    }
+
+    function provider()
+    {
+        $providers = Provider::where('is_active', true)->where('can_payin', true)->get();
+
+        return view('user.provider.index', ['providers' => $providers]);
     }
 }

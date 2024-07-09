@@ -34,16 +34,18 @@ class NowpaymentController extends Controller
         return view('nowpayments.create', $data);
     }
 
-    function iniatePayment($service = null)
+    function payment($validated=null)
     {
         try {
-            $user = auth()->user();
+            // $user = auth()->user();
 
-            if (!empty($service)) {
+            if (!empty($validated)) {
+
+                $service = $validated['package'];
 
                 $payload = [
                     'amount'           => $service->price,
-                    'order_id'          => generateReference(),
+                    'order_id'          => $validated['invoice']['order_id'],
                     'description'       => "{$service->name} Purchase",
                     'ipn_callback_url'  => config('contstants.nowpayment.ipn_base_url') . '/ipn/nowpayment/service/payment'
                 ];
@@ -59,15 +61,10 @@ class NowpaymentController extends Controller
                     ], Response::HTTP_UNPROCESSABLE_ENTITY));
                 }
 
-                Invoice::create([
-                    'user_id' => $user->id,
-                    'service_id' => $service->id,
-                    'order_id'   => $response['order_id'],
-                    'is_paid' => false
-                ]);
-
                 return $response['invoice_url'];
             } else {
+
+                $user = auth()->user();
 
                 $payload = [
                     'amount'           => systemSettings()->ambassador_fee,
@@ -88,9 +85,9 @@ class NowpaymentController extends Controller
                 }
 
                 Invoice::create([
-                    'user_id' => $user->id,
-                    'order_id'   => $response['order_id'],
-                    'is_paid' => false
+                    'user_id'       => $user->id,
+                    'order_id'      => $response['order_id'],
+                    'is_paid'       => false
                 ]);
 
                 return $response['invoice_url'];

@@ -15,6 +15,8 @@
 
 @include('partials.scripts._copy-scripts')
 
+@include('partials.scripts._copy')
+
 <script>
     function displayMessage(message, type) {
         const Toast = swal.mixin({

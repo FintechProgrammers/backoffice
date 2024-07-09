@@ -17,15 +17,17 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 class StripeController extends Controller
 {
 
-    function iniatePayment($service=null)
+    function payment($validated=null)
     {
         try {
 
             $stripeService = new \App\Services\StripeService();
 
-            $user = auth()->user();
-
             if (!empty($service)) {
+
+                $service = $validated['package'];
+
+                $user = $validated['user'];
 
                 $data = [
                     'currency' => 'usd',
@@ -52,6 +54,9 @@ class StripeController extends Controller
 
                 return $response->url;
             } else {
+
+                $user = auth()->user();
+
                 $data = [
                     'currency' => 'usd',
                     'amount' => systemSettings()->ambassador_fee * 100,

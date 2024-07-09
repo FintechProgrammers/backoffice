@@ -12,6 +12,7 @@ use App\Http\Controllers\User\KycController;
 use App\Http\Controllers\User\ProviderController;
 use App\Http\Controllers\User\ReportController;
 use App\Http\Controllers\User\SalesController;
+use App\Http\Controllers\User\ServiceAdsCheckoutController;
 use App\Http\Controllers\User\ServiceController;
 use App\Http\Controllers\User\SubscriptionController;
 use App\Http\Controllers\User\SupportController;
@@ -130,6 +131,13 @@ Route::prefix('ipn')->name('ipn.')->group(function () {
         Route::post('payout', 'payoutIpn')->name('payout');
     });
 });
+
+Route::controller(ServiceAdsCheckoutController::class)->prefix('checkout')->name('checkout.')->group(function () {
+    Route::get('', 'index')->name('index');
+    Route::post('/store', 'store')->name('store');
+});
+
+Route::get('providers', [ProviderController::class, 'providers'])->name('providers.active');
 
 
 require __DIR__ . '/auth.php';

@@ -14,7 +14,18 @@
                 <div class="card custom-card">
                     <div class="card-body p-3">
                         <div class="mb-3 overflow-hidden position-relative">
+                            <a href="javascript:void(0);" class="stretched-link"></a>
                             <img src="{{ $item->image }}" alt="img" class="nft-img img-fluid">
+                            <a href="javascript:void(0);" class="nft-btn copy-btn" data-bs-toggle="tooltip"
+                                aria-label="Like"
+                                copy_value="{{ route('register') }}?amb={{ auth()->user()->uuid }}&service={{ $item->uuid }}"><i
+                                    class="bx bx-share"></i>
+                            </a>
+                            <span class="nft-timer-container">
+                                <i class="ti ti-bolt fs-14"></i>
+                                <span
+                                    class="nft-timer ms-1 fs-11">{{ convertDaysToUnit($item->duration, $item->duration_unit) . ' ' . $item->duration_unit }}</span>
+                            </span>
                         </div>
                         <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap">
                             <div class="d-inline-flex align-items-start position-relative">
