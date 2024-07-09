@@ -18,7 +18,7 @@
                             <img src="{{ $item->image }}" alt="img" class="nft-img img-fluid">
                             <a href="javascript:void(0);" class="nft-btn copy-btn" data-bs-toggle="tooltip"
                                 aria-label="Like"
-                                copy_value="{{ route('register') }}?amb={{ auth()->user()->uuid }}&service={{ $item->uuid }}"><i
+                                copy_value="{{ route('checkout.index') }}?amb={{ auth()->user()->uuid }}&service={{ $item->uuid }}"><i
                                     class="bx bx-share"></i>
                             </a>
                             <span class="nft-timer-container">
