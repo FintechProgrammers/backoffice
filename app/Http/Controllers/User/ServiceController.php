@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Provider;
 use App\Models\Service;
 use App\Services\StripeService;
 use Illuminate\Http\Request;
@@ -19,6 +20,8 @@ class ServiceController extends Controller
     function show(Service $service)
     {
         $data['package'] = $service;
+        $data['providers'] = Provider::where('is_active', true)->where('can_payin', true)->get();
+
         return view('user.package.details', $data);
     }
 

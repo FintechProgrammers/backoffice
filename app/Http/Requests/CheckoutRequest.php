@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class CheckoutRequest extends FormRequest
 {
@@ -24,15 +25,20 @@ class CheckoutRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'referral_id' => ['required', 'exists:users,uuid'],
+        $rules =  [
             'package_id'  => ['required', 'exists:services,uuid'],
-            'name' => ['required'],
-            'email' => ['required', 'unique:users,email'],
-            'username'  => ['required', 'unique:users,username'],
-            'password' => ['required', 'confirmed'],
-            'payment_provider'  => ['required','exists:providers,uuid']
+            'payment_provider'  => ['required', 'exists:providers,uuid']
         ];
+
+        if (!auth()->check()) {
+            $rules['name'] = ['required'];
+            $rules['email'] = ['required', 'unique:users,email'];
+            $rules['username']  = ['required', 'unique:users,username'];
+            $rules['password'] = ['required', 'confirmed'];
+            $rules['referral_id'] = ['required', 'exists:users,uuid'];
+        }
+
+        return $rules;
     }
 
     protected function failedValidation(Validator $validator)

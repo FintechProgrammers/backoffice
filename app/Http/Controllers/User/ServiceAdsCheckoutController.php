@@ -34,20 +34,26 @@ class ServiceAdsCheckoutController extends Controller
             // check package
             $package = Service::whereUuid($validated['package_id'])->first();
 
-            // get referral
-            $referral = User::whereUuid($validated['referral_id'])->first();
-
             // Get provider
             $provider = Provider::whereUuid($validated['payment_provider'])->first();
 
-            // create user account
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'username' => $request->username,
-                'password' => Hash::make($request->password),
-                'parent_id'  => $referral->id
-            ]);
+            if (auth()->check()) {
+                $user = auth()->user();
+            } else {
+                // get referral
+                $referral = User::whereUuid($validated['referral_id'])->first();
+
+                // create user account
+                $user = User::create([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'username' => $request->username,
+                    'password' => Hash::make($request->password),
+                    'parent_id'  => $referral->id
+                ]);
+
+                $validated['referral'] = $referral;
+            }
 
             // create invoice
             $invoice = Invoice::create([
@@ -59,7 +65,6 @@ class ServiceAdsCheckoutController extends Controller
 
             $validated['invoice'] = $invoice;
             $validated['user'] = $user;
-            $validated['referral'] = $referral;
             $validated['provider'] = $provider;
             $validated['package'] = $package;
 

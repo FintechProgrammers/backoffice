@@ -49,6 +49,7 @@ class SubscriptionService
         Sale::create([
             'user_id' => $subscription->user->id,
             'service_id' => $subscription->service->id,
+            'cycle_id' => currentCycle(),
             'parent_id' => !empty($subscription->user->parent_id) ? $subscription->user->parent_id : null,
             'amount' => $amount
         ]);
