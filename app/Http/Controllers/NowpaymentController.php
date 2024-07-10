@@ -2,10 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AmbassedorPayments;
+use App\Models\Bonus;
 use App\Models\Invoice;
 use App\Models\Service;
+use App\Models\User;
+use App\Models\UserActivities;
+use App\Models\UserSubscription;
 use App\Models\Withdrawal;
 use App\Services\NowpaymentsService;
+use App\Services\SubscriptionService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -34,7 +40,7 @@ class NowpaymentController extends Controller
         return view('nowpayments.create', $data);
     }
 
-    function payment($validated=null)
+    function payment($validated = null)
     {
         try {
             // $user = auth()->user();
@@ -69,8 +75,8 @@ class NowpaymentController extends Controller
                 $payload = [
                     'amount'           => systemSettings()->ambassador_fee,
                     'order_id'         => generateReference(),
-                    'description'       => "Ambassedor Account Setup",
-                    'ipn_callback_url'  => config('contstants.nowpayment.ipn_base_url') . '/ipn/nowpayment/abassador/payment'
+                    'description'       => "Ambassador Account Setup",
+                    'ipn_callback_url'  => config('contstants.nowpayment.ipn_base_url') . '/ipn/nowpayment/ambassador/payment'
                 ];
 
                 $response = $this->nowpaymentService->createInvoice($payload);
@@ -152,7 +158,7 @@ class NowpaymentController extends Controller
             $details = [
                 'wallet_address' => $validated['wallet_address'],
                 'coin'           => 'USDT',
-                'newtwork'       =>  $currency
+                'network'       =>  $currency
             ];
 
             // create transaction record
@@ -213,13 +219,167 @@ class NowpaymentController extends Controller
 
     function payoutIpn(Request $request)
     {
+        $data = trim(file_get_contents('php://input'), "\xEF\xBB\xBF");
+        // Decode the contents from the webhook response
+        $decoded = json_decode(mb_convert_encoding($data, 'UTF-8', 'UTF-8'), true, 512, JSON_THROW_ON_ERROR);
+
+        if (empty($decoded)) {
+            sendToLog('Nowpayment sent an empty transaction webhook response payload.');
+
+            return response('Payload is empty.', Response::HTTP_OK)->header('Content-Type', 'text/plain');
+        }
+
+        if (empty($decoded)) {
+            sendToLog('Nowpayment sent an empty transaction webhook response payload.');
+
+            return response('Payload is empty.', Response::HTTP_OK)->header('Content-Type', 'text/plain');
+        }
+
+        // Compute the HMAC using the SHA-512 hash algorithm
+        $signature = hash_hmac('SHA512', $data, config('contstants.nowpayment.ipn_key'));
+
+        $headerKey = $request->headers->get('x-nowpayments-sig');
+
+        // Verify signature
+        if ($headerKey !== $signature) {
+            sendToLog('Nowpayment payout webhook unauthorized access.');
+            sendToLog('Nowpayment payout response: ' . json_encode($decoded));
+
+            return response()->json([], Response::HTTP_UNAUTHORIZED);
+        }
+
+        return response('Successful', Response::HTTP_OK)->header('Content-Type', 'text/plain');
     }
 
-    function abassadorIpn(Request $request)
+    function ambassadorIpn(Request $request)
     {
+        $data = trim(file_get_contents('php://input'), "\xEF\xBB\xBF");
+        // Decode the contents from the webhook response
+        $decoded = json_decode(mb_convert_encoding($data, 'UTF-8', 'UTF-8'), true, 512, JSON_THROW_ON_ERROR);
+
+        if (empty($decoded)) {
+            sendToLog('Nowpayment sent an empty transaction webhook response payload.');
+
+            return response('Payload is empty.', Response::HTTP_OK)->header('Content-Type', 'text/plain');
+        }
+
+        // Compute the HMAC using the SHA-512 hash algorithm
+        $signature = hash_hmac('SHA512', $data, config('contstants.nowpayment.ipn_key'));
+
+        $headerKey = $request->headers->get('x-nowpayments-sig');
+
+        // Verify signature
+        if ($headerKey !== $signature) {
+            sendToLog('Nowpayment payout webhook unauthorized access.');
+            sendToLog('Nowpayment payout response: ' . json_encode($decoded));
+
+            return response()->json([], Response::HTTP_UNAUTHORIZED);
+        }
+
+        // GEt the invoice
+        $invoice = Invoice::where('order_id', $decoded['order_id'])->whereNull('service_id')->where('is_paid', false)->first();
+
+        if (empty($invoice)) {
+            sendToLog('Nowpayment invoice not found.');
+            sendToLog('Nowpayment payout response: ' . json_encode($decoded));
+
+            return response()->json([], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $invoice->update([
+            'is_paid' => true
+        ]);
+
+        $user = $invoice->user;
+
+        if (!$user->is_ambassador) {
+
+            AmbassedorPayments::create([
+                'reference' => generateReference(),
+                'user_id' => $user->id,
+                'amount'  => $invoice->amount
+            ]);
+
+            $user->update([
+                'is_ambassador' => true
+            ]);
+
+            Bonus::create([
+                'user_id' => $user->id,
+                'amount' => 0
+            ]);
+
+            UserActivities::create([
+                'user_id' => $user->id,
+                'log'  => 'Payment for Ambassador Account.'
+            ]);
+        }
+
+        return response('Successful', Response::HTTP_OK)->header('Content-Type', 'text/plain');
     }
 
     function serviceIpn(Request $request)
     {
+        $data = trim(file_get_contents('php://input'), "\xEF\xBB\xBF");
+        // Decode the contents from the webhook response
+        $decoded = json_decode(mb_convert_encoding($data, 'UTF-8', 'UTF-8'), true, 512, JSON_THROW_ON_ERROR);
+
+        if (empty($decoded)) {
+            sendToLog('Nowpayment sent an empty transaction webhook response payload.');
+
+            return response('Payload is empty.', Response::HTTP_OK)->header('Content-Type', 'text/plain');
+        }
+
+        // Compute the HMAC using the SHA-512 hash algorithm
+        $signature = hash_hmac('SHA512', $data, config('contstants.nowpayment.ipn_key'));
+
+        $headerKey = $request->headers->get('x-nowpayments-sig');
+
+        // Verify signature
+        if ($headerKey !== $signature) {
+            sendToLog('Nowpayment payout webhook unauthorized access.');
+            sendToLog('Nowpayment payout response: ' . json_encode($decoded));
+
+            return response()->json([], Response::HTTP_UNAUTHORIZED);
+        }
+
+        // GEt the invoice
+        $invoice = Invoice::where('order_id', $decoded['order_id'])->where('is_paid', false)->first();
+
+        if (empty($invoice)) {
+            sendToLog('Nowpayment invoice not found.');
+            sendToLog('Nowpayment payout response: ' . json_encode($decoded));
+
+            return response()->json([], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $user = $invoice->user;
+
+        $package = Service::find($invoice->service_id);
+
+        if (empty($package)) {
+            sendToLog('Package not found.');
+            sendToLog('Nowpayment payout response: ' . json_encode($decoded));
+
+            return response()->json([], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $subscriptionService = new SubscriptionService();
+
+        $userSubscription = UserSubscription::where('user_id', $user->id)->where('service_id', $package->id)->first();
+
+        if ($userSubscription) {
+            if (!$userSubscription->is_active) {
+                $subscriptionService->updateSubscription($package, $userSubscription);
+            }
+        } else {
+            $subscriptionService->createSubscription($package, $user);
+        }
+
+        $invoice->update([
+            'is_paid' => true
+        ]);
+
+        return response('Successful', Response::HTTP_OK)->header('Content-Type', 'text/plain');
     }
 }

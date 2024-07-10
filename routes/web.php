@@ -90,11 +90,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('packages', 'packages')->name('packages');
     });
 
-    Route::controller(PaymentController::class)->prefix('payment')->name('payment.')->group(function () {
-        Route::get('success', 'success')->name('success');
-        Route::get('cancel', 'cancel')->name('cancel');
-    });
-
     Route::get('team', [TeamController::class, 'index'])->name('team.index');
 
     Route::controller(ProviderController::class)->prefix('provider')->name('provider.')->group(function () {
@@ -127,7 +122,7 @@ Route::prefix('webhook')->name('webhook')->group(function () {
 Route::prefix('ipn')->name('ipn.')->group(function () {
     Route::controller(NowpaymentController::class)->prefix('nowpayment')->name('nowpayment.')->group(function () {
         Route::post('service/payment', 'serviceIpn')->name('service');
-        Route::post('abassador/payment', 'abassadorIpn')->name('abassador');
+        Route::post('ambassador/payment', 'ambassadorIpn')->name('ambassador');
         Route::post('payout', 'payoutIpn')->name('payout');
     });
 });
@@ -138,6 +133,11 @@ Route::controller(ServiceAdsCheckoutController::class)->prefix('checkout')->name
 });
 
 Route::get('providers', [ProviderController::class, 'providers'])->name('providers.active');
+
+Route::controller(PaymentController::class)->prefix('payment')->name('payment.')->group(function () {
+    Route::get('success', 'success')->name('success');
+    Route::get('cancel', 'cancel')->name('cancel');
+});
 
 
 require __DIR__ . '/auth.php';

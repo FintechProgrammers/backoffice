@@ -69,15 +69,15 @@ class ServiceAdsCheckoutController extends Controller
             $validated['package'] = $package;
 
             if ($provider->short_name == 'nowpayment') {
-                $stripController = new \App\Http\Controllers\NowpaymentController();
+                $nowpaymentController = new \App\Http\Controllers\NowpaymentController();
 
-                $route = $stripController->payment($validated);
+                $route = $nowpaymentController->payment($validated);
             } else if ($provider->short_name == 'strip') {
                 $stripController = new \App\Http\Controllers\StripeController();
 
                 $route = $stripController->payment($validated);
             } else {
-                return $this->sendError("Unable to complete your request at the momment", [], 400);
+                return $this->sendError("Unable to complete your request at the moment", [], 400);
             }
 
             DB::commit();

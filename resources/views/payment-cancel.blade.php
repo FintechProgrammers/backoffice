@@ -18,6 +18,10 @@
                 Your payment process was cancelled by you.
             </p>
         </div>
-        <a href="{{ route('dashboard') }}" class="btn btn-success">Continue to Dashboard</a>
+        @if (auth()->check())
+            <a href="{{ route('dashboard') }}" class="btn btn-success">Continue to Dashboard</a>
+        @else
+            <a href="{{ route('login') }}" class="btn btn-success">Login</a>
+        @endif
     </div>
 @endsection

@@ -11,4 +11,9 @@ class Invoice extends Model
     use HasFactory, GeneratesUuid;
 
     protected $guarded = [];
+
+    function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

@@ -103,7 +103,7 @@ class StripeController extends Controller
             // make user an ambassedor
             $user = User::where('id', $session->metadata->user_id)->first();
 
-            if (!$user->is_ambassedor) {
+            if (!$user->is_ambassador) {
 
                 AmbassedorPayments::create([
                     'reference' => generateReference(),
@@ -122,7 +122,7 @@ class StripeController extends Controller
 
                 UserActivities::create([
                     'user_id' => $user->id,
-                    'log'  => 'Payment for Ambassedor Account.'
+                    'log'  => 'Payment for Ambassador Account.'
                 ]);
             }
 
@@ -224,17 +224,17 @@ class StripeController extends Controller
             case 'checkout.session.completed':
                 $session = $event->data->object;
             case 'invoice.finalized':
-                $invoice = $event->data->object;
+                $session = $event->data->object;
             case 'invoice.overdue':
-                $invoice = $event->data->object;
+                $session = $event->data->object;
             case 'invoice.paid':
-                $invoice = $event->data->object;
+                $session = $event->data->object;
             case 'invoice.payment_action_required':
-                $invoice = $event->data->object;
+                $session = $event->data->object;
             case 'invoice.payment_failed':
-                $invoice = $event->data->object;
+                $session = $event->data->object;
             case 'invoice.payment_succeeded':
-                $invoice = $event->data->object;
+                $session = $event->data->object;
                 // ... handle other event types
             default:
                 echo 'Received unknown event type ' . $event->type;
