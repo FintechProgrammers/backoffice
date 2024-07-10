@@ -92,6 +92,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('team', [TeamController::class, 'index'])->name('team.index');
 
+    Route::controller(TeamController::class)->prefix('team')->name('team.')->group(function () {
+        Route::get('', 'index')->name('index');
+        Route::get('/filter', 'filter')->name('fileter');
+        Route::get('/genealogy', 'genealogy')->name('genealogy');
+    });
+
     Route::controller(ProviderController::class)->prefix('provider')->name('provider.')->group(function () {
         Route::get('payin/{serviceId?}', 'payinProvider')->name('payin');
         Route::get('payout', 'payoutProvider')->name('payout');

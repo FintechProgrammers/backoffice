@@ -198,10 +198,22 @@ class Navigation
                 'hasPermission' => true
             ],
             (object) [
-                'name'  => 'Team',
-                'route' => 'team.index',
-                'icon'  => 'bx bx-sitemap',
-                'hasPermission' => auth()->user()->is_ambassador ?? false
+                'name'      => 'Team',
+                'icon'      => 'bx bx-sitemap',
+                'routes'    => ['team.index', 'team.genealogy'],
+                'hasPermission' => true,
+                'subMenu'   => (object) [
+                    (object) [
+                        'name'  => 'Customer Downline',
+                        'route' => 'team.index',
+                        'hasPermission' => true
+                    ],
+                    (object) [
+                        'name'  => 'Genealogy',
+                        'route' => 'team.genealogy',
+                        'hasPermission' => auth()->user()->is_ambassador ?? false
+                    ],
+                ]
             ],
             (object) [
                 'name'  => 'Tickets',

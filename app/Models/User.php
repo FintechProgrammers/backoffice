@@ -49,6 +49,11 @@ class User extends Authenticatable
         return $this->hasOne(UserInfo::class, 'user_id');
     }
 
+    function sponsor()
+    {
+        return $this->belongsTo(User::class, 'parent_id', 'id');
+    }
+
     public function getProfilePictureAttribute(): string
     {
         return !empty($this->profile_image) ? $this->profile_image : url('/') . '/assets/images/avatar.svg';
@@ -127,6 +132,11 @@ class User extends Authenticatable
         return $this->hasMany(Withdrawal::class, 'user_id', 'id')->latest();
     }
 
+    function sales()
+    {
+        return $this->hasMany(Sale::class, 'provider_id', 'id');
+    }
+
     function getTotalWithdrawalsAmountAttribute()
     {
         return number_format($this->withdrawals()->where('status', 'completed')->sum('amount'), 2, '.', ',');
@@ -135,6 +145,13 @@ class User extends Authenticatable
     function getTotalPendingWithdrawalsAmountAttribute()
     {
         return number_format($this->withdrawals()->where('status', 'pending')->sum('amount'), 2, '.', ',');
+    }
+
+    function getTotalSalesAttribute()
+    {
+        $total = $this->sales()->sum('amount');
+
+        return number_format($total, 2, '.', ',');
     }
 
     function activities()

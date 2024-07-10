@@ -4,12 +4,18 @@
             <x-profile-component name="{{ $item->name }}" email="{{ $item->email }}"
                 image="{{ $item->profile_picture }}" />
         </td>
-        <td>{{ $item->username }}</td>
+        <td class="text-center">{{ $item->username }}</td>
         <td class="text-center">
             @if ($item->is_ambassador)
                 <span class="badge bg-blue">Ambassador</span>
             @else
                 <span class="badge bg-black">Customer</span>
+            @endif
+        </td>
+        <td>
+            @if (!empty($item->sponsor))
+                <x-profile-component name="{{ $item->sponsor->name }}" email="{{ $item->sponsor->email }}"
+                    image="{{ $item->sponsor->profile_picture }}" />
             @endif
         </td>
         <td>{{ $item->created_at->format('jS, M Y H:i A') }}</td>
@@ -52,7 +58,8 @@
                 @else
                     <li class="mb-0">
                         <a href="javascript:void(0);" class="dropdown-item btn-action"
-                            data-url="{{ route('admin.users.suspend', $item->uuid) }}" data-action="suspend">Suspend</a>
+                            data-url="{{ route('admin.users.suspend', $item->uuid) }}"
+                            data-action="suspend">Suspend</a>
                     </li>
                 @endif
                 <li class="mb-0">
@@ -64,11 +71,11 @@
     </tr>
 @empty
     <tr>
-        <td colspan="6" class="text-center"><span class="text-warning">no data available</span></td>
+        <td colspan="7" class="text-center"><span class="text-warning">no data available</span></td>
     </tr>
 @endforelse
 <tr style="border: none;">
-    <td colspan="6" style="border: none;">
+    <td colspan="7" style="border: none;">
         {{ $users->links('vendor.pagination.custom') }}
     </td>
 </tr>

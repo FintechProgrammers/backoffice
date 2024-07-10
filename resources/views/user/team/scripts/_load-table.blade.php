@@ -33,35 +33,21 @@
 
     function loadTable() {
 
-        const table = $('#table-body')
+        const table = $('#content')
 
-        const search = $('#search').val()
-        const account_type = $('#account_type').val()
-        const status = $('#status').val()
-        const date = $("#search-date").val();
-        const [startDate, endDate] = date.split(" - ");
         const page = $('#hidden_page').val();
 
         $.ajax({
-            url: `/admin/users/filter?page=${page}`,
+            url: `/team/filter?page=${page}`,
             type: 'GET',
-            data: {
-                search: search,
-                account_type: account_type,
-                status: status,
-                startDate: startDate,
-                endDate: endDate,
-            },
             beforeSend: function() {
-                table.html(`<tr>
-                    <td class="text-center" colspan="7">
-                        <div class="d-flex justify-content-center">
+                table.html(`
+                    <div class="d-flex justify-content-center">
                         <div class="spinner-border" role="status">
                             <span class="sr-only">Loading...</span>
                         </div>
                     </div>
-                        </td>
-                    </tr>`)
+                 `)
             },
             success: function(response) {
                 table.empty().html(response);

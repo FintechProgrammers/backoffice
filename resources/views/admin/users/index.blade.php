@@ -64,6 +64,7 @@
                         <th>Name</th>
                         <th>Username</th>
                         <th class="text-center">Account Type</th>
+                        <th>Sponsor</th>
                         <th>Date Join</th>
                         <th>Status</th>
                         <th>KYC Status</th>
