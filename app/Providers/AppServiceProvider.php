@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Notifications\ResetPassword;
 use App\Models\User;
 use App\Models\Admin;
+use App\Models\Sale;
+use App\Observers\SaleObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,6 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Sale::observe(SaleObserver::class);
+
         ResetPassword::createUrlUsing(function ($user, string $token) {
             $baseAdminUrl = route('admin.reset.password.index', ['token' => $token]);
             $baseUserUrl = route('password.reset', ['token' => $token]);
@@ -29,7 +33,7 @@ class AppServiceProvider extends ServiceProvider
             return match (true) {
                 $user instanceof Admin => $baseAdminUrl . '?email=' . urlencode($user->email),
                 $user instanceof User => $baseUserUrl . '?email=' . urlencode($user->email),
-                // other user types
+                    // other user types
                 default => throw new \Exception("Invalid user type"),
             };
         });

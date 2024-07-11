@@ -43,6 +43,8 @@ class RegisteredUserController extends Controller
 
             $parent = null;
 
+            $level = 1;
+
             // Check if referral code is not empty then assign parent to the person registering.
             if ($request->filled('referral_code')) {
                 // get user that has code
@@ -51,6 +53,9 @@ class RegisteredUserController extends Controller
                 if (empty($parent)) {
                     return $this->sendError('The referral code you entered is not valid.');
                 }
+
+                // $level = $this->calculateLevel($parent);
+                // $level = min($level, 4); // Cap level at 4
             }
 
             $user = User::create([
@@ -59,6 +64,7 @@ class RegisteredUserController extends Controller
                 'email' => $request->email,
                 'parent_id' => $parent,
                 'password' => Hash::make($request->password),
+                // 'level' => $level
             ]);
 
             DB::commit();
@@ -75,5 +81,14 @@ class RegisteredUserController extends Controller
             logger($e);
             return $this->sendError(serviceDownMessage(), [], 500);
         }
+    }
+
+    private function calculateLevel($referrerId)
+    {
+        if ($referrerId === null) {
+            return 1; // Level 1 for direct referral
+        }
+
+        return $this->calculateLevel(User::find($referrerId)->parent_id) + 1;
     }
 }
