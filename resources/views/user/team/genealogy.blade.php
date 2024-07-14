@@ -9,58 +9,37 @@
         </div>
     </div>
     @if (count(directReferrals($user->id)) > 0)
-        <div class="card card-body">
+        <div class="card card-body h-70">
             <div class="d-flex flex-column align-items-center">
                 <div class="tree">
                     <ul>
                         <li>
                             @if (count(directReferrals($user->id)) > 0)
-                                <a href="#">
-                                    <div class="tree-img" style="background-image: url('{{ $user->profile_picture }}')">
-                                    </div>
-
-                                    {{ $user->username }}
-                                    {{-- (L -{{ $user->current_level_id != null ? $user->current_level_id : 0 }}) --}}
-                                </a>
+                                @include('user.team.team-head', ['user' => $user])
                             @endif
 
                             @if (count(directReferrals($user->id)) > 0)
                                 <ul>
                                     @foreach (directReferrals($user->id) as $child)
                                         <li>
-                                            <a href="#">
-                                                <div class="tree-img"
-                                                    style="background-image: url('{{ $child->profile_picture }}');">
-                                                </div>
-                                                {{ $child->username }}
-                                                {{-- (L -{{ $child->current_level_id != null ? $child->current_level_id : 0 }}) --}}
-
-                                            </a>
+                                            @include('user.team.team-head', ['user' => $child])
                                             @if (count(directReferrals($child->id)) > 0)
                                                 <ul>
                                                     @foreach (directReferrals($child->id) as $grand_child)
                                                         <li>
-                                                            <a href="#">
-                                                                <div class="tree-img"
-                                                                    style="background-image: url('{{ $grand_child->profile_picture }}');">
-                                                                </div>
-                                                                {{ $grand_child->username }}
-                                                                {{-- (L -
-                                                    {{ $grand_child->current_level_id != null ? $grand_child->current_level_id : 0 }}) --}}
-                                                            </a>
-
+                                                            @include('user.team.team-head', [
+                                                                'user' => $grand_child,
+                                                            ])
                                                             @if (count(directReferrals($grand_child->id)) > 0)
                                                                 <ul>
                                                                     @foreach (directReferrals($grand_child->id) as $great_grand_child)
                                                                         <li>
-                                                                            <a href="#">
-                                                                                <div class="tree-img"
-                                                                                    style="background-image: url('{{ $great_grand_child->profile_picture }}');">
-                                                                                </div>
-                                                                                {{ $great_grand_child->username }}
-                                                                                {{-- (L -
-                                                                    {{ $great_grand_child->current_level_id != null ? $great_grand_child->current_level_id : 0 }}) --}}
-                                                                            </a>
+                                                                            @include(
+                                                                                'user.team.team-head',
+                                                                                [
+                                                                                    'user' => $great_grand_child,
+                                                                                ]
+                                                                            )
                                                                         </li>
                                                                     @endforeach
                                                                 </ul>
@@ -84,7 +63,7 @@
         <div class="d-flex flex-column align-items-center h-100 ">
             <img src="{{ asset('assets/images/referral.png') }}" width="400px" height="400px" alt="">
             <h5 class="text-uppercase text-center"><b>Refer a friend</b></h5>
-            <p class="text-center"> and earn commissions on each of their purchases!<br/> Share
+            <p class="text-center"> and earn commissions on each of their purchases!<br /> Share
                 your referral link today and start earning rewards.</p>
             <div class="input-group mb-3 w-25">
                 <input type="text" class="form-control" placeholder="Recipient's username"
@@ -96,5 +75,44 @@
             </div>
         </div>
     @endif
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel1">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasRightLabel1"></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body" id="user-details">
 
+        </div>
+    </div>
 @endsection
+@push('scripts')
+    <script>
+        const canBody = $('#user-details')
+
+        $('.show-detail').click(function(e) {
+            e.preventDefault();
+
+            const url = $(this).data('url');
+
+            $.ajax({
+                url: url,
+                method: "GET",
+                beforeSend: function() {
+                    canBody.html(`<div class="d-flex justify-content-center h-75">
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>`)
+                },
+                success: function(result) {
+                    canBody.empty().html(result);
+                },
+                error: function(jqXHR, testStatus, error) {
+                    console.log(jqXHR.responseText, testStatus, error);
+                    displayMessage("An error occurred", "error")
+                },
+                timeout: 8000,
+            });
+        })
+    </script>
+@endpush

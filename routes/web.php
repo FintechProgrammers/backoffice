@@ -96,6 +96,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('', 'index')->name('index');
         Route::get('/filter', 'filter')->name('fileter');
         Route::get('/genealogy', 'genealogy')->name('genealogy');
+        Route::get('/user/info/{user}', 'userInfo')->name('user.info');
     });
 
     Route::controller(ProviderController::class)->prefix('provider')->name('provider.')->group(function () {
@@ -143,6 +144,14 @@ Route::get('providers', [ProviderController::class, 'providers'])->name('provide
 Route::controller(PaymentController::class)->prefix('payment')->name('payment.')->group(function () {
     Route::get('success', 'success')->name('success');
     Route::get('cancel', 'cancel')->name('cancel');
+});
+
+Route::get('text-con', function () {
+    $service = new \App\Services\CommissionService();
+
+    $sale = \App\Models\Sale::where('id', 3)->first();
+
+    $service->distributeCommissions($sale);
 });
 
 

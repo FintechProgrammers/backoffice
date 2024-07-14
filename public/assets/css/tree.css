@@ -14,11 +14,9 @@
     list-style-type: none;
     position: relative;
     padding: 20px 5px 0 5px;
-
     transition: all 0.5s;
     -webkit-transition: all 0.5s;
     -moz-transition: all 0.5s;
-
 }
 
 /*We will use ::before and ::after to draw the connectors*/
@@ -88,11 +86,12 @@ right connector from last child*/
     border: 1px solid #ccc;
     padding: 5px 10px;
     text-decoration: none;
-    color: #000s;
+    color: #000;
     font-family: arial, verdana, tahoma;
     font-size: 13px;
     display: inline-block;
     text-transform: capitalize;
+    width : 150px;
 
     border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -194,3 +193,4 @@ Thanks :)*/
 .clock-label {
     font-size: 12px;
 }
+

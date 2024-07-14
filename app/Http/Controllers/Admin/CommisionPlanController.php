@@ -51,7 +51,7 @@ class CommisionPlanController extends Controller
 
             $commission = CommissionLevels::create([
                 'name' => $request->name,
-                'level'  => $request->level,
+                'level'  => $request->commission_type == 'direct' ? 1 : $request->level,
                 'commission_percentage' => $request->commission_percentage,
                 'is_direct'  => $request->commission_type == 'direct' ? true : false,
             ]);
@@ -121,8 +121,7 @@ class CommisionPlanController extends Controller
                 'is_direct'  => $request->commission_type == 'direct' ? true : false,
             ]);
 
-            if($request->has_requirement === 'on')
-            {
+            if ($request->has_requirement === 'on') {
                 LevelRequirement::where('commission_level_id', $commission->id)->update([
                     'direct_bv'   => $request->direct_bv,
                     'sponsored_bv' => $request->sponsored_bv,

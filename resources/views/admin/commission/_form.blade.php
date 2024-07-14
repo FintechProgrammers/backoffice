@@ -33,7 +33,7 @@
         <label class="form-check-label" for="switch-lg">Activate Requirements</label>
     </div>
 </div>
-<div id="requirementBlock" style="display:{{ isset($commission) && !$commission->has_requirement ? 'block' : 'none' }}">
+<div id="requirementBlock" style="display:{{ isset($commission) && $commission->has_requirement ? 'block' : 'none' }}">
     <h6><b>Requirement Configuration</b></h6>
     <div class="mb-3">
         <label for="form-text" class="form-label fs-14 text-dark">{{ __('Required Direct BV') }}</label>

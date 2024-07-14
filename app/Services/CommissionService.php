@@ -16,45 +16,49 @@ class CommissionService
 
         foreach ($commissions as $commission) {
             CommissionTransaction::create([
-                'user_id' => $commission['user_id'],
+                'user_id' => $commission['parent_id'],
                 'sale_id' => $sale->id,
                 'level' => $commission['level'],
                 'amount' => $commission['amount'],
+                'child_id' => $commission['child_id'],
                 'cycle_id' => currentCycle()
             ]);
         }
     }
 
-    public function calculateCommission(Sale $sale, $level = 1,User $parent = null)
+    public function calculateCommission(Sale $sale)
     {
-        if ($level > 4) {
-            return [];
-        }
-
-        $parent = $parent ?: User::find($sale->parent_id);
-        if (!$parent) {
-            return [];
-        }
-
-        $commissionPlan = CommissionLevels::where('level', $level)->first();
-        if (!$commissionPlan) {
-            return [];
-        }
-
+        $parent = User::find($sale->parent_id);
+        $level = 1;
         $commissions = [];
+        $childId = $sale->user_id;
 
-        if (!$commissionPlan->has_requirement || $this->meetsRequirements($parent, $commissionPlan)) {
-            $commissions[] = [
-                'user_id' => $parent->id,
-                'level' => $commissionPlan->level,
-                'amount' => ($sale->amount * $commissionPlan->commission_percentage) / 100,
-            ];
+        while ($parent && $level <= 4) {
+            $commissionPlan = CommissionLevels::where('level', $level)->first();
+
+            if (!$commissionPlan) {
+                break;
+            }
+
+            // If commission plan has requirements and parent meets them, or if there are no requirements
+            if (!$commissionPlan->has_requirement || $this->meetsRequirements($parent, $commissionPlan)) {
+                $commissions[] = [
+                    'parent_id' => $parent->id,
+                    'level' => $commissionPlan->level,
+                    'amount' => ($sale->amount * $commissionPlan->commission_percentage) / 100,
+                    'child_id' => $childId
+                ];
+            }
+
+            $childId = $parent->id;
+            $parent = User::find($parent->parent_id);
+
+            $level++;
         }
 
-        $parent = User::find($parent->parent_id);
-
-        return array_merge($commissions, $this->calculateCommission($sale, $level + 1, $parent));
+        return $commissions;
     }
+
 
     private function meetsRequirements(User $user, CommissionLevels $commissionPlan)
     {
