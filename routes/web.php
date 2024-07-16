@@ -78,6 +78,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/filter', 'filter')->name('filter');
         Route::get('/create', 'create')->name('create');
         Route::post('/store', 'store')->name('store');
+        Route::get('/send-otp', 'sendOTP')->name('send.otp');
     });
 
     Route::controller(AcademyController::class)->prefix('academy')->name('academy.')->group(function () {

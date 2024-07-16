@@ -15,3 +15,19 @@
   <link rel="stylesheet" href="{{ asset('assets/libs/sweetalert2/sweetalert2.min.css') }}">
 
   <link href="{{ asset('assets/css/tree.css') }}" rel="stylesheet">
+
+  <style>
+      .pin-box-grid {
+          display: grid;
+          grid-template-columns: repeat(6, 1fr);
+          gap: 10px;
+      }
+
+      .pin-box-grid-2 {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 10px;
+          width: 75%;
+          margin: 0 auto;
+      }
+  </style>

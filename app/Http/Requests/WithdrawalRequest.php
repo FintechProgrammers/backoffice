@@ -28,8 +28,8 @@ class WithdrawalRequest extends FormRequest
     {
         return [
             'amount' => ['required', 'numeric'],
-            'account_number' => ['required', 'numeric'],
-            'account_name' => ['required', 'string'],
+            'wallet_address' => ['nullable', 'required_if:payment_method,crypto'],
+            'token' => ['required', 'numeric', 'digits:4'],
         ];
     }
 

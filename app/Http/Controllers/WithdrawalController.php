@@ -3,15 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\WithdrawalRequest;
+use App\Jobs\Mail\OtpMail;
 use App\Models\Provider;
 use App\Models\UserActivities;
+use App\Models\UserOtp;
+use App\Models\Wallet;
 use App\Models\Withdrawal;
+use App\Traits\RecursiveActions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Symfony\Component\HttpFoundation\Response;
 
 class WithdrawalController extends Controller
 {
+    use RecursiveActions;
+
     function index()
     {
         return view('user.withdrawal.index');
@@ -27,9 +35,25 @@ class WithdrawalController extends Controller
     function create()
     {
         $data['cryptoProvider'] = Provider::where('is_active', true)->where('is_crypto', true)->where('can_payout', true)->where('is_default', true)->first();
-        $data['bankTransferProvider'] = Provider::where('is_active', true)->where('is_crypto',false)->where('can_payout', true)->where('is_default', true)->first();
+        $data['bankTransferProvider'] = Provider::where('is_active', true)->where('is_crypto', false)->where('can_payout', true)->where('is_default', true)->first();
 
-        return view('user.withdrawal.create',$data);
+        return view('user.withdrawal.create', $data);
+    }
+
+    function sendOTP(Request $request)
+    {
+        $user = auth()->user();
+
+        $mail = [
+            'name' => ucfirst($user->name),
+            'email' => $user->email,
+            'content' => '',
+            'token' => $this->generateUserOtp($user->id, 'withdrawal_request'),
+        ];
+
+        dispatch(new OtpMail($mail));
+
+        return view('user.withdrawal._token-input');
     }
 
     function store(WithdrawalRequest $request)
@@ -40,9 +64,19 @@ class WithdrawalController extends Controller
 
             $user = $request->user();
 
-            $bonusWallet = Auth::user()->bonuWallet;
+            $code = UserOtp::where('token', $request->token)
+                ->where('purpose', 'withdrawal_request')
+                ->where('user_id', $user->id)
+                ->where('created_at', '>', now()->subMinute())
+                ->first();
 
-            $convertedBV = $bonusWallet->amount * systemSettings()->bv_equivalent;
+            if (!$code) {
+                return $this->sendError('Invalid token', Response::HTTP_UNAUTHORIZED);
+            }
+
+            $wallet = Wallet::where('user_id', $user->id)->first();
+
+            $convertedBV = $wallet->amount * systemSettings()->bv_equivalent;
 
             if ($request->amount > $convertedBV) {
                 return $this->sendError("Insufficient funds to place withdrawal", []);
@@ -67,7 +101,7 @@ class WithdrawalController extends Controller
             // Convert the remaining BV back to the bonus wallet equivalent if needed
             $remainingBonusWalletAmount = $remainingBV / systemSettings()->bv_equivalent;
 
-            $bonusWallet->update([
+            $wallet->update([
                 'amount' => $remainingBonusWalletAmount
             ]);
 
@@ -77,6 +111,8 @@ class WithdrawalController extends Controller
                 'user_id' => $user->id,
                 'log'  => "Places withdrawal request of {$amount}"
             ]);
+
+            $code->delete();
 
             DB::commit();
 
