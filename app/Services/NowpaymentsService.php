@@ -80,15 +80,20 @@ class NowpaymentsService
 
     function payout(array $data)
     {
+
+
         $payload = [
-            // "ipn_callback_url" => $data['ipn_callback_url'],
-            "withdrawals"      => [[
-                'address'   => $data['address'],
-                'amount'    => $data['amount'],
-                'currency'  => $data['currency'],
-                "ipn_callback_url" => $data['ipn_callback_url']
-            ]],
+            "ipn_callback_url" => $data['ipn_callback_url'],
+            "withdrawals"      =>  [
+                [
+                    'address'           => $data['address'],
+                    'amount'            => $data['amount'],
+                    'currency'          => $data['currency'],
+                    "ipn_callback_url" => $data['ipn_callback_url']
+                ],
+            ]
         ];
+
 
         $token = self::authenticate();
 
