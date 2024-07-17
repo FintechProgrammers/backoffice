@@ -57,7 +57,7 @@ class WithdrawalController extends Controller
             ];
 
             // dispatch(new \App\Jobs\Mail\OtpMail($mail));
-            // Mail::to($user->email)->send(new \App\Mail\OtpMail($mail));
+            Mail::to($user->email)->send(new \App\Mail\OtpMail($mail));
 
             return view('user.withdrawal._token-input');
         } catch (\Exception $e) {
