@@ -75,9 +75,9 @@ class ProviderController extends Controller
         }
 
         if ($provider->short_name == 'nowpayment') {
-            $stripController = new \App\Http\Controllers\NowpaymentController();
+            $nowpyamnet = new \App\Http\Controllers\NowpaymentController();
 
-            $route = $stripController->payment($service);
+            $route = $nowpyamnet->payment($service);
         } else {
             return $this->sendError("Unable to complete your request at the momment", [], 400);
         }

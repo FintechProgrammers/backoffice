@@ -25,7 +25,7 @@ class OtpMail implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(): void
+    public function handle()
     {
         logger("hello");
 

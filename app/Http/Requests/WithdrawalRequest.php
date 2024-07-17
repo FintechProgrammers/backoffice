@@ -28,9 +28,57 @@ class WithdrawalRequest extends FormRequest
     {
         return [
             'amount' => ['required', 'numeric'],
+            'payment_method' => ['required', 'string'],
             'wallet_address' => ['nullable', 'required_if:payment_method,crypto'],
             'token' => ['required', 'numeric', 'digits:4'],
+            'provider_id' => ['required', 'string'],
         ];
+    }
+
+    /**
+     * Handle the after validation logic.
+     *
+     * @return void
+     */
+    protected function passedValidation()
+    {
+        $providerId = $this->input('provider_id');
+
+        // get provider information
+        $provider = \App\Models\Provider::whereUuid($providerId)->first();
+
+        if (!$provider) {
+            throw new HttpResponseException(response()->json([
+                'success' => false,
+                'message' => serviceDownMessage(),
+                'errors' => [],
+            ], Response::HTTP_UNPROCESSABLE_ENTITY));
+        }
+
+        if ($provider->short_name == 'nowpayment') {
+
+            $validated = $this->validated();
+
+            $validated['currency'] = 'usdttrc20';
+
+            // Call the validateAddress method and pass the validated data and currency
+            $nowpaymentService = new \App\Services\NowpaymentsService();
+
+            $validateAddress = [
+                'address'     => $validated['wallet_address'],
+                'currency'    => $validated['currency']
+            ];
+
+            $verifyAddress = $nowpaymentService->validateAddress($validateAddress);
+
+            if ($verifyAddress['code'] == 'BAD_ADDRESS_VALIDATION_REQUEST') {
+                throw new HttpResponseException(response()->json([
+                    'success' => false,
+                    'message' => $verifyAddress['message'],
+                    'errors' => [],
+                ], Response::HTTP_UNPROCESSABLE_ENTITY));
+            }
+        }
     }
 
     protected function failedValidation(Validator $validator)

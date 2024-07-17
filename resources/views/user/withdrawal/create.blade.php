@@ -15,6 +15,7 @@
                         <form action="{{ route('withdrawal.store') }}" class="payoutForm" method="POST" id="withdrawalForm">
                             @csrf
                             <input type="hidden" name="token" id="tokenInput">
+                            <input type="hidden" name="provider_id" value="" id="provider">
                             <div class="mb-3 form-group">
                                 <label for="amount">Amount</label>
                                 <input type="text" class="form-control" placeholder="0.00" name="amount" id="amount"
@@ -25,10 +26,11 @@
                                 <select class="form-control" name="payment_method" id="payment-method" required>
                                     <option value="">--select--method--</option>
                                     @if (!empty($bankTransferProvider))
-                                        <option value="bank_transfer">Bank Transfer</option>
+                                        <option value="bank_transfer" data-provider="{{ $bankTransferProvider->uuid }}">Bank
+                                            Transfer</option>
                                     @endif
                                     @if (!empty($cryptoProvider))
-                                        <option value="crypto">Crypto</option>
+                                        <option value="crypto" data-provider="{{ $cryptoProvider->uuid }}">Crypto</option>
                                     @endif
                                 </select>
                             </div>
@@ -100,6 +102,11 @@
                     cryptoSection.style.display = 'none';
                     walletAddressInput.removeAttribute('required');
                 }
+                var selectedOption = this.options[this.selectedIndex];
+                var providerUuid = selectedOption.getAttribute('data-provider');
+
+                $('#provider').val(providerUuid);
+
                 validateForm(); // Validate form after showing/hiding the crypto section
             });
 

@@ -71,7 +71,7 @@ if (!function_exists('convertDaysToUnit')) {
 if (!function_exists('serviceDownMessage')) {
     function serviceDownMessage()
     {
-        return 'Unable to complete your request the moment.';
+        return 'We apologize, but at this time we are unable to complete your request.';
     }
 }
 

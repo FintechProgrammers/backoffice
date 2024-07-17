@@ -82,12 +82,12 @@ class NowpaymentsService
     {
         $payload = [
             // "ipn_callback_url" => $data['ipn_callback_url'],
-            "withdrawals"      => [
+            "withdrawals"      => [[
                 'address'   => $data['address'],
                 'amount'    => $data['amount'],
                 'currency'  => $data['currency'],
                 "ipn_callback_url" => $data['ipn_callback_url']
-            ],
+            ]],
         ];
 
         $token = self::authenticate();
@@ -167,25 +167,33 @@ class NowpaymentsService
             $res = $client->send($request);
 
             return json_decode($res->getBody()->getContents(), true);
-        } catch (\Exception $e) {
-            sendToLog($e);
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            // Log the exception message
+            sendToLog($e->getMessage());
 
-            $responseString = $e->getMessage();
+            // Get the response body from the exception
+            if ($e->hasResponse()) {
+                $responseBody = $e->getResponse()->getBody()->getContents();
+                $responseArray = json_decode($responseBody, true);
 
-            // Find the position of the first curly brace
-            $bracePosition = strpos($responseString, '{');
-
-            if ($bracePosition !== false) {
-                // Extract the JSON string
-                $jsonString = substr($responseString, $bracePosition);
-
-                // Decode the JSON string
-                $responseArray = json_decode($jsonString, true);
-
-                return $responseArray;
+                // Check if the JSON decoding was successful
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    return $responseArray;
+                }
             }
 
-            return [];
+            return [
+                'success' => false,
+                'message' => 'An error occurred while processing the request.',
+            ];
+        } catch (\Exception $e) {
+            // Log other exceptions
+            sendToLog($e->getMessage());
+
+            return [
+                'success' => false,
+                'message' => 'An unexpected error occurred.',
+            ];
         }
     }
 }

@@ -115,31 +115,16 @@
 
                 },
                 error: function(xhr, status, error) {
+                    $('#primaryModal').modal('hide')
                     spinner.hide()
                     buttonTest.show()
                     button.attr('disabled', false)
                     // Handle error response
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.errors;
 
-                        $.each(errors, function(field, messages) {
-                            // Find the corresponding field
-                            var fieldInput = $('[name="' + field + '"]');
-                            var fieldContainer = fieldInput.closest('.mb-3');
+                    // Handle other error statuses
+                    // console.log(xhr.responseJSON)
+                    displayMessage(xhr.responseJSON.message, "error")
 
-                            // Append error messages under the field container
-                            $.each(messages, function(index, message) {
-                                var errorMessage =
-                                    '<div class="error-message text-danger">' +
-                                    message + '</div>';
-                                fieldContainer.append(errorMessage);
-                            });
-                        });
-                    } else {
-                        // Handle other error statuses
-                        // console.log(xhr.responseJSON)
-                        displayMessage(xhr.responseJSON.message, "error")
-                    }
                 }
             });
         });

@@ -6,11 +6,8 @@ use App\Models\AmbassedorPayments;
 use App\Models\Bonus;
 use App\Models\Invoice;
 use App\Models\Service;
-use App\Models\User;
 use App\Models\UserActivities;
 use App\Models\UserSubscription;
-use App\Models\Withdrawal;
-use App\Services\NowpaymentsService;
 use App\Services\SubscriptionService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -108,30 +105,19 @@ class NowpaymentController extends Controller
         }
     }
 
-    function validateAddress($validated,  $currency = 'usdttrc20')
+    function validateAddress($validated)
     {
         try {
 
             $validateAddress = [
-                'address'     => $validated['wallet_address'],
-                'currency'    => $currency
+                'address'     => $validated->wallet_address,
+                'currency'    => $validated->currency
             ];
 
             $verifyAddress = $this->nowpaymentService->validateAddress($validateAddress);
 
-            if (empty($verifyAddress) || $verifyAddress['code'] != 'BAD_CREATE_WITHDRAWAL_REQUEST') {
-                // sendToLog($verifyAddress);
-                return throw new HttpResponseException(response()->json([
-                    'success' => false,
-                    'message' => serviceDownMessage(),
-                ], Response::HTTP_INTERNAL_SERVER_ERROR));
-            }
-
-            if ($verifyAddress['code'] == 'BAD_CREATE_WITHDRAWAL_REQUEST') {
-                return throw new HttpResponseException(response()->json([
-                    'success' => false,
-                    'message' => $verifyAddress['message'],
-                ], Response::HTTP_UNPROCESSABLE_ENTITY));
+            if ($verifyAddress['code'] == 'BAD_ADDRESS_VALIDATION_REQUEST') {
+                throw new HttpResponseException($this->sendError("hello", [], Response::HTTP_UNPROCESSABLE_ENTITY));
             }
 
             return true;
@@ -144,64 +130,62 @@ class NowpaymentController extends Controller
         }
     }
 
-    function payout($validated, $provider, $currency = 'usdttrc20')
+    function payout($validated, $transaction)
     {
         try {
 
+            // Variable to hold to the response data
+            $response = [];
+
             $payoutPayload = [
-                'address'  => $validated['wallet_address'],
-                'amount' => $validated['amount'],
-                'currency' => $validated['currency'],
-                'ipn_callback_url' => config('contstants.nowpayment.ipn_base_url') . '/ipn/nowpayment/payout'
+                'address'  => $validated->wallet_address,
+                'amount' => $validated->amount,
+                'currency' => $validated->currency,
+                'ipn_callback_url' => config('constants.nowpayment.ipn_base_url') . '/ipn/nowpayment/payout'
             ];
 
-            $details = [
-                'wallet_address' => $validated['wallet_address'],
+            $response = $this->nowpaymentService->payout($payoutPayload);
+
+            if (empty($response) || isset($response['status'])) {
+                sendToLog($response);
+
+                $payload['status'] = 'declined';
+                $payload['external_reference'] = '';
+            } else {
+                // check payment status
+                $withdrawal = $response['withdrawals']['0'];
+
+                $payload['external_reference'] = !empty($withdrawal['id']) ? $withdrawal['id'] : '';
+                // $payload['response'] = json_encode($response);
+
+                if (in_array($withdrawal->status, ['WAITING', 'SENDING', 'PROCESSING'])) {
+                    $payload['status'] = "pending";
+                } elseif ($withdrawal->status === 'FINISHED') {
+                    $payload['status'] = "completed";
+                } else {
+                    $payload['status'] = "declined";
+                }
+            }
+
+            $payload['details'] = json_encode([
+                'wallet_address' => $validated->wallet_address,
                 'coin'           => 'USDT',
-                'network'       =>  $currency
-            ];
-
-            // create transaction record
-            $withdrawalRecord = Withdrawal::create([
-                'cycle_id' => currentCycle(),
-                'provider_id' => $provider->id,
-                'reference' => generateReference(),
-                'user_id'  => $validated['user']['id'],
-                'amount' =>  $validated['amount'],
-                'details' => json_encode($details),
-                'status' => 'pending'
+                'network'       =>  $validated->currency
             ]);
 
             // Set `success` to false before DB transaction
             (bool) $success = false;
 
-            \Illuminate\Support\Facades\DB::transaction(function () use ($payoutPayload, $withdrawalRecord, &$success) {
+            \Illuminate\Support\Facades\DB::transaction(function () use ($payload, $validated, $transaction, &$success) {
 
-                $response = $this->nowpaymentService->payout($payoutPayload);
-
-                if (empty($response) || isset($response['status'])) {
-                    sendToLog($response);
-                    return $this->sendError("Unable to complete your request at the moment", [], 400);
-                }
-
-                debitWallet($payoutPayload['amount']);
-
-                // check payment status
-                $withdrawal = $response['withdrawals']['0'];
-
-                if (in_array($withdrawal['status'], ['WAITING', 'SENDING', 'PROCESSING'])) {
-                    $status = "pending";
-                } elseif ($withdrawal['status'] === 'FINISHED') {
-                    $status = "completed";
-                } else {
-                    refundWallet($payoutPayload['amount']);
-                    $status = "declined";
-                }
-
-                $withdrawalRecord->update([
-                    'external_reference' => $withdrawal['id'],
-                    'status'             => $status,
+                $transaction->update([
+                    'status' => $payload['status'],
+                    'external_reference' => $payload['external_reference']
                 ]);
+
+                if (strtolower($payload['status']) === 'declined') {
+                    refundWallet($validated->amount);
+                }
 
                 // Update success if all DB transactions were executed successfully
                 $success = !$success;

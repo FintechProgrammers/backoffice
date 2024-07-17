@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\WithdrawalRequest;
-use App\Jobs\Mail\OtpMail;
 use App\Models\Provider;
 use App\Models\UserActivities;
 use App\Models\UserOtp;
@@ -19,6 +18,10 @@ use Symfony\Component\HttpFoundation\Response;
 class WithdrawalController extends Controller
 {
     use RecursiveActions;
+
+    public const ERROR_RESPONSE = 'We apologize, but at this time we are unable to complete your request.';
+    public const TRANSACTION_PENDING = 'Transaction has been received for processing.';
+    public const INSUFFICIENT_WALLET_BALANCE = 'Insufficient wallet balance.';
 
     function index()
     {
@@ -42,86 +45,91 @@ class WithdrawalController extends Controller
 
     function sendOTP(Request $request)
     {
-        $user = auth()->user();
+        try {
+            $user = auth()->user();
 
-        $mail = [
-            'name' => ucfirst($user->name),
-            'email' => $user->email,
-            'content' => '',
-            'token' => $this->generateUserOtp($user->id, 'withdrawal_request'),
-        ];
+            $mail = [
+                'name' => ucfirst($user->name),
+                'email' => $user->email,
+                'content' => 'We have received your request to withdraw funds from your account.
+                 To proceed with this request, please use the following One-Time Password (OTP) to verify your identity:',
+                'code' => $this->generateUserOtp($user->id, 'withdrawal_request'),
+            ];
 
-        dispatch(new OtpMail($mail));
+            // dispatch(new \App\Jobs\Mail\OtpMail($mail));
+            // Mail::to($user->email)->send(new \App\Mail\OtpMail($mail));
 
-        return view('user.withdrawal._token-input');
+            return view('user.withdrawal._token-input');
+        } catch (\Exception $e) {
+            sendToLog($e);
+            return $this->sendError(serviceDownMessage(), [], 500);
+        }
     }
 
     function store(WithdrawalRequest $request)
     {
-        try {
+        $validated = (object)$request->validated();
 
-            DB::beginTransaction();
+        $user = $request->user();
 
-            $user = $request->user();
+        $code = UserOtp::where('token', $validated->token)
+            ->where('purpose', 'withdrawal_request')
+            ->where('user_id', $user->id)
+            // ->where('created_at', '>', now()->subMinute())
+            ->first();
 
-            $code = UserOtp::where('token', $request->token)
-                ->where('purpose', 'withdrawal_request')
-                ->where('user_id', $user->id)
-                ->where('created_at', '>', now()->subMinute())
-                ->first();
+        if (!$code) {
+            return $this->sendError('Invalid token', Response::HTTP_UNAUTHORIZED);
+        }
 
-            if (!$code) {
-                return $this->sendError('Invalid token', Response::HTTP_UNAUTHORIZED);
-            }
+        $wallet = Wallet::where('user_id', $user->id)->first();
 
-            $wallet = Wallet::where('user_id', $user->id)->first();
+        if ($validated->amount > $wallet->amount) {
+            return $this->sendError("Insufficient funds to place withdrawal", []);
+        }
 
-            $convertedBV = $wallet->amount * systemSettings()->bv_equivalent;
+        // get provider information
+        $provider = Provider::whereUuid($validated->provider_id)->first();
 
-            if ($request->amount > $convertedBV) {
-                return $this->sendError("Insufficient funds to place withdrawal", []);
-            }
 
-            $details = [
-                'account_number' => $request->account_number,
-                'account_name'   => $request->account_name,
-            ];
-
-            Withdrawal::create([
-                'reference' => generateReference(),
-                'user_id'  => $user->id,
-                'amount' =>  $request->amount,
-                'details' => json_encode($details),
-                'status' => 'pending'
-            ]);
-
-            // Calculate the remaining BV after withdrawal
-            $remainingBV = $convertedBV - $request->amount;
-
-            // Convert the remaining BV back to the bonus wallet equivalent if needed
-            $remainingBonusWalletAmount = $remainingBV / systemSettings()->bv_equivalent;
-
-            $wallet->update([
-                'amount' => $remainingBonusWalletAmount
-            ]);
-
-            $amount = '$' . $request->amount;
-
-            UserActivities::create([
-                'user_id' => $user->id,
-                'log'  => "Places withdrawal request of {$amount}"
-            ]);
-
-            $code->delete();
-
-            DB::commit();
-
-            return $this->sendResponse([], "Withdrawal request was successful");
-        } catch (\Exception $e) {
-            DB::rollBack();
-            sendToLog($e->getMessage());
-
+        if (!$provider) {
             return $this->sendError(serviceDownMessage(), [], 500);
         }
+
+        // debit wallet
+        $wallet->update([
+            'amount' => $wallet->amount - $validated->amount
+        ]);
+
+        $Withdrawal = Withdrawal::create([
+            'reference' => generateReference(),
+            'user_id'  => $user->id,
+            'amount' =>  $validated->amount,
+            'cycle_id' => currentCycle(),
+            'provider_id' => $provider->id,
+            'status' => 'pending'
+        ]);
+
+        $amount = '$' . $validated->amount;
+
+        UserActivities::create([
+            'user_id' => $user->id,
+            'log'  => "Places withdrawal request of {$amount}"
+        ]);
+
+        // $code->delete();
+
+        $validated->provider = $provider;
+
+        if ($provider->short_name == 'nowpayment') {
+            $nowpyamnet = new \App\Http\Controllers\NowpaymentController();
+
+            $validated->currency = 'usdttrc20';
+
+            return ($nowpyamnet->payout($validated, $Withdrawal)) ? $this->sendResponse([], self::TRANSACTION_PENDING) : $this->sendError(serviceDownMessage(), [], 500);
+        } elseif ($provider->short_name === 'masspay') {
+        }
+
+        return $this->sendError(serviceDownMessage(), [], 500);
     }
 }
