@@ -24,19 +24,19 @@
                 <div class="row">
                     <div class="col-lg-6 mb-3">
                         <label for="email-address" class="form-label">Email Address :</label>
-                        <input type="text" class="form-control" name="email" id="email-address" value="{{ $user->email }}"
-                            readonly placeholder="Email">
+                        <input type="text" class="form-control" name="email" id="email-address"
+                            value="{{ $user->email }}" readonly placeholder="Email">
                     </div>
                     <div class="col-lg-6 mb-3">
                         <label class="form-label">Phone Number :</label>
-                        <input type="text" class="form-control" value="{{ $user->phone_number }}"
+                        <input type="text" class="form-control" name="phone_number" value="{{ $user->phone_number }}"
                             placeholder="Enter Phone number">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xl-4 mb-3">
                         <label for="">Country</label>
-                        <x-country-select value="{{ $user->userProfile->country_code }}"/>
+                        <x-country-select value="{{ $user->userProfile->country_code }}" />
                     </div>
                     <div class="col-xl-4 mb-3">
                         <label for="">State</label>
@@ -47,6 +47,18 @@
                         <label for="">City</label>
                         <input type="text" name="city" class="form-control" placeholder="City"
                             value="{{ $user->userProfile->city }}" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-6 mb-3">
+                        <label for="">Date Of Birth</label>
+                        <input type="date" name="date_of_birth" class="form-control" placeholder="Date of Birth"
+                            value="{{ $user->userProfile->date_of_birth }}" />
+                    </div>
+                    <div class="col-xl-6 mb-3">
+                        <label for="">Zip Code</label>
+                        <input type="number" name="zip_code" class="form-control" placeholder="Zip code"
+                            value="{{ $user->userProfile->zip_code }}" />
                     </div>
                 </div>
                 <div class="col-lg-12 mb-3">

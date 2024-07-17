@@ -30,10 +30,16 @@ class User extends Authenticatable
         'name',
         'email',
         'username',
+        'phone_number'
     ];
 
     protected $userInfoRequiredFields = [
         'country_code',
+        'state',
+        'city',
+        'address',
+        'zip_code',
+        'date_of_birth',
     ];
 
     /**

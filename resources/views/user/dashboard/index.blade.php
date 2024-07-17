@@ -39,6 +39,16 @@
     <script src="{{ asset('assets/libs/chart.js/chart.min.js') }}"></script>
     <script src="{{ asset('assets/libs/swiper/swiper-bundle.min.js') }}"></script>
     <script src="{{ asset('assets/js/swiper.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var recentActivity = document.getElementById('latest-timeline');
+            if (recentActivity) {
+                new SimpleBar(recentActivity, {
+                    autoHide: true
+                });
+            }
+        });
+    </script>
     @if (Auth::user()->profile_completion_percentage < 100)
         <script>
             var myModal = new bootstrap.Modal(document.getElementById('profileUpdateModal'), {
@@ -47,12 +57,6 @@
             myModal.show();
         </script>
     @endif
-    <script>
-        var myElement1 = document.getElementById('recent-activity');
-        new SimpleBar(myElement1, {
-            autoHide: true
-        });
-    </script>
     <script>
         Chart.defaults.borderColor = "rgba(142, 156, 173,0.1)", Chart.defaults.color = "#8c9097";
         const labels = [

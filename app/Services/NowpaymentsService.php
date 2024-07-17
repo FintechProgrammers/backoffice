@@ -81,8 +81,8 @@ class NowpaymentsService
     function payout(array $data)
     {
 
-
         $payload = [
+            "payout_description" => "Payout request of  {$data['amount']} USD",
             "ipn_callback_url" => $data['ipn_callback_url'],
             "withdrawals"      =>  [
                 [

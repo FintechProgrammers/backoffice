@@ -42,6 +42,8 @@ class ProfileController extends Controller
                 'address'       => $request->address,
                 'city'          => $request->city,
                 'state'         => $request->state,
+                'date_of_birth' => $request->date_of_birth,
+                'zip_code'      => $request->zip_code,
             ]);
 
             return $this->sendResponse([], 'Profile updated successfully.');
