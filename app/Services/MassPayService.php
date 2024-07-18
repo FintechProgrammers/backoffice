@@ -12,7 +12,7 @@ class MassPay
         return self::handle("/v1.0.0/payout/account/balance", "GET");
     }
 
-    function initateTransaction(array $data)
+    function initiateTransaction(array $data)
     {
         $payload = [
             "source_currency_code" => "USD",
