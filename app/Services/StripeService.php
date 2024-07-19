@@ -13,18 +13,47 @@ class StripeService
         $this->stripe = new StripeClient(config('contstants.stripe.secret'));
     }
 
+    function createCustomer(array $data)
+    {
+        $response = $this->stripe->customers->create([
+            'name'      => $data['name'],
+            'email'     => $data['email'],
+        ]);
+
+        return $response;
+    }
+
+    function createSession(array $data)
+    {
+        $response = $this->stripe->checkout->sessions->create([
+            'mode'                  => 'setup',
+            'currency'              => 'usd',
+            'payment_method_types'  => ['card'],
+            'customer'              => $data['customer_id'],
+            'metadata'      => $data['metadata'],
+            'success_url'           => $data['success_url'],
+            'cancel_url'            => $data['cancel_url'],
+        ]);
+
+        return $response;
+    }
+
     function  processCheckout($data)
     {
         $response = $this->stripe->checkout->sessions->create([
+            'payment_intent_data' => ['setup_future_usage' => 'off_session'],
+            // 'customer_creation' => 'always',
+            'customer' => $data['customer_id'],
             'line_items' => [[
                 'price_data' => [
-                    'currency' => $data['currency'],
+                    'currency' => "usd",
                     'product_data' => $data['product_data'],
                     'unit_amount' => $data['amount'],
                 ],
                 'quantity' => 1,
             ]],
-            'customer_email' => $data['customer_email'],
+            'saved_payment_method_options' => ['payment_method_save' => 'enabled'],
+            // 'customer_email' => $data['customer_email'],
             'metadata' => $data['metadata'],
             'mode' => 'payment',
             'success_url' => $data['success_url'],
@@ -39,8 +68,37 @@ class StripeService
     {
         $response = $this->stripe->checkout->sessions->retrieve(
             $sessionId,
-            []
+            [
+                'expand' => ['line_items'],
+            ]
         );
+
+        return $response;
+    }
+
+    function paymentIntent(array $data)
+    {
+        $response = $this->stripe->paymentIntents->create([
+            'amount' => $data['amount'],
+            'currency' => 'usd',
+            'automatic_payment_methods' => ['enabled' => true],
+            'customer' => $data['customer'],
+            'payment_method' => $data['payment_method'],
+            'return_url' => $data['success_url'],
+            'metadata' => $data['metadata'],
+            'off_session' => true,
+            'confirm' => true,
+        ]);
+
+        return $response;
+    }
+
+    function createWebhook()
+    {
+        $response = $this->stripe->webhookEndpoints->create([
+            'enabled_events' => ['charge.succeeded', 'charge.failed'],
+            'url' => 'https://example.com/my/webhook/endpoint',
+        ]);
 
         return $response;
     }

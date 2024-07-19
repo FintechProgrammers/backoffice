@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SubscriptionMail;
 use App\Models\AmbassedorPayments;
 use App\Models\Bonus;
+use App\Models\Invoice;
 use App\Models\Service;
+use App\Models\StripeUser;
 use App\Models\User;
 use App\Models\UserActivities;
 use App\Models\UserSubscription;
@@ -13,35 +16,67 @@ use App\Services\SubscriptionService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Mail;
+use Stripe\Stripe;
 
 class StripeController extends Controller
 {
+    protected $stripeService;
 
-    function payment($validated=null)
+    function __construct()
+    {
+        $this->stripeService = new \App\Services\StripeService();
+    }
+
+    function payment($validated)
     {
         try {
 
-            $stripeService = new \App\Services\StripeService();
+            $service = $validated['package'];
 
-            if (!empty($service)) {
+            $user = $validated['user'];
 
-                $service = $validated['package'];
+            $invoice = $validated['invoice'];
 
-                $user = $validated['user'];
+            // check if user exist on stripe
+            $stripUser = StripeUser::where('user_id', $user->id)->first();
 
-                $data = [
-                    'currency' => 'usd',
-                    'amount' => $service->price * 100,
-                    'product_data' => [
-                        'name' => $service->name
-                    ],
-                    'customer_email' => $user->email,
-                    'metadata' => ['user_id' => $user->id, 'service_id' => $service->id],
-                    'success_url' => route('stripe.service.payment.Success') . '?session_id={CHECKOUT_SESSION_ID}',
-                    'cancel_url' => route('payment.cancel')
+            if (!$stripUser) {
+                $userData = [
+                    'email'  => $user->email,
+                    'name'  => $user->name,
                 ];
 
-                $response = $stripeService->processCheckout($data);
+                $createUser = $this->stripeService->createCustomer($userData);
+
+                if (empty($createUser)) {
+                    sendToLog($createUser);
+
+                    return throw new HttpResponseException(response()->json([
+                        'success' => false,
+                        'message' => serviceDownMessage(),
+                    ], Response::HTTP_UNPROCESSABLE_ENTITY));
+                }
+
+                $stripUser = StripeUser::create([
+                    'user_id'       => $user->id,
+                    'customer_id'   => $createUser->id
+                ]);
+
+                $data = [
+                    'amount'        => $service->price * 100,
+                    'product_data'  => [
+                        'name'      => $service->name
+                    ],
+                    'customer_email' => $user->email,
+                    'customer_name' => $user->name,
+                    'customer_id'    => $stripUser->customer_id,
+                    'metadata'       => ['user_id' => $user->uuid, 'service_id' => $service->uuid, 'invoice' => $invoice->uuid],
+                    'success_url'    => route('payment.success') . '?session_id={CHECKOUT_SESSION_ID}',
+                    'cancel_url'     => route('payment.cancel')
+                ];
+
+                $response = $this->stripeService->processCheckout($data);
 
                 if (empty($response)) {
                     sendToLog($response);
@@ -54,34 +89,25 @@ class StripeController extends Controller
 
                 return $response->url;
             } else {
-
-                $user = auth()->user();
-
                 $data = [
-                    'currency' => 'usd',
-                    'amount' => systemSettings()->ambassador_fee * 100,
-                    'product_data' => [
-                        'name' => "Ambassedor Account Setup"
-                    ],
-                    'customer_email' => $user->email,
-                    'metadata' => ['user_id' => $user->id],
-                    'success_url' => route('stripe.abassador.payment.success') . '?session_id={CHECKOUT_SESSION_ID}',
-                    'cancel_url' => route('payment.cancel')
+                    'amount' => $service->price * 100,
+                    'customer'    => $stripUser->customer_id,
+                    'payment_method' => $stripUser->payment_method,
+                    'metadata'       => ['user_id' => $user->uuid, 'service_id' => $service->uuid, 'invoice' => $invoice->uuid],
+                    'success_url'    => route('payment.success') . '?session_id={CHECKOUT_SESSION_ID}',
                 ];
 
-                $response = $stripeService->processCheckout($data);
+                $response  = $this->stripeService->paymentIntent($data);
 
-                if (empty($response)) {
-                    sendToLog($response);
+                logger($response);
 
-                    return throw new HttpResponseException(response()->json([
-                        'success' => false,
-                        'message' => serviceDownMessage(),
-                    ], Response::HTTP_UNPROCESSABLE_ENTITY));
-                }
-
-                return $response->url;
+                return route('payment.success');
             }
+
+            return throw new HttpResponseException(response()->json([
+                'success' => false,
+                'message' => serviceDownMessage(),
+            ], Response::HTTP_UNPROCESSABLE_ENTITY));
         } catch (\Exception $e) {
             sendToLog($e);
 
@@ -90,107 +116,6 @@ class StripeController extends Controller
                 'message' => serviceDownMessage(),
             ], Response::HTTP_UNPROCESSABLE_ENTITY));
         }
-    }
-
-    function abassedorPaymentSuccess(Request $request, StripeService $stripeService)
-    {
-        $sessionId = $request->get('session_id');
-
-        $session = $stripeService->retrieveSession($sessionId);
-
-        if ($session->payment_status === 'paid') {
-
-            // make user an ambassedor
-            $user = User::where('id', $session->metadata->user_id)->first();
-
-            if (!$user->is_ambassador) {
-
-                AmbassedorPayments::create([
-                    'reference' => generateReference(),
-                    'user_id' => $session->metadata->user_id,
-                    'amount'  => $session->amount_total / 100
-                ]);
-
-                $user->update([
-                    'is_ambassador' => true
-                ]);
-
-                Bonus::create([
-                    'user_id' => $user->id,
-                    'amount' => 0
-                ]);
-
-                UserActivities::create([
-                    'user_id' => $user->id,
-                    'log'  => 'Payment for Ambassador Account.'
-                ]);
-            }
-
-            $title = "Payment Successful";
-            $message = "Your account has been successfully upgraded to Ambassador status. You can now refer others and earn sales bonuses!";
-
-            return redirect()->route('payment.success')->with(['message' => $message, 'success' => true, 'title' => $title]);
-        }
-
-        $title = "Payment Awaiting Approval";
-        $message = "Your payment has been received and is awaiting approval";
-
-        return redirect()->route('payment.success')->with(['message' => $message, 'success' => false, 'title' => $title]);
-    }
-
-    function subscriptionSuccess(Request $request, StripeService $stripeService)
-    {
-        $sessionId = $request->get('session_id');
-
-        $session = $stripeService->retrieveSession($sessionId);
-
-        if ($session->payment_status === 'paid') {
-
-            $title = "Payment Successful";
-            $success = true;
-
-            $user = User::find($session->metadata->user_id);
-
-            if (!$user) {
-                sendToLog("User not found");
-
-                return redirect()->route('stripe.cancel');
-            }
-
-            $service = Service::find($session->metadata->service_id);
-
-            if (!$service) {
-                sendToLog("Service not found");
-
-                return redirect()->route('stripe.cancel');
-            }
-
-            $subscriptionService = new SubscriptionService();
-
-            $userSubscription = UserSubscription::where('user_id', $user->id)->where('service_id', $service->id)->first();
-
-            if ($userSubscription) {
-                if (!$userSubscription->is_active) {
-
-                    $subscriptionService->updateSubscription($service, $userSubscription);
-
-                    $message = "You have successfully renewed the {$service->name} service.";
-                } else {
-                    $message = "Your subscription is active";
-                }
-            } else {
-
-                $subscriptionService->createSubscription($service, $user);
-
-                $message = "You have successfully subscribed to the {$service->name} service.";
-            }
-        } else {
-            $title = "Payment Awaiting Approval";
-            $message = "Your payment has been received and is awaiting approval";
-            $success = false;
-        }
-
-        return redirect()->route('payment.success')->with(['message' => $message, 'success' => $success, 'title' => $title]);
     }
 
     function webhook(Request $request, StripeService $stripeService)
@@ -215,33 +140,110 @@ class StripeController extends Controller
             exit();
         }
 
-        $session = null;
-
         // Handle the event
         switch ($event->type) {
-            case 'checkout.session.async_payment_succeeded':
-                $session = $event->data->object;
             case 'checkout.session.completed':
-                $session = $event->data->object;
-            case 'invoice.finalized':
-                $session = $event->data->object;
-            case 'invoice.overdue':
-                $session = $event->data->object;
-            case 'invoice.paid':
-                $session = $event->data->object;
-            case 'invoice.payment_action_required':
-                $session = $event->data->object;
-            case 'invoice.payment_failed':
-                $session = $event->data->object;
-            case 'invoice.payment_succeeded':
-                $session = $event->data->object;
-                // ... handle other event types
+                $this->sessionCompleted($event->data->object);
+                break;
+            case 'charge.succeeded':
+                $this->chargeCompleted($event->data->object);
+                break;
+            case 'charge.updated':
+                $this->paymentIntentCreated($event->data->object);
+                break;
+            case 'payment_intent.succeeded':
+                $this->paymentIntentCompleted($event->data->object);
             default:
                 echo 'Received unknown event type ' . $event->type;
+                break;
         }
 
-        logger($session);
+        return response('Successful', Response::HTTP_OK)->header('Content-Type', 'text/plain');
+    }
 
-        http_response_code(200);
+    function chargeCompleted($data)
+    {
+    }
+
+    function sessionCompleted($data)
+    {
+        try {
+            // Retrieve the Checkout Session from the API with line_items expanded
+            $session = $this->stripeService->retrieveSession($data->id);
+
+            if ($session->payment_status === 'paid') {
+                $this->processInternalInvoice($session->metadata, $session->id);
+                // get the invoice
+            }
+        } catch (\Exception $e) {
+            sendToLog($e);
+        }
+    }
+
+    function paymentIntentCreated($data)
+    {
+        $stripeUser = StripeUser::where('customer_id', $data->customer)->first();
+
+        if (!$stripeUser) {
+            sendToLog("stripe user {$data->customer} not found");
+            return false;
+        }
+
+        $stripeUser->update([
+            'payment_method'  => $data->payment_method
+        ]);
+    }
+
+    function paymentIntentCompleted($data)
+    {
+        try {
+            $this->processInternalInvoice($data->metadata, $data->id);
+        } catch (\Exception $e) {
+            sendToLog($e);
+        }
+    }
+
+
+    function processInternalInvoice($metadata, $externalReference)
+    {
+        $invoice = Invoice::whereUuid($metadata->invoice)->first();
+
+        if (!$invoice) {
+            sendToLog("invoice {$metadata->invoice} not found");
+            return false;
+        }
+
+        if (!$invoice->is_paid) {
+
+            $user = User::whereUuid($metadata->user_id)->first();
+
+            // get the service
+            if (!$user) {
+                sendToLog("user {$metadata->user_id} not found");
+                return false;
+            }
+
+            $service = Service::whereUuid($metadata->service_id)->first();
+
+            if (!$service) {
+                sendToLog("user {$metadata->service_id} not found");
+                return false;
+            }
+
+            $subscriptionService = new SubscriptionService();
+
+            $userSubscription = UserSubscription::where('user_id', $user->id)->where('service_id', $service->id)->first();
+
+            if ($userSubscription) {
+                $subscriptionService->updateSubscription($service, $userSubscription);
+            } else {
+                $subscriptionService->createSubscription($service, $user);
+            }
+
+            $invoice->update([
+                'is_paid' => true,
+                'external_reference' => $externalReference
+            ]);
+        }
     }
 }

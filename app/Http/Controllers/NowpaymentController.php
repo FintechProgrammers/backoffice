@@ -40,61 +40,28 @@ class NowpaymentController extends Controller
     function payment($validated = null)
     {
         try {
-            // $user = auth()->user();
 
-            if (!empty($validated)) {
+            $service = $validated['package'];
 
-                $service = $validated['package'];
+            $payload = [
+                'amount'           => $service->price,
+                'order_id'          => $validated['invoice']['order_id'],
+                'description'       => "{$service->name} Purchase",
+                'ipn_callback_url'  => config('contstants.nowpayment.ipn_base_url') . '/ipn/nowpayment/service/payment'
+            ];
 
-                $payload = [
-                    'amount'           => $service->price,
-                    'order_id'          => $validated['invoice']['order_id'],
-                    'description'       => "{$service->name} Purchase",
-                    'ipn_callback_url'  => config('contstants.nowpayment.ipn_base_url') . '/ipn/nowpayment/service/payment'
-                ];
+            $response = $this->nowpaymentService->createInvoice($payload);
 
-                $response = $this->nowpaymentService->createInvoice($payload);
+            if (empty($response)) {
+                sendToLog($response);
 
-                if (empty($response)) {
-                    sendToLog($response);
-
-                    return throw new HttpResponseException(response()->json([
-                        'success' => false,
-                        'message' => serviceDownMessage(),
-                    ], Response::HTTP_UNPROCESSABLE_ENTITY));
-                }
-
-                return $response['invoice_url'];
-            } else {
-
-                $user = auth()->user();
-
-                $payload = [
-                    'amount'           => systemSettings()->ambassador_fee,
-                    'order_id'         => generateReference(),
-                    'description'       => "Ambassador Account Setup",
-                    'ipn_callback_url'  => config('contstants.nowpayment.ipn_base_url') . '/ipn/nowpayment/ambassador/payment'
-                ];
-
-                $response = $this->nowpaymentService->createInvoice($payload);
-
-                if (empty($response)) {
-                    sendToLog($response);
-
-                    return throw new HttpResponseException(response()->json([
-                        'success' => false,
-                        'message' => serviceDownMessage(),
-                    ], Response::HTTP_UNPROCESSABLE_ENTITY));
-                }
-
-                Invoice::create([
-                    'user_id'       => $user->id,
-                    'order_id'      => $response['order_id'],
-                    'is_paid'       => false
-                ]);
-
-                return $response['invoice_url'];
+                return throw new HttpResponseException(response()->json([
+                    'success' => false,
+                    'message' => serviceDownMessage(),
+                ], Response::HTTP_UNPROCESSABLE_ENTITY));
             }
+
+            return $response['invoice_url'];
         } catch (\Exception $e) {
             sendToLog($e);
 
