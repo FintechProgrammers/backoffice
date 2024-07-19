@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\WithdrawalRequest;
 use App\Models\Provider;
+use App\Models\Transaction;
 use App\Models\UserActivities;
 use App\Models\UserOtp;
 use App\Models\Wallet;
@@ -91,23 +92,32 @@ class WithdrawalController extends Controller
         // get provider information
         $provider = Provider::whereUuid($validated->provider_id)->first();
 
-
         if (!$provider) {
             return $this->sendError(serviceDownMessage(), [], 500);
         }
+
+        $openingBalance = $wallet->amount;
 
         // debit wallet
         $wallet->update([
             'amount' => $wallet->amount - $validated->amount
         ]);
 
-        $Withdrawal = Withdrawal::create([
-            'reference' => generateReference(),
+        $closingBalance = $wallet->amount - $validated->amount;
+
+        $Withdrawal = Transaction::create([
+            'internal_reference' => generateReference(),
             'user_id'  => $user->id,
+            'associated_user_id' => $user->id,
             'amount' =>  $validated->amount,
             'cycle_id' => currentCycle(),
             'provider_id' => $provider->id,
-            'status' => 'pending'
+            'type' => 'withdrawal',
+            'narration' => 'External Withdrawal',
+            'action' => 'debit',
+            'status' => 'pending',
+            'opening_balance' => $openingBalance,
+            'closing_balance' => $closingBalance
         ]);
 
         $amount = '$' . $validated->amount;

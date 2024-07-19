@@ -37,7 +37,7 @@ class NowpaymentController extends Controller
         return view('nowpayments.create', $data);
     }
 
-    function payment($validated = null)
+    function payment($validated)
     {
         try {
 
@@ -130,7 +130,7 @@ class NowpaymentController extends Controller
                 } elseif ($withdrawal->status === 'FINISHED') {
                     $payload['status'] = "completed";
                 } else {
-                    $payload['status'] = "declined";
+                    $payload['status'] = "failed";
                 }
             }
 
@@ -150,7 +150,7 @@ class NowpaymentController extends Controller
                     'external_reference' => $payload['external_reference']
                 ]);
 
-                if (strtolower($payload['status']) === 'declined') {
+                if (strtolower($payload['status']) === 'failed') {
                     refundWallet($validated->amount);
                 }
 
@@ -197,73 +197,6 @@ class NowpaymentController extends Controller
             sendToLog('Nowpayment payout response: ' . json_encode($decoded));
 
             return response()->json([], Response::HTTP_UNAUTHORIZED);
-        }
-
-        return response('Successful', Response::HTTP_OK)->header('Content-Type', 'text/plain');
-    }
-
-    function ambassadorIpn(Request $request)
-    {
-        $data = trim(file_get_contents('php://input'), "\xEF\xBB\xBF");
-        // Decode the contents from the webhook response
-        $decoded = json_decode(mb_convert_encoding($data, 'UTF-8', 'UTF-8'), true, 512, JSON_THROW_ON_ERROR);
-
-        if (empty($decoded)) {
-            sendToLog('Nowpayment sent an empty transaction webhook response payload.');
-
-            return response('Payload is empty.', Response::HTTP_OK)->header('Content-Type', 'text/plain');
-        }
-
-        // Compute the HMAC using the SHA-512 hash algorithm
-        $signature = hash_hmac('SHA512', $data, config('contstants.nowpayment.ipn_key'));
-
-        $headerKey = $request->headers->get('x-nowpayments-sig');
-
-        // Verify signature
-        if ($headerKey !== $signature) {
-            sendToLog('Nowpayment payout webhook unauthorized access.');
-            sendToLog('Nowpayment payout response: ' . json_encode($decoded));
-
-            return response()->json([], Response::HTTP_UNAUTHORIZED);
-        }
-
-        // GEt the invoice
-        $invoice = Invoice::where('order_id', $decoded['order_id'])->whereNull('service_id')->where('is_paid', false)->first();
-
-        if (empty($invoice)) {
-            sendToLog('Nowpayment invoice not found.');
-            sendToLog('Nowpayment payout response: ' . json_encode($decoded));
-
-            return response()->json([], Response::HTTP_UNAUTHORIZED);
-        }
-
-        $invoice->update([
-            'is_paid' => true
-        ]);
-
-        $user = $invoice->user;
-
-        if (!$user->is_ambassador) {
-
-            AmbassedorPayments::create([
-                'reference' => generateReference(),
-                'user_id' => $user->id,
-                'amount'  => $invoice->amount
-            ]);
-
-            $user->update([
-                'is_ambassador' => true
-            ]);
-
-            Bonus::create([
-                'user_id' => $user->id,
-                'amount' => 0
-            ]);
-
-            UserActivities::create([
-                'user_id' => $user->id,
-                'log'  => 'Payment for Ambassador Account.'
-            ]);
         }
 
         return response('Successful', Response::HTTP_OK)->header('Content-Type', 'text/plain');
@@ -320,9 +253,7 @@ class NowpaymentController extends Controller
         $userSubscription = UserSubscription::where('user_id', $user->id)->where('service_id', $package->id)->first();
 
         if ($userSubscription) {
-            if (!$userSubscription->is_active) {
-                $subscriptionService->updateSubscription($package, $userSubscription);
-            }
+            $subscriptionService->updateSubscription($package, $userSubscription);
         } else {
             $subscriptionService->createSubscription($package, $user);
         }
