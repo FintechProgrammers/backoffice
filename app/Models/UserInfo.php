@@ -10,4 +10,9 @@ class UserInfo extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    function country()
+    {
+        return $this->belongsTo(Country::class, 'country_code', 'iso2');
+    }
 }

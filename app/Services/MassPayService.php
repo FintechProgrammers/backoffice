@@ -5,7 +5,7 @@ namespace App\Services;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 
-class MassPay
+class MassPayService
 {
     function getBalance()
     {
@@ -68,6 +68,11 @@ class MassPay
         return self::handle("/v1.0.0/payout/user", "POST", $payload);
     }
 
+    function getUserWallet($userToken)
+    {
+        return $this->handle("/v1.0.0/payout/wallet/{$userToken}", "GET", []);
+    }
+
     private function handle($uri = '/', $method = 'POST', $params = [], $token = null)
     {
         try {
@@ -88,11 +93,40 @@ class MassPay
 
             $res = $client->send($request);
 
-            return json_decode($res->getBody()->getContents(), true);
-        } catch (\Exception $e) {
+            $data = [
+                'success' => true,
+                'data' => json_decode($res->getBody()->getContents(), true)
+            ];
+
+            return $data;
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            // Log the exception message
+
             sendToLog($e);
 
-            return $e->getMessage();
+            // Get the response body from the exception
+            if ($e->hasResponse()) {
+                $responseBody = $e->getResponse()->getBody()->getContents();
+                $responseArray = json_decode($responseBody, true);
+
+                // Check if the JSON decoding was successful
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    return $responseArray;
+                }
+            }
+
+            return [
+                'success' => false,
+                'message' => 'An error occurred while processing the request.',
+            ];
+        } catch (\Exception $e) {
+            // Log other exceptions
+            sendToLog($e);
+
+            return [
+                'success' => false,
+                'message' => 'An unexpected error occurred.',
+            ];
         }
     }
 }

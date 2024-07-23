@@ -9,6 +9,7 @@ use App\Models\UserActivities;
 use App\Models\UserOtp;
 use App\Models\Wallet;
 use App\Models\Withdrawal;
+use App\Notifications\WithdrawalToken;
 use App\Traits\RecursiveActions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -57,8 +58,9 @@ class WithdrawalController extends Controller
                 'code' => $this->generateUserOtp($user->id, 'withdrawal_request'),
             ];
 
-            // dispatch(new \App\Jobs\Mail\OtpMail($mail));
-            Mail::to($user->email)->send(new \App\Mail\OtpMail($mail));
+            // Mail::to($user->email)->send(new \App\Mail\OtpMail($mail));
+
+            $user->notify(new WithdrawalToken($mail));
 
             return view('user.withdrawal._token-input');
         } catch (\Exception $e) {
@@ -72,6 +74,8 @@ class WithdrawalController extends Controller
         $validated = (object)$request->validated();
 
         $user = $request->user();
+
+        $validated->user = $user;
 
         $code = UserOtp::where('token', $validated->token)
             ->where('purpose', 'withdrawal_request')
@@ -98,14 +102,9 @@ class WithdrawalController extends Controller
 
         $openingBalance = $wallet->amount;
 
-        // debit wallet
-        $wallet->update([
-            'amount' => $wallet->amount - $validated->amount
-        ]);
-
         $closingBalance = $wallet->amount - $validated->amount;
 
-        $Withdrawal = Transaction::create([
+        $Withdrawal = [
             'internal_reference' => generateReference(),
             'user_id'  => $user->id,
             'associated_user_id' => $user->id,
@@ -118,7 +117,7 @@ class WithdrawalController extends Controller
             'status' => 'pending',
             'opening_balance' => $openingBalance,
             'closing_balance' => $closingBalance
-        ]);
+        ];
 
         $amount = '$' . $validated->amount;
 
@@ -130,6 +129,8 @@ class WithdrawalController extends Controller
         // $code->delete();
 
         $validated->provider = $provider;
+        $validated->wallet = $wallet;
+        $validated->transaction_payload = $Withdrawal;
 
         if ($provider->short_name == 'nowpayment') {
             $nowpyamnet = new \App\Http\Controllers\NowpaymentController();
@@ -138,6 +139,9 @@ class WithdrawalController extends Controller
 
             return ($nowpyamnet->payout($validated, $Withdrawal)) ? $this->sendResponse([], self::TRANSACTION_PENDING) : $this->sendError(serviceDownMessage(), [], 500);
         } elseif ($provider->short_name === 'masspay') {
+            $masspay = new \App\Http\Controllers\MassPaymentController();
+
+            return $masspay->makeWithdrawal($validated);
         }
 
         return $this->sendError(serviceDownMessage(), [], 500);
