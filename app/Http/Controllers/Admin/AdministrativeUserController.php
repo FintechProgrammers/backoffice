@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
+use App\Notifications\AdminUserAdded;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -51,13 +52,23 @@ class AdministrativeUserController extends Controller
 
             DB::beginTransaction();
 
+            $password = \Illuminate\Support\Str::random(5);
+
             $admin = Admin::create([
                 'email' => $request->email,
                 'name'  => $request->fullname,
-                'password' => Hash::make('default')
+                'password' => $password
             ]);
 
             $admin->assignRole($request->roles);
+
+            $mailData = [
+                'email' => $admin->email,
+                'password' => $admin->password,
+                'name' => $admin->name
+            ];
+
+            $admin->notify(new AdminUserAdded($mailData));
 
             DB::commit();
 
