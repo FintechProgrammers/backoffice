@@ -39,6 +39,10 @@
     <script src="{{ asset('assets/libs/chart.js/chart.min.js') }}"></script>
     <script src="{{ asset('assets/libs/swiper/swiper-bundle.min.js') }}"></script>
     <script src="{{ asset('assets/js/swiper.js') }}"></script>
+    <!-- Apex Charts JS -->
+    <script src="{{ asset('assets/libs/apexcharts/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/jsvectormap/maps/world-merc.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var recentActivity = document.getElementById('latest-timeline');
@@ -47,15 +51,20 @@
                     autoHide: true
                 });
             }
+
+            var myElement21 = document.getElementById('teams-nav');
+            new SimpleBar(myElement21, {
+                autoHide: true
+            });
         });
     </script>
     @if (Auth::user()->profile_completion_percentage < 100)
-        <script>
+        {{-- <script>
             var myModal = new bootstrap.Modal(document.getElementById('profileUpdateModal'), {
                 keyboard: false
             });
             myModal.show();
-        </script>
+        </script> --}}
     @endif
     <script>
         Chart.defaults.borderColor = "rgba(142, 156, 173,0.1)", Chart.defaults.color = "#8c9097";
@@ -86,7 +95,7 @@
             config
         );
     </script>
-    @include('partials.scripts.initiate-payin')
+    {{-- @include('partials.scripts.initiate-payin') --}}
     <script>
         $.ajax({
             url: "{{ route('week.clock') }}",
@@ -125,4 +134,143 @@
             document.getElementById('progress-bar').style.width = `${progress}%`;
         }
     </script>
+    <script>
+        var smioptions = {
+            series: [76],
+            chart: {
+                type: 'radialBar',
+                height: 100,
+                offsetY: -20,
+                sparkline: {
+                    enabled: true
+                }
+            },
+            plotOptions: {
+                radialBar: {
+                    startAngle: -90,
+                    endAngle: 90,
+                    track: {
+                        background: "#fff",
+                        strokeWidth: '97%',
+                        margin: 5, // margin is in pixels
+                        dropShadow: {
+                            enabled: false,
+                            top: 2,
+                            left: 0,
+                            color: '#999',
+                            opacity: 1,
+                            blur: 2
+                        }
+                    },
+                    dataLabels: {
+                        name: {
+                            show: false
+                        },
+                        value: {
+                            offsetY: -2,
+                            fontSize: '15px'
+                        }
+                    }
+                }
+            },
+            colors: ["#845adf"],
+            grid: {
+                padding: {
+                    top: 5
+                }
+            },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shade: 'light',
+                    shadeIntensity: 0.4,
+                    inverseColors: false,
+                    opacityFrom: 1,
+                    opacityTo: 1,
+                    stops: [0, 50, 53, 91]
+                },
+            },
+            labels: ['Average Results'],
+        };
+        var chart = new ApexCharts(document.querySelector("#circular-semi"), smioptions);
+        chart.render();
+    </script>
+    <script>
+        var markers = [{
+                name: 'Russia',
+                coords: [61, 105],
+                style: {
+                    fill: '#28d193'
+                }
+            },
+            {
+                name: 'Geenland',
+                coords: [72, -42],
+                style: {
+                    fill: '#ff8c33'
+                }
+            },
+            {
+                name: 'Canada',
+                coords: [56, -106],
+                style: {
+                    fill: '#ff534d'
+                }
+            },
+            {
+                name: 'Palestine',
+                coords: [31.5, 34.8],
+                style: {
+                    fill: '#ffbe14'
+                }
+            },
+            {
+                name: 'Brazil',
+                coords: [-14.2350, -51.9253],
+                style: {
+                    fill: '#4b9bfa'
+                }
+            },
+        ];
+        var map = new jsVectorMap({
+            map: 'world_merc',
+            selector: '#users-map',
+            markersSelectable: true,
+
+            onMarkerSelected(index, isSelected, selectedMarkers) {
+                console.log(index, isSelected, selectedMarkers);
+            },
+
+            // -------- Labels --------
+            labels: {
+                markers: {
+                    render: function(marker) {
+                        return marker.name
+                    },
+                },
+            },
+
+            // -------- Marker and label style --------
+            markers: markers,
+            markerStyle: {
+                hover: {
+                    stroke: "#DDD",
+                    strokeWidth: 3,
+                    fill: '#FFF'
+                },
+                selected: {
+                    fill: '#ff525d'
+                }
+            },
+            markerLabelStyle: {
+                initial: {
+                    fontFamily: 'Poppins',
+                    fontSize: 13,
+                    fontWeight: 500,
+                    fill: '#35373e',
+                },
+            },
+        })
+    </script>
+
 @endpush
