@@ -12,9 +12,14 @@
                 @csrf
                 @method('PATCH')
                 <div class="mb-3">
-                    <label for="first-name" class="form-label">Fullname</label>
-                    <input type="text" class="form-control" id="first-name" name="name"
-                        value="{{ $user->name }}" placeholder="Name" readonly>
+                    <label for="first-name" class="form-label">First name</label>
+                    <input type="text" class="form-control" id="first-name" name="first_name"
+                        value="{{ $user->first_name }}" placeholder="Name" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="first-name" class="form-label">Last name</label>
+                    <input type="text" class="form-control" id="first-name" name="last_name"
+                        value="{{ $user->last_name }}" placeholder="Name" readonly>
                 </div>
                 <div class="mb-3">
                     <label for="last-name" class="form-label">Username</label>

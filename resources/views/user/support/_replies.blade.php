@@ -18,7 +18,7 @@
                                 <div class="d-flex align-items-center mb-3">
                                     <div class="mt-sm-0 mt-2">
                                         <p class="mb-0 fs-14 fw-semibold">
-                                            {{ !empty($item->admin) ? $item->admin->name : $item->ticket->user->name }}
+                                            {{ !empty($item->admin) ? $item->admin->name : $item->ticket->user->full_name }}
                                         </p>
                                         <span
                                             class="mb-0 d-block text-muted fs-12">{{ $item->created_at->diffForHumans() }}</span>
