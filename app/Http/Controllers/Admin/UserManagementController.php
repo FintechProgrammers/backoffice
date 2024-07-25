@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Bonus;
 use App\Models\User;
 use App\Models\UserInfo;
+use App\Notifications\NewAccountCreated;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -34,7 +35,7 @@ class UserManagementController extends Controller
         $query = User::withTrashed();
 
         $query = $query
-            ->when(!empty($search), fn ($query) => $query->where('name', 'LIKE', "%{$search}%")->orWhere('email', 'LIKE', "%{$search}%")->orWhere('username', 'LIKE', "%{$search}%"))
+            ->when(!empty($search), fn ($query) => $query->where('first_name', 'LIKE', "%{$search}%")->orWhere('last_name', 'LIKE', "%{$search}%")->orWhere('email', 'LIKE', "%{$search}%")->orWhere('username', 'LIKE', "%{$search}%"))
             ->when(!empty($status), fn ($query) => $query->where('status', $status))
             ->when(!empty($accountType), fn ($query) => $accountType == 'ambassador' ? $query->where('is_ambassador', true) : $query->where('is_ambassador', false))
             ->when(!empty($dateFrom) && !empty($dateTo), fn ($query) => $query->whereBetween('created_at', [$dateFrom, $dateTo]))
@@ -55,7 +56,8 @@ class UserManagementController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'fullname' => 'required|string',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
             'username' => 'required|string|unique:users,username',
             'email' => 'required|email|unique:users,email',
         ]);
@@ -69,16 +71,23 @@ class UserManagementController extends Controller
 
             DB::beginTransaction();
 
+            $password = \Illuminate\Support\Str::random(5);
+
             $user = User::create([
                 'username' => $request->username,
                 'email' => $request->email,
-                'name'  => $request->fullname,
-                'password' => Hash::make('default')
+                'first_name'  => $request->first_name,
+                'last_name' => $request->last_name,
+                'password' => $password
             ]);
 
-            UserInfo::create([
-                'user_id' => $user->id
-            ]);
+            $mailData = [
+                'username' => $request->username,
+                'name' => $request->first_name,
+                'password' => $password
+            ];
+
+            $user->notify(new NewAccountCreated($mailData));
 
             DB::commit();
 

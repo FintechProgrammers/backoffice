@@ -21,7 +21,7 @@
                             <img src="{{ $user->profile_image }}" alt="">
                         </span>
                         <div class="mt-2">
-                            <p class="mb-0 fw-semibold">{{ $user->name }}</p>
+                            <p class="mb-0 fw-semibold">{{ $user->full_name }}</p>
                             <p class="fs-12 op-7 mb-1 text-muted">{{ $user->email }}</p>
                             @if ($user->is_ambassador)
                                 <span class="badge bg-info-transparent rounded-pill">Ambassador</span>
@@ -94,12 +94,13 @@
                                                     <a href="javascript:void(0);" data-bs-toggle="tooltip"
                                                         data-bs-placement="top" title="Approve Document"
                                                         class="btn btn-icon btn-sm btn-success-transparent rounded-pill btn-action"
-                                                        data-url="{{ route('admin.kyc.approve', $item->uuid) }}" data-action="approve this document"
-                                                        ><i
+                                                        data-url="{{ route('admin.kyc.approve', $item->uuid) }}"
+                                                        data-action="approve this document"><i
                                                             class="bx bx-user-check"></i></a>
                                                     <a href="javascript:void(0);" data-bs-toggle="tooltip"
                                                         data-bs-placement="top" title="Decline Document"
-                                                        data-url="{{ route('admin.kyc.decline', $item->uuid) }}" data-action="decline this document"
+                                                        data-url="{{ route('admin.kyc.decline', $item->uuid) }}"
+                                                        data-action="decline this document"
                                                         class="btn btn-icon btn-sm btn-danger-transparent rounded-pill btn-action"><i
                                                             class="bx bx-user-x"></i></a>
                                                 @endif
@@ -137,5 +138,5 @@
             } = current;
         });
     </script>
-     @include('admin.kyc.scritps._actions')
+    @include('admin.kyc.scritps._actions')
 @endpush

@@ -1,7 +1,7 @@
 @forelse ($sales as $item)
     <tr>
         <td>
-            <x-profile-component name="{{ $item->user->name }}" email="{{ $item->user->email }}"
+            <x-profile-component name="{{ $item->user->full_name }}" email="{{ $item->user->email }}"
                 image="{{ $item->user->profile_picture }}" />
         </td>
         <td>

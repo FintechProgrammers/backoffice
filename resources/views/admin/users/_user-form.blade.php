@@ -3,10 +3,19 @@
     <form method="POST" action="{{ route('admin.users.store') }}">
         @csrf
         <div class="mb-3">
-            <label for="form-text1" class="form-label fs-14 text-dark">Fullname</label>
+            <label for="form-text1" class="form-label fs-14 text-dark">First name</label>
             <div class="input-group">
                 <div class="input-group-text"><i class="ri-user-line"></i></div>
-                <input type="text" class="form-control" name="fullname" id="form-text1" placeholder="Enter fullname">
+                <input type="text" class="form-control" name="first_name" id="form-text1"
+                    placeholder="Enter first name">
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="form-text1" class="form-label fs-14 text-dark">Last name</label>
+            <div class="input-group">
+                <div class="input-group-text"><i class="ri-user-line"></i></div>
+                <input type="text" class="form-control" name="last_name" id="form-text1"
+                    placeholder="Enter last name">
             </div>
         </div>
         <div class="mb-3">

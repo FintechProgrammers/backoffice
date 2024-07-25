@@ -18,7 +18,7 @@
                             class="d-flex flex-wrap align-item-center mt-sm-0 mt-5 justify-content-between border-bottom border-block-end-dashed p-3">
                             <div class="team-member-details flex-fill">
                                 <p class="mb-0 fw-semibold fs-16 text-truncate">
-                                    <a href="javascript:void(0);">{{ Str::ucfirst($item->name) }}</a>
+                                    <a href="javascript:void(0);">{{ Str::ucfirst($item->full_name) }}</a>
                                 </p>
                                 <p class="mb-0 fs-11 text-muted text-break">{{ $item->email }}</p>
                             </div>

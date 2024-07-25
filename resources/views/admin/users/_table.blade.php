@@ -1,7 +1,7 @@
 @forelse ($users as $item)
     <tr>
         <td>
-            <x-profile-component name="{{ $item->name }}" email="{{ $item->email }}"
+            <x-profile-component name="{{ $item->full_name }}" email="{{ $item->email }}"
                 image="{{ $item->profile_picture }}" />
         </td>
         <td class="text-center">{{ $item->username }}</td>
@@ -14,7 +14,7 @@
         </td>
         <td>
             @if (!empty($item->sponsor))
-                <x-profile-component name="{{ $item->sponsor->name }}" email="{{ $item->sponsor->email }}"
+                <x-profile-component name="{{ $item->sponsor->full_name }}" email="{{ $item->sponsor->email }}"
                     image="{{ $item->sponsor->profile_picture }}" />
             @endif
         </td>

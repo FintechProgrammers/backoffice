@@ -65,6 +65,14 @@ class User extends Authenticatable
         return !empty($this->profile_image) ? $this->profile_image : url('/') . '/assets/images/avatar.svg';
     }
 
+    /**
+     * Get the full name of the user.
+     */
+    public function getFullNameAttribute(): string
+    {
+        return !empty($this->first_name) ? \Illuminate\Support\Str::title($this->first_name . ' ' . $this->last_name) : 'Unavailable';
+    }
+
     protected static function boot()
     {
         parent::boot();

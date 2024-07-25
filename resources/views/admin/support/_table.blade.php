@@ -4,7 +4,7 @@
             #{{ $item->ticket_code }}
         </td>
         <td>
-            <x-profile-component name="{{ optional($item->user)->name }}" email="{{ optional($item->user)->email }}"
+            <x-profile-component name="{{ optional($item->user)->full_name }}" email="{{ optional($item->user)->email }}"
                 image="{{ optional($item->user)->profile_picture }}" />
         </td>
         <td>

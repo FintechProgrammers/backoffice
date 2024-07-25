@@ -5,8 +5,14 @@
     <form action="{{ route('register') }}" method="POST" id="registerForm">
         @csrf
         <div class="mb-3">
-            <label for="signin-username" class="form-label text-default">Name</label>
-            <input type="text" class="form-control form-control-lg" name="name" id="signin-username" placeholder="Name">
+            <label for="signin-username" class="form-label text-default">First Name</label>
+            <input type="text" class="form-control form-control-lg" name="first_name" id="signin-username"
+                placeholder="First Name">
+        </div>
+        <div class="mb-3">
+            <label for="signin-username" class="form-label text-default">Last Name</label>
+            <input type="text" class="form-control form-control-lg" name="last_name" id="signin-username"
+                placeholder="Last Name">
         </div>
         <div class="mb-3">
             <label for="signin-username" class="form-label text-default">Username</label>
