@@ -29,11 +29,11 @@ class CycleController extends Controller
     {
         $cycle = Cycle::where('is_active', true)->first();
 
-        // If no active cycle exists, create a new cycle as cycle 1
+        // If no active cycle exists, create a new cycle starting from the beginning of the current month
         if (!$cycle) {
             $cycleNumber = 1;
-            $startDate = now();
-            $endDate = $startDate->copy()->addMonth(); // Add a month to start date to get end date
+            $startDate = now()->startOfMonth();
+            $endDate = now()->endOfMonth(); // End of the current month
 
             $cycle = Cycle::create([
                 'name' => "Cycle {$cycleNumber}",
@@ -43,17 +43,17 @@ class CycleController extends Controller
                 'is_active' => true
             ]);
         } else {
-            // Check if the active cycle end date has passed
+            // Check if the active cycle end date has passed or is today
             $currentDate = now();
-            if ($currentDate->gt($cycle->end_date)) {
+            if ($currentDate->gte($cycle->end_date)) {
                 // Deactivate the current cycle
                 $cycle->is_active = false;
                 $cycle->save();
 
-                // Create a new cycle incrementing the cycle number by 1
+                // Create a new cycle starting from the beginning of the next month
                 $cycleNumber = $cycle->cycle_number + 1;
-                $startDate = now();
-                $endDate = $startDate->copy()->addMonth(); // Add a month to start date to get end date
+                $startDate = now()->startOfMonth()->addMonth();
+                $endDate = $startDate->copy()->endOfMonth(); // End of the next month
 
                 $cycle = Cycle::create([
                     'name' => "Cycle {$cycleNumber}",
@@ -66,6 +66,7 @@ class CycleController extends Controller
         }
 
         // At this point, $cycle contains the current active cycle
+
 
     }
 }

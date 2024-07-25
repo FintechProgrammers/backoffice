@@ -29,7 +29,7 @@ class CommissionService
     public function calculateCommission(Sale $sale)
     {
         $parent = User::find($sale->parent_id);
-        $level = 1;
+        $level = 0;
         $commissions = [];
         $childId = $sale->user_id;
 

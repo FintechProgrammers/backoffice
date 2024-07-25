@@ -91,13 +91,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('packages', 'packages')->name('packages');
     });
 
-    Route::get('team', [TeamController::class, 'index'])->name('team.index');
-
     Route::controller(TeamController::class)->prefix('team')->name('team.')->group(function () {
         Route::get('', 'index')->name('index');
         Route::get('/filter', 'filter')->name('fileter');
         Route::get('/genealogy', 'genealogy')->name('genealogy');
         Route::get('/user/info/{user}', 'userInfo')->name('user.info');
+        Route::get('/create/member', 'createCustomer')->name('create.customer');
     });
 
     Route::controller(ProviderController::class)->prefix('provider')->name('provider.')->group(function () {
@@ -105,10 +104,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('payout', 'payoutProvider')->name('payout');
         Route::get('/card/initiate', 'getDefaultCardProvider')->name('card.initiate');
         Route::get('/crypto/initiate', 'getDefaultCryptoProvider')->name('crypto.initiate');
-    });
-
-    Route::controller(NowpaymentController::class)->prefix('nowpayment')->name('nowpayment.')->group(function () {
-        Route::get('/c/eoeomomceome/{serviceId?}', 'create')->name('layout');
     });
 
     Route::controller(PayoutController::class)->prefix('payout')->name('payout.')->group(function () {

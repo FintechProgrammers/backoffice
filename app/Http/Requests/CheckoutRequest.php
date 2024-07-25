@@ -27,15 +27,17 @@ class CheckoutRequest extends FormRequest
     {
         $rules =  [
             'package_id'  => ['required', 'exists:services,uuid'],
-            'payment_provider'  => ['required', 'exists:providers,uuid']
+            'payment_provider'  => ['required']
         ];
 
-        if (!auth()->check()) {
-            $rules['name'] = ['required'];
+        if ($this->filled('referral_id')) {
+            $rules['first_name'] = ['required', 'string'];
+            $rules['last_name'] = ['required', 'string'];
             $rules['email'] = ['required', 'unique:users,email'];
-            $rules['username']  = ['required', 'unique:users,username'];
-            $rules['password'] = ['required', 'confirmed'];
+            $rules['username'] = ['required', 'unique:users,username'];
             $rules['referral_id'] = ['required', 'exists:users,uuid'];
+        } else {
+            $rules['referral_id'] = ['nullable', 'exists:users,uuid'];
         }
 
         return $rules;

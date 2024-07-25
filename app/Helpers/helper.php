@@ -3,10 +3,12 @@
 use App\Models\Settings;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Mail;
+use Symfony\Component\HttpFoundation\Response;
 
 if (!function_exists('generateReference')) { /* Check_for "generateReference" */
     function generateReference()
@@ -395,5 +397,29 @@ if (!function_exists('getWeekStartAndEnd')) {
             'week_start' => $weekStart->format('Y-m-d H:i:s'),
             'week_end' => $weekEnd->format('Y-m-d H:i:s'),
         ];
+    }
+}
+
+
+if (!function_exists('getDaysOfWeek')) {
+    function getDaysOfWeek()
+    {
+        return array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
+    }
+}
+
+
+if (!function_exists('errorResponse')) {
+    /**
+     * Throw an error response
+     * @param string  $message
+     */
+    function errorResponse($message, $code = Response::HTTP_UNPROCESSABLE_ENTITY)
+    {
+        // Trim and transform the message to sentence case
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'message' => $message,
+        ], $code));
     }
 }

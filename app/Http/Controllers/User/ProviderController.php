@@ -39,21 +39,26 @@ class ProviderController extends Controller
             $service = null;
         }
 
-        $provider = Provider::where('is_active', true)->where('is_crypto', false)->where('can_payin', true)->where('is_default', true)->first();
+        if ($request->payment_provider === 'commission_wallet') {
+            // get user commission wallet
 
-        if (!$provider) {
-            return $this->sendError("Unable to complete your request at the momment", [], 400);
-        }
-
-        if ($provider->short_name == 'strip') {
-            $stripController = new \App\Http\Controllers\StripeController();
-
-            $route = $stripController->payment($service);
         } else {
-            return $this->sendError("Unable to complete your request at the momment", [], 400);
-        }
+            $provider = Provider::where('is_active', true)->where('is_crypto', false)->where('can_payin', true)->where('is_default', true)->first();
 
-        return $this->sendResponse(['route' => $route]);
+            if (!$provider) {
+                return $this->sendError("Unable to complete your request at the momment", [], 400);
+            }
+
+            if ($provider->short_name == 'strip') {
+                $stripController = new \App\Http\Controllers\StripeController();
+
+                $route = $stripController->payment($service);
+            } else {
+                return $this->sendError(serviceDownMessage(), [], 400);
+            }
+
+            return $this->sendResponse(['route' => $route]);
+        }
     }
 
     function getDefaultCryptoProvider(Request $request)

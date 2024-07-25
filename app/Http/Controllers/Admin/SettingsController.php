@@ -23,7 +23,9 @@ class SettingsController extends Controller
             'maximum_withdrawal_amount' => $request->has('maximum_withdrawal_amount') ? $request->maximum_withdrawal_amount : 0,
             'withdrawal_fee'            => $request->has('withdrawal_fee') ? $request->withdrawal_fee : 0,
             'bv_equivalent'             => $request->has('bv_equivalent') ? $request->bv_equivalent : 0,
-            'ambassador_fee'            => $request->has('ambassador_fee') ? $request->ambassador_fee : 0
+            'ambassador_fee'            => $request->has('ambassador_fee') ? $request->ambassador_fee : 0,
+            'withdrawal_day'            => $request->withdrawal_day,
+            'cash_back_window'  => $request->cash_back_window
         ];
 
         $settings = Settings::first();

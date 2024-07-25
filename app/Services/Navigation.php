@@ -204,7 +204,12 @@ class Navigation
                 'hasPermission' => true,
                 'subMenu'   => (object) [
                     (object) [
-                        'name'  => 'Customer Downline',
+                        'name' => 'Add New Registration',
+                        'route' => 'team.create.customer',
+                        'hasPermission' => true
+                    ],
+                    (object) [
+                        'name'  => 'My Customers',
                         'route' => 'team.index',
                         'hasPermission' => true
                     ],

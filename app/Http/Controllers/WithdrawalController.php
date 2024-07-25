@@ -80,7 +80,7 @@ class WithdrawalController extends Controller
         $code = UserOtp::where('token', $validated->token)
             ->where('purpose', 'withdrawal_request')
             ->where('user_id', $user->id)
-            // ->where('created_at', '>', now()->subMinute())
+            ->where('created_at', '>', now()->subMinute())
             ->first();
 
         if (!$code) {

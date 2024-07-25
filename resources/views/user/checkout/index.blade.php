@@ -28,7 +28,14 @@
                                     <input type="hidden" name="referral_id" value="{{ $ambassador->uuid }}">
                                     <input type="hidden" name="package_id" value="{{ $package->uuid }}">
                                     @include('user.checkout.package')
-                                    @include('user.checkout.personalDetails')
+                                    <div class="p-4">
+                                        <p class="mb-1 fw-semibold text-muted op-5 fs-20">02</p>
+                                        <div
+                                            class="fs-15 fw-semibold d-sm-flex d-block align-items-center justify-content-between mb-3">
+                                            <div>Personal Details :</div>
+                                        </div>
+                                        @include('user.team._user-info')
+                                    </div>
                                     @include('user.checkout.payment-methods')
                                     <div
                                         class="px-4 py-3 border-top border-block-start-dashed d-sm-flex justify-content-between">
@@ -51,7 +58,11 @@
 
     @include('partials._js')
 
-    <script>
+
+    <script script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+    <script src="{{ asset('assets/js/custom.js') }}">
         $(document).ready(function() {
             $('#checkoutForm').on('submit', function(event) {
                 event.preventDefault(); // Prevent default form submission

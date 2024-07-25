@@ -51,7 +51,7 @@ class CommisionPlanController extends Controller
 
             $commission = CommissionLevels::create([
                 'name' => $request->name,
-                'level'  => $request->commission_type == 'direct' ? 1 : $request->level,
+                'level'  => $request->commission_type == 'direct' ? 0 : $request->level,
                 'commission_percentage' => $request->commission_percentage,
                 'is_direct'  => $request->commission_type == 'direct' ? true : false,
             ]);
@@ -67,7 +67,7 @@ class CommisionPlanController extends Controller
 
             DB::commit();
 
-            return response()->json(['success' => true, 'message' => 'Commision Plan Created Successfully']);
+            return response()->json(['success' => true, 'message' => 'Commission Plan Created Successfully']);
         } catch (\Exception $e) {
             DB::rollBack();
             logger($e);

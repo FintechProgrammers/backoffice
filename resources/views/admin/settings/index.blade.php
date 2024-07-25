@@ -8,10 +8,13 @@
     </div>
     <form method="POST" action="{{ route('admin.settings.store') }}" id="setting-form">
         @csrf
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-6">
+
+        <div class="d-flex  justify-content-center align-items-center">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            {{-- <div class="col-lg-6">
                         <h6>{{ __('Ambassador Settings') }}</h6>
                         <div class="mb-3">
                             <label for="">Ambassador Fee</label>
@@ -23,8 +26,8 @@
                             </div>
                             <small class="text-muted">{{ __('The fee to become an Ambassador.') }} </small>
                         </div>
-                    </div>
-                    <div class="col-lg-6 mb-3">
+                    </div> --}}
+                            {{-- <div class="col-lg-6 mb-3">
                         <label for="basic-url" class="form-label">BV Settings</label>
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon3">1BV is equivalent to </span>
@@ -34,45 +37,75 @@
                             <span class="input-group-text">USD</span>
                         </div>
                         <small class="text-muted">{{ __('Set BV Equivalent in USD') }} </small>
-                    </div>
-                </div>
-                <div class="row">
-                    <h6><b>{{ __('Withdrawal Settings') }}</b></h6>
-                    <div class="col-lg-6 mb-3">{{ __('Minimum Withdrawal Amount') }}</label>
-                        <div class="input-group">
-                            <input type="number" min="1" name="minimum_withdrawal_amount" class="form-control" id="basic-url"
-                                value="{{ !empty(systemSettings()->minimum_withdrawal_amount) ? systemSettings()->minimum_withdrawal_amount : 0 }}"
-                                aria-describedby="basic-addon3">
-                            <span class="input-group-text">USD</span>
+                    </div> --}}
+                        </div>
+                        <div class="row">
+                            <h6><b>{{ __('Withdrawal Settings') }}</b></h6>
+                            <div class="col-lg-12 mb-3">{{ __('Minimum Withdrawal Amount') }}</label>
+                                <div class="input-group">
+                                    <input type="number" min="0" name="minimum_withdrawal_amount"
+                                        class="form-control" id="basic-url"
+                                        value="{{ !empty(systemSettings()->minimum_withdrawal_amount) ? systemSettings()->minimum_withdrawal_amount : 0 }}"
+                                        aria-describedby="basic-addon3">
+                                    <span class="input-group-text">USD</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 mb-3">{{ __('Maximum Withdrawal Amount') }}</label>
+                                <div class="input-group">
+                                    <input type="number" min="0" name="maximum_withdrawal_amount"
+                                        class="form-control" id="basic-url"
+                                        value="{{ !empty(systemSettings()->maximum_withdrawal_amount) ? systemSettings()->maximum_withdrawal_amount : 0 }}"
+                                        aria-describedby="basic-addon3">
+                                    <span class="input-group-text">USD</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 mb-3">{{ __('Withdrawal Fee') }}</label>
+                                <div class="input-group">
+                                    <input type="number" min="0" name="bv_equivalent" class="form-control"
+                                        id="basic-url"
+                                        value="{{ !empty(systemSettings()->withdrawal_fee) ? systemSettings()->withdrawal_fee : 0 }}"
+                                        aria-describedby="basic-addon3">
+                                    <span class="input-group-text">USD</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <h6><b>{{ __('Payment Settings') }}</b></h6>
+                            <div class="col-lg-6 mb-3">
+                                <label>{{ __('Payment Day') }}</label>
+                                <select name="withdrawal_day" id="withdrawal_day" class="form-control">
+                                    <option value="">--SELECT--DAY--</option>
+                                    @foreach (getDaysOfWeek() as $item)
+                                        <option @selected(!empty(systemSettings()->withdrawal_day) && $item === systemSettings()->withdrawal_day)>{{ $item }}</option>
+                                    @endforeach
+                                </select>
+                                <small class="text-muted">{{ __('Set Day for commision withdrawal') }} </small>
+                            </div>
+                            <div class="col-lg-6 mb-3">
+                                <label>{{ __('Cash Back Window') }}</label>
+                                <div class="input-group">
+                                    <input type="number" min="1" name="cash_back_window" class="form-control"
+                                        id="basic-url"
+                                        value="{{ !empty(systemSettings()->cash_back_window) ? systemSettings()->cash_back_window : 0 }}"
+                                        aria-describedby="basic-addon3">
+                                    <span class="input-group-text">Day(s)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="">
+                            <button class="btn btn-primary btn-block" type="submit">
+                                <div class="spinner-border spinner-border-sm align-middle" style="display: none"
+                                    aria-hidden="true">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <span id="text">Submit</span>
+                            </button>
                         </div>
                     </div>
-                    <div class="col-lg-6 mb-3">{{ __('Maximum Withdrawal Amount') }}</label>
-                        <div class="input-group">
-                            <input type="number" min="1" name="maximum_withdrawal_amount" class="form-control" id="basic-url"
-                                value="{{ !empty(systemSettings()->maximum_withdrawal_amount) ? systemSettings()->maximum_withdrawal_amount : 0 }}"
-                                aria-describedby="basic-addon3">
-                            <span class="input-group-text">USD</span>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 mb-3">{{ __('Withdrawal Fee') }}</label>
-                        <div class="input-group">
-                            <input type="number" min="1" name="bv_equivalent" class="form-control" id="basic-url"
-                                value="{{ !empty(systemSettings()->withdrawal_fee) ? systemSettings()->withdrawal_fee : 0 }}"
-                                aria-describedby="basic-addon3">
-                            <span class="input-group-text">USD</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="">
-                    <button class="btn btn-primary btn-block" type="submit">
-                        <div class="spinner-border spinner-border-sm align-middle" style="display: none" aria-hidden="true">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                        <span id="text">Submit</span>
-                    </button>
                 </div>
             </div>
         </div>
+
     </form>
 @endsection
 @push('scripts')

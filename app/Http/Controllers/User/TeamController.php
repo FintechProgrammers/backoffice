@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Country;
 use App\Models\Sale;
+use App\Models\Service;
 use App\Models\User;
 use App\Models\UserSubscription;
 use Illuminate\Http\Request;
@@ -42,5 +44,13 @@ class TeamController extends Controller
         $data['subscription'] = UserSubscription::where('user_id', $user->id)->latest()->first();
 
         return view('user.team.user-info', $data);
+    }
+
+    function createCustomer()
+    {
+        $data['countries'] = Country::get();
+        $data['packages'] = Service::where('is_published', true)->where('ambassadorship', false)->get();
+
+        return view('user.team.create-user', $data);
     }
 }
