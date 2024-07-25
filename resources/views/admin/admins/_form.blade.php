@@ -1,16 +1,18 @@
 @csrf
 <div class="mb-3">
     <label for="form-text1" class="form-label fs-14 text-dark">Fullname</label>
-    <input type="text" class="form-control" name="fullname" id="form-text1" placeholder="Enter fullname" value="{{ isset($admin) ? $admin->name : '' }}">
+    <input type="text" class="form-control" name="fullname" id="form-text1" placeholder="Enter fullname"
+        value="{{ isset($admin) ? $admin->name : '' }}">
 </div>
 <div class="mb-3">
     <label for="form-text1" class="form-label fs-14 text-dark">Email</label>
-    <input type="text" class="form-control" id="form-text1" name="email" placeholder="Enter email" value="{{ isset($admin) ? $admin->email : '' }}" {{ isset($admin) ? 'readonly' : '' }}>
+    <input type="text" class="form-control" id="form-text1" name="email" placeholder="Enter email"
+        value="{{ isset($admin) ? $admin->email : '' }}" {{ isset($admin) ? 'readonly' : '' }}>
 </div>
 
 <div class="mb-3">
     <label for="form-text1" class="form-label fs-14 text-dark">Role</label>
-    <select name="roles[]" class="form-control " >
+    <select name="roles[]" class="form-control ">
         <option value="">--select--roles--</option>
         @foreach ($roles as $item)
             <option value="{{ $item->name }}"

@@ -71,8 +71,7 @@ class ServiceAdsCheckoutController extends Controller
                     'parent_id'  => $referral->id
                 ]);
 
-                UserInfo::create([
-                    'user_id' => $user->id,
+                UserInfo::where('user_id', $user->id)->update([
                     'country_code' => $request->country,
                 ]);
 
