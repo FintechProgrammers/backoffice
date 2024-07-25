@@ -91,7 +91,7 @@ right connector from last child*/
     font-size: 13px;
     display: inline-block;
     text-transform: capitalize;
-    width : 150px;
+    width: 150px;
 
     border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -153,8 +153,10 @@ Thanks :)*/
 }
 
 .custom-card {
-    background-color: #333; /* Custom card background color */
-    color: #fff; /* Custom text color */
+    background-color: #333;
+    /* Custom card background color */
+    color: #fff;
+    /* Custom text color */
 }
 
 .text-fixed-white {
@@ -186,11 +188,10 @@ Thanks :)*/
 
 .clock-number {
     display: block;
-    font-size: 24px;
+    font-size: 15px;
     font-weight: bold;
 }
 
 .clock-label {
-    font-size: 12px;
+    font-size: 8px;
 }
-

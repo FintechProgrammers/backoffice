@@ -2,189 +2,360 @@
 <div class="row">
     <div class="col-lg-3">
         @include('user.dashboard._profile-card')
-        {{-- <div class="card custom-card text-fixed-white">
-            <div class="card-body p-3">
-                <div class="text-center">
+        <div class="card custom-card card-bg-primary text-fixed-white">
+            <div class="card-body p-0">
+                <div class="d-flex align-items-top p-4 flex-wrap">
+                    <div class="me-3 lh-1">
+                        <span class="avatar avatar-md avatar-rounded bg-white text-primary shadow-sm">
+                            <i class="ri-wallet-2-line fs-18"></i>
+                        </span>
+                    </div>
                     <div class="flex-fill">
-                        <div class="d-flex justify-content-between">
-                            <small>Next rank progress</small>
-                            <p class="mb-0">Delta 500</p>
-                        </div>
-                        <div class="progress progress-xs">
-                            <div class="progress-bar bg-success" role="progressbar" style="width: 24%" aria-valuenow="24"
-                                aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <small>3000</small>
-                            <p class="mb-0">5000</p>
-                        </div>
+                        <h5 class="fw-semibold mb-1 text-fixed-white">
+                            ${{ number_format($walletBalance, 2, '.', ',') }}
+                        </h5>
+                        <p class="op-7 mb-0 fs-12">Commisions Wallet</p>
                     </div>
                 </div>
             </div>
-        </div> --}}
+        </div>
+        <div class="card custom-card card-bg-dark text-fixed-white">
+            <div class="card-body p-0">
+                <div class="d-flex align-items-top p-4 flex-wrap">
+                    <div class="me-3 lh-1">
+                        <span class="avatar avatar-md avatar-rounded bg-white text-primary shadow-sm">
+                            <i class="ri-wallet-2-line fs-18"></i>
+                        </span>
+                    </div>
+                    <div class="flex-fill">
+                        <h5 class="fw-semibold mb-1 text-fixed-white">
+                            ${{ number_format($lifeTimeEarnings, 2, '.', ',') }}</h5>
+                        <p class="op-7 mb-0 fs-12">Lifetime Earnings</p>
+                    </div>
+                </div>
+            </div>
+        </div>
         @include('user.dashboard._activities')
     </div>
     <div class="col-lg-9">
         <div class="row">
             <div class="col-lg-4">
-                <div class="card custom-card card-bg-primary text-fixed-white">
-                    <div class="card-body p-0">
-                        <div class="d-flex align-items-top p-4 flex-wrap">
-                            <div class="me-3 lh-1">
-                                <span class="avatar avatar-md avatar-rounded bg-white text-primary shadow-sm">
-                                    <i class="las la-medal fs-18"></i>
-                                </span>
+                <div class="card custom-card card-bg-white text-fixed-white">
+                    <div class="card-body p-4">
+                        <p class="op-7  text-dark">Highest Rank</p>
+                        <div class="d-flex align-items-center w-100">
+                            <div class="me-2">
+                                @if (!empty(Auth::user()->highestRank->highest_criteria))
+                                    <span class="avatar avatar-rounded">
+                                        <img src="{{ Auth::user()->highestRank->file_url }}" alt="img">
+                                    </span>
+                                @else
+                                    <span class="avatar avatar-md avatar-rounded bg-white text-dark shadow-sm">
+                                        <i class="las la-medal fs-18"></i>
+                                    </span>
+                                @endif
                             </div>
                             <div class="flex-fill">
-                                <h5 class="fw-semibold mb-1 text-fixed-white">
+                                <h3 class="fw-semibold mb-0 text-fixed-white">
                                     @if (!empty(Auth::user()->highestRank->highest_criteria))
                                         {{ Auth::user()->highestRank->highest_criteria }}
                                     @else
-                                        <small class="text-muted">no rank</small>
+                                        <small class="text-dark">no rank</small>
                                     @endif
-                                </h5>
-                                <p class="op-7 mb-0 fs-12">Highest Rank</p>
+                                </h3>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
-                <div class="card custom-card card-bg-success text-fixed-white">
-                    <div class="card-body p-0">
-                        <div class="d-flex align-items-top p-4 flex-wrap">
-                            <div class="me-3 lh-1">
-                                <span class="avatar avatar-md avatar-rounded bg-white text-primary shadow-sm">
-                                    <i class="ri-wallet-2-line fs-18"></i>
-                                </span>
-                            </div>
-                            <div class="flex-fill">
-                                <h5 class="fw-semibold mb-1 text-fixed-white">
-                                    ${{ number_format($walletBalance, 2, '.', ',') }}
-                                </h5>
-                                <p class="op-7 mb-0 fs-12">Commisions Wallet</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card custom-card card-bg-warning text-fixed-white">
-                    <div class="card-body p-0">
-                        <div class="d-flex align-items-top p-4 flex-wrap">
-                            <div class="me-3 lh-1">
-                                <span class="avatar avatar-md avatar-rounded bg-white text-primary shadow-sm">
-                                    <i class="ri-wallet-2-line fs-18"></i>
-                                </span>
-                            </div>
-                            <div class="flex-fill">
-                                <h5 class="fw-semibold mb-1 text-fixed-white">
-                                    ${{ number_format($lifeTimeEarnings, 2, '.', ',') }}</h5>
-                                <p class="op-7 mb-0 fs-12">Lifetime Earnings</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="card custom-card">
-                    <div class="card-body">
-                        <div class="d-flex flex-wrap align-items-top justify-content-between">
-                            <div class="flex-fill">
-                                <p class="mb-0 text-muted">Current Circle Direct Volumn</p>
-                                <div class="d-flex align-items-center">
-                                    <span
-                                        class="fs-5 fw-semibold">{{ number_format($currenctCirlceDirectVolume, 2, '.', ',') }}
-                                        BV</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card custom-card">
-                    <div class="card-body">
-                        <div class="d-flex flex-wrap align-items-top justify-content-between">
-                            <div class="flex-fill">
-                                <p class="mb-0 text-muted">Current Cycle Commissions</p>
-                                <div class="d-flex align-items-center">
-                                    <span
-                                        class="fs-5 fw-semibold">${{ number_format($currenctCirlceCommisions, 2, '.', ',') }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card custom-card card-bg-primary text-fixed-white">
-                    <div class="card-body p-0">
-                        <div class="d-flex align-items-top p-4 flex-wrap">
-                            <div class="me-3 lh-1">
-                                <span class="avatar avatar-md avatar-rounded bg-white text-primary shadow-sm">
-                                    <i class="las la-medal fs-18"></i>
-                                </span>
-                            </div>
-                            <div class="flex-fill">
-                                <h5 class="fw-semibold mb-1 text-fixed-white">
-                                    @if (!empty(Auth::user()->rank))
-                                        {{ Auth::user()->rank->name }}
-                                    @else
-                                        <small class="text-muted">no rank</small>
-                                    @endif
-                                </h5>
-                                <p class="op-7 mb-0 fs-12">Current Rank</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-8">
                 @include('user.dashboard._clock')
             </div>
-            <div class="col-xl-3">
-                <div class="card custom-card border-top-card border-top-primary">
-                    <div class="card-body p-3">
-                        <div class="text-center">
-                            <span class="avatar avatar-md bg-primary shadow-sm avatar-rounded mb-2">
-                                <i class="bx bx-doughnut-chart fs-16"></i>
-                            </span>
-                            <p class="fs-14 fw-semibold mb-2">Subscriptions</p>
-                            <div class="d-flex align-items-center justify-content-center flex-wrap">
-                                <h5 class="mb-0 fw-semibold">{{ $subscriptionsCount }}</h5>
+        </div>
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card custom-card card-bg-primary">
+                            <div class="card-body">
+                                <div class="d-flex flex-wrap align-items-top justify-content-between">
+                                    <div class="flex-fill">
+                                        <p class="mb-0 text-light">Current Circle Direct Volumn</p>
+                                        <div class="d-flex align-items-center">
+                                            <span
+                                                class="fs-5 fw-semibold">{{ number_format($currenctCirlceDirectVolume, 2, '.', ',') }}
+                                                BV</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card custom-card">
+                            <div class="card-body">
+                                <div class="d-flex flex-wrap align-items-top justify-content-between">
+                                    <div class="flex-fill">
+                                        <p class="mb-0 text-muted">Current week direct Commissions</p>
+                                        <div class="d-flex align-items-center">
+                                            <span
+                                                class="fs-5 fw-semibold">${{ number_format($currenctCirlceCommisions, 2, '.', ',') }}</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card custom-card">
+                            <div class="card-body">
+                                <div class="d-flex flex-wrap align-items-top justify-content-between">
+                                    <div class="flex-fill">
+                                        <p class="mb-0">Team Volume</p>
+                                        <div class="d-flex align-items-center">
+                                            <span
+                                                class="fs-5 fw-semibold">{{ number_format($currenctCirlceDirectVolume, 2, '.', ',') }}BV</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card custom-card">
+                            <div class="card-body">
+                                <div class="d-flex flex-wrap align-items-top justify-content-between">
+                                    <div class="flex-fill">
+                                        <p class="mb-0 text-muted">Team Commissions</p>
+                                        <div class="d-flex align-items-center">
+                                            <span
+                                                class="fs-5 fw-semibold">${{ number_format($currenctCirlceCommisions, 2, '.', ',') }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="card custom-card card-bg-primary">
+                                <div class="card-body">
+                                    <div class="d-flex flex-wrap align-items-top justify-content-between">
+                                        <div class="flex-fill">
+                                            <p class="mb-0 text-light">Commissions this week</p>
+                                            <div class="d-flex align-items-center">
+                                                <span class="fs-5 fw-semibold">$5,000</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card custom-card">
+                                <div class="card-body">
+                                    <div class="d-flex flex-wrap align-items-top justify-content-between">
+                                        <div class="flex-fill">
+                                            <p class="mb-0 text-muted">Total BV this month</p>
+                                            <div class="d-flex align-items-center">
+                                                <span class="fs-5 fw-semibold">40.000BV</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card custom-card">
+                                <div class="card-body">
+                                    <div class="d-flex flex-wrap align-items-top justify-content-between">
+                                        <div class="flex-fill">
+                                            <p class="mb-0 text-muted">Commissions this month</p>
+                                            <div class="d-flex align-items-center">
+                                                <span class="fs-5 fw-semibold">$40,00</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @include('user.dashboard._revenue-stats')
             </div>
-            <div class="col-xl-3">
-                <div class="card custom-card border-top-card border-top-primary">
-                    <div class="card-body p-3">
-                        <div class="text-center">
-                            <span class="avatar avatar-md bg-primary shadow-sm avatar-rounded mb-2">
-                                <i class="bx bx-support fs-16"></i>
-                            </span>
-                            <p class="fs-14 fw-semibold mb-2">Tickets</p>
-                            <div class="d-flex align-items-center justify-content-center flex-wrap">
-                                <h5 class="mb-0 fw-semibold">{{ $ticketsCount }}</h5>
+            <div class="col-xl-4">
+                <div class="col-lg-12">
+                    <div class="card custom-card card-bg-dark text-fixed-white">
+                        <div class="card-body p-0">
+                            <div class="d-flex align-items-top p-4 flex-wrap">
+                                <div class="me-3 lh-1">
+                                    <span class="avatar avatar-md avatar-rounded bg-white text-primary shadow-sm">
+                                        <i class="las la-medal fs-18"></i>
+                                    </span>
+                                </div>
+                                <div class="flex-fill">
+                                    <h5 class="fw-semibold mb-1 text-fixed-white">
+                                        @if (!empty(Auth::user()->rank))
+                                            {{ Auth::user()->rank->name }}
+                                        @else
+                                            <small class="text-muted">no rank</small>
+                                        @endif
+                                    </h5>
+                                    <p class="op-7 mb-0 fs-12">Current Rank</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="col-lg-12">
+                    <div class="card custom-card text-fixed-white">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-center flex-wrap">
+                                <div class="flex-fill text-center">
+                                    <p class="mb-0 text-muted">Ambassadors</p>
+                                    <div class="text-center">
+                                        <span class="fs-5 fw-semibold">5</span>
+                                    </div>
+                                </div>
+                                <div class="flex-fill">
+                                    <p class="mb-0 text-muted">New Customers</p>
+                                    <div class="text-center">
+                                        <span class="fs-5 fw-semibold">10</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="card custom-card">
+                        <div class="card-body">
+                            <p class="mb-1 text-muted">Next rank Delta500</p>
+                            <div class="d-flex justify-content-between">
+                                <p>300</p>
+                                <div id="circular-semi"></div>
+                                <p>500</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @include('user.dashboard._last_enrollment')
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-12">
-                @include('user.dashboard._revenue-stats')
+            <div class="col-xl-4">
+                <div class="card custom-card card-bg-dark">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <p class="fs-14 fw-semibold mb-2 text-light">Active User</p>
+                            <div class="d-flex align-items-center justify-content-center flex-wrap">
+                                <h5 class="mb-0 fw-semibold  text-light">12,650</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="card custom-card card-bg-dark">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <p class="fs-14 fw-semibold mb-2 text-light">Total User</p>
+                            <div class="d-flex align-items-center justify-content-center flex-wrap">
+                                <h5 class="mb-0 fw-semibold  text-light">12,650</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="card custom-card card-bg-dark">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <p class="fs-14 fw-semibold mb-2 text-light">Upcoming Renewals</p>
+                            <div class="d-flex align-items-center justify-content-center flex-wrap">
+                                <h5 class="mb-0 fw-semibold  text-light">12,650</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        @if (!empty(auth()->user()->subscriptions))
-            @include('user.dashboard._purchases')
-        @endif
+        @include('user.dashboard._user_country')
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="team-groups">
+                    <div class="card custom-card card-bg-dark text-white">
+
+                        <div class="card-body p-0 ">
+                            <h6 class="fw-semibold mb-0 text-light p-3">Top 20 my Team</h6>
+
+                            <div class="teams-nav" id="teams-nav">
+                                <ul class="list-unstyled mb-0 mt-2 text-white">
+                                    <li>
+                                        <a href="javascript:void(0);">
+                                            <div class="d-flex align-items-center">
+                                                <div class="me-2 d-flex align-items-center">
+                                                    <span class="avatar avatar-sm avatar-rounded online">
+                                                        <img src="{{ asset('assets/images/avatar.svg') }}"
+                                                            alt="">
+                                                    </span>
+                                                </div>
+                                                <div class="flex-fill text-white">
+                                                    <span>Angelica Hale</span>
+                                                </div>
+                                                <div>
+                                                    <span class="fs-10 fw-semibold text-muted">
+
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-6">
+                <div class="team-groups">
+                    <div class="card custom-card card-bg-dark text-white">
+                        <div class="card-body p-0 ">
+                            <h6 class="fw-semibold mb-0 text-light p-3">Top 20 Global</h6>
+                            <div class="teams-nav" id="teams-nav">
+                                <ul class="list-unstyled mb-0 mt-2 text-white">
+                                    <li>
+                                        <a href="javascript:void(0);">
+                                            <div class="d-flex align-items-center">
+                                                <div class="me-2 d-flex align-items-center">
+                                                    <span class="avatar avatar-sm avatar-rounded online">
+                                                        <img src="{{ asset('assets/images/avatar.svg') }}"
+                                                            alt="">
+                                                    </span>
+                                                </div>
+                                                <div class="flex-fill text-white">
+                                                    <span>Angelica Hale</span>
+                                                </div>
+                                                <div>
+                                                    <span class="fs-10 fw-semibold text-muted">
+
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
 </div>
