@@ -57,7 +57,7 @@ class AdministrativeUserController extends Controller
             $admin = Admin::create([
                 'email' => $request->email,
                 'name'  => $request->fullname,
-                'password' => $password
+                'password' => Hash::make($password)
             ]);
 
             $admin->assignRole($request->roles);
