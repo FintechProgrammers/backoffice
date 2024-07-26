@@ -64,7 +64,7 @@ class AdministrativeUserController extends Controller
 
             $mailData = [
                 'email' => $admin->email,
-                'password' => $admin->password,
+                'password' => $password,
                 'name' => $admin->name
             ];
 
