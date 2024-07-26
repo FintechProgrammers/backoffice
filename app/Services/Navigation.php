@@ -80,12 +80,12 @@ class Navigation
                 'icon'  => 'las la-wallet',
                 'hasPermission' => true
             ],
-            (object) [
-                'name'  => 'Cycles',
-                'route' => 'admin.cycle.index',
-                'icon'  => 'las la-sync',
-                'hasPermission' => true
-            ],
+            // (object) [
+            //     'name'  => 'Cycles',
+            //     'route' => 'admin.cycle.index',
+            //     'icon'  => 'las la-sync',
+            //     'hasPermission' => true
+            // ],
             (object) [
                 'name'      => 'Supports',
                 'icon'      => 'las la-headset',
