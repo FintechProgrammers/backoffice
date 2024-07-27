@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Admin;
 use App\Models\Sale;
 use App\Observers\SaleObserver;
+use App\Services\CommissionService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,7 +17,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(CommissionService::class, function ($app) {
+            return new CommissionService();
+        });
     }
 
     /**

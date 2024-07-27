@@ -13,13 +13,6 @@ class Sale extends Model
 
     protected $guarded = [];
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        Sale::observe(SaleObserver::class);
-    }
-
     function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
