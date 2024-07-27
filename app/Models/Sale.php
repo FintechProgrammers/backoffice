@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Observers\SaleObserver;
 use App\Traits\GeneratesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +12,13 @@ class Sale extends Model
     use HasFactory, GeneratesUuid;
 
     protected $guarded = [];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        Sale::observe(SaleObserver::class);
+    }
 
     function user()
     {
