@@ -25,7 +25,7 @@
                                 @forelse ($bonuses as $item)
                                     <tr>
                                         <td>
-                                            {{ $item->amount }} BV
+                                            ${{ $item->amount }}
                                         </td>
                                         <td>
                                             {{ $item->created_at->format('jS,M Y') }}

@@ -11,4 +11,14 @@ class CommissionTransaction extends Model
     use HasFactory, GeneratesUuid;
 
     protected $guarded = [];
+
+    function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    function associate()
+    {
+        return $this->belongsTo(User::class, 'child_id', 'id');
+    }
 }

@@ -174,10 +174,15 @@ class Navigation
                     //     'hasPermission' => auth()->user()->is_ambassador ?? false
                     // ],
                     (object) [
-                        'name'  => 'Bonus History',
-                        'route' => 'report.bonuses',
+                        'name'  => 'Commission',
+                        'route' => 'report.commissions',
                         'hasPermission' => auth()->user()->is_ambassador ?? false
                     ],
+                    // (object) [
+                    //     'name'  => 'Bonus History',
+                    //     'route' => 'report.bonuses',
+                    //     'hasPermission' => auth()->user()->is_ambassador ?? false
+                    // ],
                     (object) [
                         'name'  => 'Package History',
                         'route' => 'report.packages',

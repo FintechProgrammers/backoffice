@@ -86,6 +86,8 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::controller(ReportController::class)->prefix('report')->name('report.')->group(function () {
+        Route::get('/commissions', 'commission')->name('commissions');
+        Route::get('/commissions/filter', 'commissionFilter')->name('commissions.filter');
         Route::get('bonuses', 'bonuses')->name('bonuses');
         Route::get('ranks', 'ranks')->name('ranks');
         Route::get('packages', 'packages')->name('packages');
