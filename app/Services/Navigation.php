@@ -186,7 +186,7 @@ class Navigation
                     (object) [
                         'name'  => 'Package History',
                         'route' => 'report.packages',
-                        'hasPermission' => auth()->user()->is_ambassador ?? false
+                        'hasPermission' => true
                     ]
                 ]
             ],
@@ -206,17 +206,17 @@ class Navigation
                 'name'      => 'Team',
                 'icon'      => 'bx bx-sitemap',
                 'routes'    => ['team.index', 'team.genealogy'],
-                'hasPermission' => true,
+                'hasPermission' => auth()->user()->is_ambassador ?? false,
                 'subMenu'   => (object) [
                     (object) [
                         'name' => 'Add New Registration',
                         'route' => 'team.create.customer',
-                        'hasPermission' => true
+                        'hasPermission' => auth()->user()->is_ambassador ?? false
                     ],
                     (object) [
                         'name'  => 'My Customers',
                         'route' => 'team.index',
-                        'hasPermission' => true
+                        'hasPermission' => auth()->user()->is_ambassador ?? false
                     ],
                     (object) [
                         'name'  => 'Genealogy',
@@ -235,7 +235,7 @@ class Navigation
                 'name'  => 'Kyc',
                 'route' => 'kyc.index',
                 'icon'  => 'bx bx-file',
-                'hasPermission' => true
+                'hasPermission' => auth()->user()->is_ambassador ?? false
             ],
         ];
     }

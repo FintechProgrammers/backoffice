@@ -7,7 +7,7 @@
         <h1 class="page-title fw-semibold fs-18 mb-0">Package history </h1>
     </div>
     <div class="container">
-        @if (!empty($packages))
+        @if (count($packages) > 0)
             <ul class="timeline list-unstyled">
                 @foreach ($packages as $item)
                     <li>
@@ -41,7 +41,5 @@
         @else
             <x-no-datacomponent />
         @endif
-
-    </div>
     </div>
 @endsection

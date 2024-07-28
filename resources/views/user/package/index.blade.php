@@ -16,11 +16,6 @@
                         <div class="mb-3 overflow-hidden position-relative">
                             <a href="javascript:void(0);" class="stretched-link"></a>
                             <img src="{{ $item->image }}" alt="img" class="nft-img img-fluid">
-                            <a href="javascript:void(0);" class="nft-btn copy-btn" data-bs-toggle="tooltip"
-                                aria-label="Like"
-                                copy_value="{{ route('checkout.index') }}?amb={{ auth()->user()->uuid }}&service={{ $item->uuid }}"><i
-                                    class="bx bx-share"></i>
-                            </a>
                             <span class="nft-timer-container">
                                 <i class="ti ti-bolt fs-14"></i>
                                 <span
@@ -42,6 +37,13 @@
                                     </span>
                                 </div>
                             </div>
+                            @if (auth()->user()->is_ambassador)
+                                <a href="javascript:void(0);" class="btn rounded-circle btn-sm text-light copy-btn btn-dark"
+                                    data-bs-toggle="tooltip" aria-label="Share package link"
+                                    copy_value="{{ route('checkout.index') }}?amb={{ auth()->user()->uuid }}&service={{ $item->uuid }}"><i
+                                        class="bx bx-share"></i>
+                                </a>
+                            @endif
                         </div>
                         <div class="d-flex align-items-end flex-wrap gap-2">
                             <div class="flex-fill">

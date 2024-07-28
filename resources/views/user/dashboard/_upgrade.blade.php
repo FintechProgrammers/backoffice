@@ -1,4 +1,3 @@
-@if (systemSettings()->ambassador_fee > 0)
     <div class="card custom-card overflow-hidden">
         <div class="card-body">
             <div class="d-flex align-items-center justify-content-center">
@@ -14,13 +13,11 @@
                             system</span>
                     </div>
                     <div class="mt-3 d-grid">
-                        <button type="button" data-url="{{ route('provider.payin') }}"
-                            data-bs-toggle="modal" data-bs-target="#primaryModal"
-                            class="btn btn-primary-gradient trigerModal">{{ __('Upgrade') }}</button>
+                        <a type="button" href="{{ route('package.index') }}" {{-- data-bs-toggle="modal" data-bs-target="#primaryModal" --}}
+                            class="btn btn-primary-gradient ">{{ __('Upgrade') }}</a>
                     </div>
                 </div>
             </div>
 
         </div>
     </div>
-@endif
