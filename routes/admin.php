@@ -51,6 +51,7 @@ Route::middleware('admin.auth')->group(function () {
         Route::post('', 'store')->name('store');
         Route::get('/create', 'create')->name('create');
         Route::get('/show/{user}', 'show')->name('show');
+        Route::post('/update/{user}', 'update')->name('update');
         Route::post('/suspend/{user}', 'suspend')->name('suspend');
         Route::post('/activate/{user}', 'activate')->name('activate');
         Route::post('/delete/{user}', 'destroy')->name('delete');
@@ -219,7 +220,7 @@ Route::middleware('admin.auth')->group(function () {
         Route::get('', 'index')->name('index');
         Route::get('/filter', 'filter')->name('filter');
         Route::get('/{user}', 'show')->name('show');
-        Route::post('/approve/{kyc}','approve')->name('approve');
-        Route::post('/decline/{kyc}','decline')->name('decline');
+        Route::post('/approve/{kyc}', 'approve')->name('approve');
+        Route::post('/decline/{kyc}', 'decline')->name('decline');
     });
 });

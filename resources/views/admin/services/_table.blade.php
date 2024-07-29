@@ -4,7 +4,9 @@
             {{ $item->name }}
         </td>
         <td class="text-center">${{ $item->price }}</td>
-        <td class="text-center">{{ convertDaysToUnit($item->duration, $item->duration_unit) . ' ' . $item->duration_unit }}
+        <td class="text-center">{{ $item->bv_amount }} BV</td>
+        <td class="text-center">
+            {{ convertDaysToUnit($item->duration, $item->duration_unit) . ' ' . $item->duration_unit }}
         </td>
         <td class="text-center">
             @if ($item->is_published)
@@ -14,7 +16,8 @@
             @endif
         </td>
         <td>
-            <a aria-label="anchor" href="javascript:void(0);" class="" data-bs-toggle="dropdown" aria-expanded="false">
+            <a aria-label="anchor" href="javascript:void(0);" class="" data-bs-toggle="dropdown"
+                aria-expanded="false">
                 <i class="bi bi-three-dots fs-22"></i>
             </a>
             <ul class="dropdown-menu" style="">

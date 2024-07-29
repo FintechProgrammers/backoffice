@@ -33,7 +33,7 @@
             @endif
         </div>
         <div class="btn-list text-center">
-            <a href="profile.edit" class="btn btn-primary-light btn-sm">
+            <a href="{{ route('profile.edit') }}" class="btn btn-primary-light btn-sm">
                 Profile
             </a>
         </div>

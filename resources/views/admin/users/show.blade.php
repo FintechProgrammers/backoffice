@@ -184,6 +184,7 @@
 @endsection
 @push('scripts')
     @include('admin.users.scritps._update-form')
+    @include('profile.scripts._update-profile')
     <script>
         $('.btn-action').click(function(e) {
             e.preventDefault();

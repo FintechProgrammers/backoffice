@@ -1,11 +1,16 @@
 @forelse ($subscriptions as $item)
     <tr>
         <td>
-            <x-profile-component name="{{ $item->user->full_name }}" email="{{ $item->user->email }}"
-                image="{{ $item->user->profile_picture }}" />
+            <a href="{{ route('admin.users.show', $item->user->uuid) }}">
+                <x-profile-component name="{{ $item->user->full_name }}" email="{{ $item->user->email }}"
+                    image="{{ $item->user->profile_picture }}" />
+            </a>
         </td>
         <td>
-            {{ optional($item->service)->name }}
+            @if (!empty($item->service))
+                <x-package-title title="{{ $item->service->name }}" image="{{ $item->service->image }}"
+                    price="{{ $item->service->price }}" />
+            @endif
         </td>
         <td>
             {{ $item->start_date->format('jS,M Y H:i A') }}

@@ -2,7 +2,6 @@
     $('#update-profile').submit(function(e) {
         e.preventDefault();
 
-
         // Remove any existing error messages
         $('.error-message').remove();
 
@@ -25,8 +24,6 @@
             },
             success: function(response) {
                 // Handle success response
-
-                $('#update-password')[0].reset();
 
                 displayMessage(response.message, "success");
 

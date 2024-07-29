@@ -1,0 +1,40 @@
+ <div class="team-groups">
+     <div class="card custom-card card-bg-dark text-white">
+
+         <div class="card-body p-0 ">
+             <h6 class="fw-semibold mb-0 text-light p-3">Top 20 my Team</h6>
+
+             <div class="teams-nav" id="teams-nav">
+                 <ul class="list-unstyled mb-0 mt-2 text-white">
+                     @forelse ($topTeamSellers as $item)
+                         <li>
+                             <a href="javascript:void(0);">
+                                 <div class="d-flex align-items-center">
+                                     <div class="me-2 d-flex align-items-center">
+                                         <span class="avatar avatar-sm avatar-rounded online">
+                                             <img src="{{ $item['user']['profile_picture'] }}" alt="">
+                                         </span>
+                                     </div>
+                                     <div class="flex-fill text-white">
+                                         <span>{{ $item['user']['full_name'] }}</span>
+                                         <p class="mb-0">{{ $item['user']['email'] }}</p>
+                                     </div>
+                                     <div>
+                                         <h4 class="fs-10 fw-semibold text-white mb-0">
+                                             ${{ $item['total_amount'] }}
+                                         </h4>
+                                     </div>
+                                 </div>
+                             </a>
+                         </li>
+                     @empty
+                         <li>
+                             <h6 class="text-center text-warning">no records</h6>
+                         </li>
+                     @endforelse
+
+                 </ul>
+             </div>
+         </div>
+     </div>
+ </div>

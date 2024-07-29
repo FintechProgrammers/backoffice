@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\Bonus;
 use App\Models\User;
 use App\Models\UserInfo;
@@ -106,8 +107,29 @@ class UserManagementController extends Controller
         return view('admin.users.show', $data);
     }
 
-    function update(Request $request)
+    function update(UpdateUserRequest $request, User $user)
     {
+        try {
+            $user->update([
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+            ]);
+
+            $user->userProfile->update([
+                'country_code'  => $request->country,
+                'address'       => $request->address,
+                'city'          => $request->city,
+                'state'         => $request->state,
+                'date_of_birth' => $request->date_of_birth,
+                'zip_code'      => $request->zip_code,
+            ]);
+
+            return $this->sendResponse([], "User profile updated successfully.");
+        } catch (\Exception $e) {
+            logger($e);
+
+            return response()->json(['success' => false, 'message' => serviceDownMessage()], 500);
+        }
     }
 
     function suspend(User $user)

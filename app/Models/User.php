@@ -27,7 +27,8 @@ class User extends Authenticatable
 
     // Define the required fields for the user model and the related userInfo model
     protected $userRequiredFields = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'username',
         'phone_number'
@@ -192,7 +193,7 @@ class User extends Authenticatable
             });
     }
 
-    function commissions()
+    function bonuses()
     {
         return $this->hasMany(BonusHistory::class, 'user_id', 'id')->latest();
     }
@@ -200,6 +201,55 @@ class User extends Authenticatable
     function kyc()
     {
         return $this->hasOne(UserKyc::class, 'user_id');
+    }
+
+    // Scope to filter ambassadors
+    public function scopeAmbassadors($query)
+    {
+        return $query->where('is_ambassador', true);
+    }
+
+    // All commission transactions (both direct and indirect)
+    public function commissionTransactions()
+    {
+        return $this->hasMany(CommissionTransaction::class, 'user_id');
+    }
+
+    // Direct invitees (children)
+    public function directInvitees()
+    {
+        return $this->hasMany(User::class, 'parent_id');
+    }
+
+    // Indirect invitees (grandchildren)
+    public function indirectInvitees()
+    {
+        return $this->hasManyThrough(User::class, User::class, 'parent_id', 'parent_id', 'id', 'id');
+    }
+
+    // Direct sales
+    public function directSales()
+    {
+        return $this->hasMany(Sale::class, 'user_id');
+    }
+
+    // Indirect sales
+    public function indirectSales()
+    {
+        return $this->hasManyThrough(Sale::class, User::class, 'parent_id', 'user_id', 'id', 'id');
+    }
+
+    // Direct commission transactions
+    public function directCommissionTransactions()
+    {
+        return $this->hasMany(CommissionTransaction::class, 'user_id')->where('level', '0');
+    }
+
+    // Indirect commission transactions
+    public function indirectCommissionTransactions()
+    {
+        return $this->hasManyThrough(CommissionTransaction::class, User::class, 'parent_id', 'user_id', 'id', 'id')
+            ->where('level', '!=', '0');
     }
 
     /**

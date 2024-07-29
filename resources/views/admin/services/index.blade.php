@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @push('styles')
-
 @endpush
 
 @section('content')
@@ -10,8 +9,8 @@
             <p class="fw-semibold fs-18 mb-0">Package Management</p>
         </div>
         <div class="btn-list mt-md-0 mt-2">
-            <button type="button" class="btn btn-primary btn-wave trigerModal"
-                data-url="{{ route('admin.package.create') }}" data-bs-toggle="modal" data-bs-target="#primaryModal">
+            <button type="button" class="btn btn-primary btn-wave trigerModal" data-url="{{ route('admin.package.create') }}"
+                data-bs-toggle="modal" data-bs-target="#primaryModal">
                 <i class="las la-user-plus me-2 align-middle d-inline-block"></i>Create Package
             </button>
         </div>
@@ -26,6 +25,7 @@
                             <tr>
                                 <th>Name</th>
                                 <th class="text-center">Price</th>
+                                <th class="text-center">Volume</th>
                                 <th class="text-center">Duration</th>
                                 <th class="text-center">Status</th>
                                 <th width="10">Action</th>

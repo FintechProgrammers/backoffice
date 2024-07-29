@@ -38,7 +38,8 @@ class ServiceManagement extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
-            'price' => 'required|numeric',
+            'price' => 'required|numeric|min:0',
+            'bv'    => 'required|numeric|min:0',
             'duration' => 'required|numeric',
             'duration_unit' => 'required|string',
             'description' => 'nullable',
@@ -101,6 +102,7 @@ class ServiceManagement extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
             'price' => 'required|numeric',
+            'bv'    => 'required|numeric|min:0',
             'duration' => 'required|numeric',
             'duration_unit' => 'required|string',
             'description' => 'nullable',
@@ -183,6 +185,7 @@ class ServiceManagement extends Controller
         return [
             'name' => $request->name,
             'price' => $request->price,
+            'bv_amount' => $request->bv,
             'duration' => $duration === 0 ? 0 : $this->getDurationInDays($duration, $request->duration_unit),
             'duration_unit' => $request->duration_unit,
             'auto_renewal' => $request->auto_renewal === "on" ? true : false,

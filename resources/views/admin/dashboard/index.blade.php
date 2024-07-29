@@ -27,7 +27,9 @@
                                     <tr>
                                         <th scope="col" class="text-center">S.no</th>
                                         <th scope="col">Service Name</th>
-                                        <th scope="col">Amount</th>
+                                        <th scope="col" class="text-center">Price</th>
+                                        <th scope="col" class="text-center">Amount</th>
+                                        <th scope="col" class="text-center">BV</th>
                                     </tr>
                                 </thead>
                                 <tbody class="top-selling">
@@ -35,14 +37,26 @@
                                         @foreach ($topSellingServices as $key => $item)
                                             <tr>
                                                 <td class="text-center">{{ $key + 1 }}</td>
-                                                <td>{{ $item->name }}</td>
-                                                <td><span class="fw-semibold">${{ number_format($item->totalSales, 2) }}</span>
+                                                <td>
+                                                    <x-package-title title="{{ $item->name }}" image="{{ $item->image }}"
+                                                        price="{{ $item->price }}" />
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="fw-semibold">${{ number_format($item->price, 2) }}</span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span
+                                                        class="fw-semibold">${{ number_format($item->totalSales, 2) }}</span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="fw-semibold">{{ number_format($item->bv_amount, 2) }}
+                                                        BV</span>
                                                 </td>
                                             </tr>
                                         @endforeach
                                     @else
                                         <tr>
-                                            <td colspan="3">No top-selling services found.</td>
+                                            <td colspan="4">No top-selling services found.</td>
                                         </tr>
                                     @endif
                                 </tbody>

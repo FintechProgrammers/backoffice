@@ -80,10 +80,10 @@
                             <div class="card-body">
                                 <div class="d-flex flex-wrap align-items-top justify-content-between">
                                     <div class="flex-fill">
-                                        <p class="mb-0 text-light">Current Circle Direct Volumn</p>
+                                        <p class="mb-0 text-light">Current week direct BV</p>
                                         <div class="d-flex align-items-center">
                                             <span
-                                                class="fs-5 fw-semibold">{{ number_format($currenctCirlceDirectVolume, 2, '.', ',') }}
+                                                class="fs-5 fw-semibold">{{ number_format($currentWeekDirectVolume, 2, '.', ',') }}
                                                 BV</span>
                                         </div>
                                     </div>
@@ -99,7 +99,7 @@
                                         <p class="mb-0 text-muted">Current week direct Commissions</p>
                                         <div class="d-flex align-items-center">
                                             <span
-                                                class="fs-5 fw-semibold">${{ number_format($currenctCirlceCommisions, 2, '.', ',') }}</span>
+                                                class="fs-5 fw-semibold">${{ number_format($currentMonthDirectVolume, 2, '.', ',') }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -116,7 +116,7 @@
                                         <p class="mb-0">Team Volume</p>
                                         <div class="d-flex align-items-center">
                                             <span
-                                                class="fs-5 fw-semibold">{{ number_format($currenctCirlceDirectVolume, 2, '.', ',') }}BV</span>
+                                                class="fs-5 fw-semibold">{{ number_format($teamVolume, 2, '.', ',') }}BV</span>
                                         </div>
                                     </div>
                                 </div>
@@ -131,7 +131,7 @@
                                         <p class="mb-0 text-muted">Team Commissions</p>
                                         <div class="d-flex align-items-center">
                                             <span
-                                                class="fs-5 fw-semibold">${{ number_format($currenctCirlceCommisions, 2, '.', ',') }}</span>
+                                                class="fs-5 fw-semibold">${{ number_format($teamCommissions, 2, '.', ',') }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -148,7 +148,8 @@
                                         <div class="flex-fill">
                                             <p class="mb-0 text-light">Commissions this week</p>
                                             <div class="d-flex align-items-center">
-                                                <span class="fs-5 fw-semibold">$5,000</span>
+                                                <span
+                                                    class="fs-5 fw-semibold">${{ number_format($currentWeekCommissions, 2, '.', ',') }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -162,7 +163,8 @@
                                         <div class="flex-fill">
                                             <p class="mb-0 text-muted">Total BV this month</p>
                                             <div class="d-flex align-items-center">
-                                                <span class="fs-5 fw-semibold">40.000BV</span>
+                                                <span
+                                                    class="fs-5 fw-semibold">{{ number_format($currentMonthDirectVolume, 2, '.', ',') }}BV</span>
                                             </div>
                                         </div>
                                     </div>
@@ -176,7 +178,8 @@
                                         <div class="flex-fill">
                                             <p class="mb-0 text-muted">Commissions this month</p>
                                             <div class="d-flex align-items-center">
-                                                <span class="fs-5 fw-semibold">$40,00</span>
+                                                <span
+                                                    class="fs-5 fw-semibold">${{ number_format($currentMonthCommissions, 2, '.', ',') }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -218,13 +221,15 @@
                                 <div class="flex-fill text-center">
                                     <p class="mb-0 text-muted">Ambassadors</p>
                                     <div class="text-center">
-                                        <span class="fs-5 fw-semibold">5</span>
+                                        <span
+                                            class="fs-5 fw-semibold">{{ number_format($teamAmbassadors, 0, '.', ',') }}</span>
                                     </div>
                                 </div>
                                 <div class="flex-fill">
                                     <p class="mb-0 text-muted">New Customers</p>
                                     <div class="text-center">
-                                        <span class="fs-5 fw-semibold">10</span>
+                                        <span
+                                            class="fs-5 fw-semibold">{{ number_format($teamCustomers, 0, '.', ',') }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -253,7 +258,7 @@
                         <div class="text-center">
                             <p class="fs-14 fw-semibold mb-2 text-light">Active User</p>
                             <div class="d-flex align-items-center justify-content-center flex-wrap">
-                                <h5 class="mb-0 fw-semibold  text-light">12,650</h5>
+                                <h5 class="mb-0 fw-semibold  text-light">{{ $activeUsers, 0, '.', ',' }}</h5>
                             </div>
                         </div>
                     </div>
@@ -265,7 +270,7 @@
                         <div class="text-center">
                             <p class="fs-14 fw-semibold mb-2 text-light">Total User</p>
                             <div class="d-flex align-items-center justify-content-center flex-wrap">
-                                <h5 class="mb-0 fw-semibold  text-light">12,650</h5>
+                                <h5 class="mb-0 fw-semibold  text-light">{{ $totalUsers, 0, '.', ',' }}</h5>
                             </div>
                         </div>
                     </div>
@@ -277,7 +282,7 @@
                         <div class="text-center">
                             <p class="fs-14 fw-semibold mb-2 text-light">Upcoming Renewals</p>
                             <div class="d-flex align-items-center justify-content-center flex-wrap">
-                                <h5 class="mb-0 fw-semibold  text-light">12,650</h5>
+                                <h5 class="mb-0 fw-semibold  text-light">{{ $upcomingRenewals, 0, '.', ',' }}</h5>
                             </div>
                         </div>
                     </div>
@@ -287,74 +292,10 @@
         @include('user.dashboard._user_country')
         <div class="row">
             <div class="col-lg-6">
-                <div class="team-groups">
-                    <div class="card custom-card card-bg-dark text-white">
-
-                        <div class="card-body p-0 ">
-                            <h6 class="fw-semibold mb-0 text-light p-3">Top 20 my Team</h6>
-
-                            <div class="teams-nav" id="teams-nav">
-                                <ul class="list-unstyled mb-0 mt-2 text-white">
-                                    <li>
-                                        <a href="javascript:void(0);">
-                                            <div class="d-flex align-items-center">
-                                                <div class="me-2 d-flex align-items-center">
-                                                    <span class="avatar avatar-sm avatar-rounded online">
-                                                        <img src="{{ asset('assets/images/avatar.svg') }}"
-                                                            alt="">
-                                                    </span>
-                                                </div>
-                                                <div class="flex-fill text-white">
-                                                    <span>Angelica Hale</span>
-                                                </div>
-                                                <div>
-                                                    <span class="fs-10 fw-semibold text-muted">
-
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+                @include('user.dashboard._top-team-sellars')
             </div>
             <div class="col-lg-6">
-                <div class="team-groups">
-                    <div class="card custom-card card-bg-dark text-white">
-                        <div class="card-body p-0 ">
-                            <h6 class="fw-semibold mb-0 text-light p-3">Top 20 Global</h6>
-                            <div class="teams-nav" id="teams-nav">
-                                <ul class="list-unstyled mb-0 mt-2 text-white">
-                                    <li>
-                                        <a href="javascript:void(0);">
-                                            <div class="d-flex align-items-center">
-                                                <div class="me-2 d-flex align-items-center">
-                                                    <span class="avatar avatar-sm avatar-rounded online">
-                                                        <img src="{{ asset('assets/images/avatar.svg') }}"
-                                                            alt="">
-                                                    </span>
-                                                </div>
-                                                <div class="flex-fill text-white">
-                                                    <span>Angelica Hale</span>
-                                                </div>
-                                                <div>
-                                                    <span class="fs-10 fw-semibold text-muted">
-
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+                @include('user.dashboard._top-team-sellars')
             </div>
         </div>
     </div>

@@ -423,3 +423,160 @@ if (!function_exists('errorResponse')) {
         ], $code));
     }
 }
+
+if (!function_exists('getAllTeamMembers')) {
+    function getAllTeamMembers($user)
+    {
+        $teamMembers = collect();
+        foreach ($user->directInvitees as $invitee) {
+            $teamMembers = $teamMembers->merge([$invitee]);
+            $teamMembers = $teamMembers->merge(getAllTeamMembers($invitee));
+        }
+        return $teamMembers;
+    }
+}
+
+if (!function_exists('calculateTeamCommissions')) {
+    function calculateTeamCommissions($userId)
+    {
+        $user = \App\Models\User::with('directInvitees.directInvitees')->find($userId);
+
+        // Get all team members (excluding the user)
+        $teamMembers = getAllTeamMembers($user);
+
+        $totalCommissions = 0;
+
+        foreach ($teamMembers as $member) {
+            $totalCommissions += $member->commissionTransactions()->sum('amount');
+        }
+
+        return $totalCommissions;
+    }
+}
+
+if (!function_exists('calculateTeamSales')) {
+    function calculateTeamSales($userId)
+    {
+        $user = \App\Models\User::with('directInvitees.directInvitees')->find($userId); // Load nested relations
+
+        // Get all team members (excluding the user)
+        $teamMembers = getAllTeamMembers($user);
+
+        $totalSales = 0;
+
+        foreach ($teamMembers as $member) {
+            $totalSales += $member->sales()->sum('bv_amount');
+        }
+
+        return $totalSales;
+    }
+}
+
+if (!function_exists('getAmbassadorDownlines')) {
+    function getAmbassadorDownlines($user)
+    {
+        $ambassadors = collect();
+        foreach ($user->directInvitees as $invitee) {
+            if ($invitee->is_ambassador) {
+                $ambassadors->push($invitee);
+            }
+            $ambassadors = $ambassadors->merge(getAmbassadorDownlines($invitee));
+        }
+        return $ambassadors;
+    }
+}
+
+if (!function_exists('getAmbassadorDownlinesList')) {
+    function getAmbassadorDownlinesList($userId)
+    {
+        $user = \App\Models\User::with('directInvitees.directInvitees')->find($userId); // Load nested relations
+
+        // Get all ambassador downlines (excluding the user)
+        $ambassadors = getAmbassadorDownlines($user);
+
+        return $ambassadors;
+    }
+}
+
+if (!function_exists('getCustomerDownlines')) {
+    function getCustomerDownlines($user)
+    {
+        $customers = collect();
+        foreach ($user->directInvitees as $invitee) {
+            if (!$invitee->is_ambassador) {
+                $customers->push($invitee);
+            }
+            $customers = $customers->merge(getAmbassadorDownlines($invitee));
+        }
+        return $customers;
+    }
+}
+
+if (!function_exists('getCustomerDownlinesList')) {
+    function getCustomerDownlinesList($userId)
+    {
+        $user = \App\Models\User::with('directInvitees.directInvitees')->find($userId); // Load nested relations
+
+        // Get all ambassador downlines (excluding the user)
+        $customers = getCustomerDownlines($user);
+
+        return $customers;
+    }
+}
+
+if (!function_exists('getDownlinesWithActiveSubscriptions')) {
+    function getDownlinesWithActiveSubscriptions($user)
+    {
+        $activeSubscriptions = collect();
+        foreach ($user->directInvitees as $invitee) {
+            if ($invitee->subscriptions()->active()->exists()) {
+                $activeSubscriptions->push($invitee);
+            }
+            $activeSubscriptions = $activeSubscriptions->merge(getDownlinesWithActiveSubscriptions($invitee));
+        }
+        return $activeSubscriptions;
+    }
+}
+
+if (!function_exists('getDownlinesWithActiveSubscriptionsList')) {
+    function getDownlinesWithActiveSubscriptionsList($userId)
+    {
+        $user = \App\Models\User::with('directInvitees.directInvitees')->find($userId); // Load nested relations
+
+        // Get all downlines with active subscriptions (excluding the user)
+        $activeSubscriptions = getDownlinesWithActiveSubscriptions($user);
+
+        return $activeSubscriptions;
+    }
+}
+
+
+if (!function_exists('getTopTeamSellers')) {
+    function getTopTeamSellers($userId, $limit = 20, $startOfPeriod = null, $endOfPeriod = null)
+    {
+        $user = \App\Models\User::with('directInvitees.directInvitees')->find($userId); // Load nested relations
+
+        // Get all team members (excluding the user)
+        $teamMembers = getAllTeamMembers($user);
+
+        // Calculate total sales for each team member
+        $salesData = $teamMembers->map(function ($member) use ($startOfPeriod, $endOfPeriod) {
+            $totalSales = $member->sales()
+                ->when(!empty($startOfPeriod) && !empty($endOfPeriod), function ($member) use ($startOfPeriod, $endOfPeriod) {
+                    $member->whereBetween('created_at', [$startOfPeriod, $endOfPeriod]);
+                })->sum('amount');
+
+            return [
+                'user' => $member,
+                'total_sales' => $totalSales,
+            ];
+        })->filter(function ($data) {
+            return $data['total_sales'] > 0;
+        });
+
+        // Sort by total sales in descending order and get top $limit sellers
+        $topSellers = $salesData->sortByDesc('total_sales')->take($limit);
+
+        return $topSellers->values();
+    }
+}

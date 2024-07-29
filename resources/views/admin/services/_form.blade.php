@@ -5,8 +5,13 @@
 </div>
 <div class="mb-3">
     <label for="form-text" class="form-label fs-14 text-dark">Price ($)</label>
-    <input type="number" step="any" class="form-control" id="form-text"
+    <input type="number" min="0" step="any" class="form-control" id="form-text"
         value="{{ isset($service) ? $service->price : '' }}" placeholder="Enter package price" name="price">
+</div>
+<div class="mb-3">
+    <label for="form-text" class="form-label fs-14 text-dark">BV</label>
+    <input type="number" min="0" step="any" class="form-control" id="form-text"
+        value="{{ isset($service) ? $service->bv_amount : '' }}" placeholder="Enter BV" name="bv">
 </div>
 <div class="row">
     <div class="col-lg-6">
@@ -52,7 +57,8 @@
     </textarea>
 </div>
 <div class="text-center" id="photoContent">
-    <img src="{{ isset($service) ? $service->image : asset('assets/images/default.jpg') }}" class="img-fluid rounded" width="150px" height="50px" alt="...">
+    <img src="{{ isset($service) ? $service->image : asset('assets/images/default.jpg') }}" class="img-fluid rounded"
+        width="150px" height="50px" alt="...">
 </div>
 <div class="mb-3">
     <label for="form-text" class="form-label fs-14 text-dark">Image</label>
