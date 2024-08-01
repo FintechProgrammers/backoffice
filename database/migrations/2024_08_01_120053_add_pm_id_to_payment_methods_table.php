@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('stripe_users', function (Blueprint $table) {
-            $table->longText('payment_method')->after('customer_id')->nullable();
+        Schema::table('payment_methods', function (Blueprint $table) {
+            $table->string('pm_id')->nullable()->after('provider_id');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('stripe_users', function (Blueprint $table) {
-            $table->dropColumn(['payment_method']);
+        Schema::table('payment_methods', function (Blueprint $table) {
+            $table->dropColumn('pm_id');
         });
     }
 };

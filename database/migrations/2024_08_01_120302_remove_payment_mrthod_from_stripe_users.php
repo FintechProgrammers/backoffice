@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('stripe_users', function (Blueprint $table) {
-            $table->longText('payment_method')->after('customer_id')->nullable();
+            $table->dropColumn('payment_method');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('stripe_users', function (Blueprint $table) {
-            $table->dropColumn(['payment_method']);
+            //
         });
     }
 };

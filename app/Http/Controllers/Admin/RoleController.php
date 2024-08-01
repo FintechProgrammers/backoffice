@@ -13,14 +13,14 @@ class RoleController extends Controller
     {
         $data['roles'] = Role::latest()->latest()->paginate(50);
 
-        return view('admin.roles.index', $data);
+        return view('administrative.roles.index', $data);
     }
 
     function create()
     {
         $data['permissions'] =  Permission::where('guard_name', 'admin')->get();
 
-        return view('admin.roles.create',$data);
+        return view('administrative.roles.create', $data);
     }
 
     function store(Request $request)
@@ -94,6 +94,6 @@ class RoleController extends Controller
         }
         $role->delete();
 
-        return response()->json(['success' => true, 'message' =>' Role was successfully deleted.']);
+        return response()->json(['success' => true, 'message' => ' Role was successfully deleted.']);
     }
 }

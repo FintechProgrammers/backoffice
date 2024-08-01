@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\NowpaymentController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\PayoutController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StripeController;
@@ -117,6 +118,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('', 'index')->name('index');
         Route::post('/', 'store')->name('store');
         Route::get('/load-data', 'loadContent')->name('load-data');
+    });
+
+    Route::controller(PaymentMethodController::class)->prefix('payment-method')->name('payment-method.')->group(function () {
+        // Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::get('/stripe-success', 'stripeSuccess')->name('stripe.success');
     });
 });
 

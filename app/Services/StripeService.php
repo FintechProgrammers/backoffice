@@ -30,7 +30,7 @@ class StripeService
             'currency'              => 'usd',
             'payment_method_types'  => ['card'],
             'customer'              => $data['customer_id'],
-            'metadata'      => $data['metadata'],
+            // 'metadata'      => $data['metadata'],
             'success_url'           => $data['success_url'],
             'cancel_url'            => $data['cancel_url'],
         ]);
@@ -89,6 +89,42 @@ class StripeService
             'off_session' => true,
             'confirm' => true,
         ]);
+
+        return $response;
+    }
+
+    function createPaymentMethod($data)
+    {
+        $response = $this->stripe->paymentMethods->create([
+            'type' => 'card',
+            'card' => [
+                'number' => $data['card_number'],
+                'exp_month' => $data['exp_month'],
+                'exp_year' => $data['exp_year'],
+                'cvc' => $data['cvc'],
+            ],
+        ]);
+
+        return $response;
+    }
+
+    function attachePaymentMethod($data)
+    {
+        $response = $this->stripe->paymentMethods->attach(
+            $data['payment_method'],
+            ['customer' => $data['customer']]
+        );
+
+        return $response;
+    }
+
+    function retrievePaymentMethod($data)
+    {
+        $response = $this->stripe->customers->retrievePaymentMethod(
+            $data['customer_id'],
+            $data['payment_method'],
+            []
+        );
 
         return $response;
     }

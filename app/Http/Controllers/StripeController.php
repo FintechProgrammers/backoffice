@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\StripStorePaymentMethod;
 use App\Mail\SubscriptionMail;
 use App\Models\AmbassedorPayments;
 use App\Models\Bonus;
 use App\Models\Invoice;
+use App\Models\PaymentMethod;
 use App\Models\Service;
 use App\Models\StripeUser;
 use App\Models\User;
@@ -38,13 +40,15 @@ class StripeController extends Controller
 
             $invoice = $validated['invoice'];
 
+            $provider = $validated['provider'];
+
             // check if user exist on stripe
             $stripUser = StripeUser::where('user_id', $user->id)->first();
 
             if (!$stripUser) {
                 $userData = [
                     'email'  => $user->email,
-                    'name'  => $user->name,
+                    'name'  => $user->full_name,
                 ];
 
                 $createUser = $this->stripeService->createCustomer($userData);
@@ -89,17 +93,28 @@ class StripeController extends Controller
 
                 return $response->url;
             } else {
+
+                // Get active payment method for provider
+                $paymentMethod = PaymentMethod::where('user_id', $user->id)->where('provider_id', $provider->id)->where('is_default', true)->first();
+
+                if (!$paymentMethod) {
+                    sendToLog("Payment method not found for provider {$provider->name}");
+
+                    return throw new HttpResponseException(response()->json([
+                        'success' => false,
+                        'message' => serviceDownMessage(),
+                    ], Response::HTTP_UNPROCESSABLE_ENTITY));
+                }
+
                 $data = [
                     'amount' => $service->price * 100,
                     'customer'    => $stripUser->customer_id,
-                    'payment_method' => $stripUser->payment_method,
+                    'payment_method' => $paymentMethod->pm_id,
                     'metadata'       => ['user_id' => $user->uuid, 'service_id' => $service->uuid, 'invoice' => $invoice->uuid],
                     'success_url'    => route('payment.success') . '?session_id={CHECKOUT_SESSION_ID}',
                 ];
 
                 $response  = $this->stripeService->paymentIntent($data);
-
-                logger($response);
 
                 return route('payment.success');
             }
@@ -116,6 +131,48 @@ class StripeController extends Controller
                 'message' => serviceDownMessage(),
             ], Response::HTTP_UNPROCESSABLE_ENTITY));
         }
+    }
+
+    function createPaymentMethod($request)
+    {
+        $user = $request->user();
+
+        // check if user already have an account with stripe
+        // check if user exist on stripe
+        $stripUser = StripeUser::where('user_id', $user->id)->first();
+
+        if (!$stripUser) {
+            $userData = [
+                'email'  => $user->email,
+                'name'  => $user->full_name,
+            ];
+
+            $createUser = $this->stripeService->createCustomer($userData);
+
+            if (empty($createUser)) {
+                sendToLog($createUser);
+
+                return throw new HttpResponseException(response()->json([
+                    'success' => false,
+                    'message' => serviceDownMessage(),
+                ], Response::HTTP_UNPROCESSABLE_ENTITY));
+            }
+
+            $stripUser = StripeUser::create([
+                'user_id'       => $user->id,
+                'customer_id'   => $createUser->id
+            ]);
+        }
+
+        $payload = [
+            'customer_id' => $stripUser->customer_id,
+            'success_url' => route('payment-method.stripe.success') . '?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url' => route('profile.edit'),
+        ];
+
+        $response = $this->stripeService->createSession($payload);
+
+        return $response->url;
     }
 
     function webhook(Request $request, StripeService $stripeService)
@@ -153,8 +210,27 @@ class StripeController extends Controller
                 break;
             case 'payment_intent.succeeded':
                 $this->paymentIntentCompleted($event->data->object);
-            default:
-                echo 'Received unknown event type ' . $event->type;
+                break;
+            case 'charge.refund.updated':
+                break;
+            case 'refund.created':
+                $refund = $event->data->object;
+                break;
+            case 'reporting.report_run.failed':
+                $reportRun = $event->data->object;
+            case 'reporting.report_run.succeeded':
+                $reportRun = $event->data->object;
+            case 'setup_intent.canceled':
+                $setupIntent = $event->data->object;
+            case 'setup_intent.created':
+                logger("setup intent");
+                $setupIntent = $event->data->object;
+            case 'setup_intent.requires_action':
+                $setupIntent = $event->data->object;
+            case 'setup_intent.setup_failed':
+                $setupIntent = $event->data->object;
+            case 'setup_intent.succeeded':
+                $this->setupIntendSucceeded($event->data->object);
                 break;
         }
 
@@ -163,6 +239,15 @@ class StripeController extends Controller
 
     function chargeCompleted($data)
     {
+    }
+
+    function setupIntendSucceeded($data)
+    {
+        try {
+            $this->savePaymentMethod($data);
+        } catch (\Exception $e) {
+            sendToLog($e);
+        }
     }
 
     function sessionCompleted($data)
@@ -182,16 +267,11 @@ class StripeController extends Controller
 
     function paymentIntentCreated($data)
     {
-        $stripeUser = StripeUser::where('customer_id', $data->customer)->first();
-
-        if (!$stripeUser) {
-            sendToLog("stripe user {$data->customer} not found");
-            return false;
+        try {
+            $this->savePaymentMethod($data);
+        } catch (\Exception $e) {
+            sendToLog($e);
         }
-
-        $stripeUser->update([
-            'payment_method'  => $data->payment_method
-        ]);
     }
 
     function paymentIntentCompleted($data)
@@ -200,6 +280,39 @@ class StripeController extends Controller
             $this->processInternalInvoice($data->metadata, $data->id);
         } catch (\Exception $e) {
             sendToLog($e);
+        }
+    }
+
+    function savePaymentMethod($data)
+    {
+        $stripeUser = StripeUser::where('customer_id', $data->customer)->first();
+
+        if (!$stripeUser) {
+            sendToLog("stripe user {$data->customer} not found");
+            return false;
+        }
+
+        // dispatch(new StripStorePaymentMethod($stripeUser, $data->payment_method));
+
+        $dataLoad = ['customer_id' => $stripeUser->customer_id, 'payment_method' => $data->payment_method];
+
+        $response = $this->stripeService->retrievePaymentMethod($dataLoad);
+
+        $provider = \App\Models\Provider::where('short_name', 'strip')->first();
+
+        if ($provider) {
+            $payment = \App\Models\PaymentMethod::updateOrCreate(
+                [
+                    'user_id' => $stripeUser->user_id,
+                    'provider_id' => $provider->id,
+                    'pm_id' => $response->id
+                ],
+                [
+                    'card_brand' => $response->card->brand,
+                    'last4' =>  $response->card->last4,
+                    'details' => json_encode($response)
+                ]
+            );
         }
     }
 
