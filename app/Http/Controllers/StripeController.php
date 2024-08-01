@@ -102,7 +102,7 @@ class StripeController extends Controller
 
                     return throw new HttpResponseException(response()->json([
                         'success' => false,
-                        'message' => serviceDownMessage(),
+                        'message' => "Kindly Select a Default Payment Method",
                     ], Response::HTTP_UNPROCESSABLE_ENTITY));
                 }
 
