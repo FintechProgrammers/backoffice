@@ -49,4 +49,92 @@
     @include('profile.scripts._update-profile-image')
     @include('profile.scripts._change-password')
     @include('profile.scripts._update-profile')
+    <script>
+        $('.make-default').click(function(e) {
+            e.preventDefault();
+
+            const button = $(this)
+
+            const spinner = button.find('.spinner-border')
+            const buttonTest = button.find('#text')
+
+            $.ajax({
+                url: $(this).data('url'),
+                type: 'POST',
+                data: {
+                    _token: "{{ csrf_token() }}"
+                },
+                beforeSend: function() {
+                    buttonTest.hide()
+                    spinner.show()
+                    button.attr('disabled', true)
+                },
+                success: function(response) {
+
+                    // spinner.hide()
+                    // buttonTest.show()
+
+                    displayMessage(response.message, "success")
+
+                    setTimeout(function() {
+                        location.reload()
+                    }, 2000); // 2000 milliseconds = 2 seconds
+
+                },
+                error: function(xhr, status, error) {
+                    spinner.hide()
+                    buttonTest.show()
+                    button.attr('disabled', false)
+                    // Handle error response
+
+                    // Handle other error statuses
+                    // console.log(xhr.responseJSON)
+                    displayMessage(xhr.responseJSON.message, "error")
+
+                }
+            });
+
+        })
+
+        $('#add-card').click(function(e) {
+            e.preventDefault();
+
+            const button = $(this)
+
+            const spinner = button.find('.spinner-border')
+            const buttonTest = button.find('#text')
+
+            $.ajax({
+                url: $(this).data('url'),
+                type: 'GET',
+                beforeSend: function() {
+                    buttonTest.hide()
+                    spinner.show()
+                    button.attr('disabled', true)
+                },
+                success: function(response) {
+
+                    // spinner.hide()
+                    // buttonTest.show()
+
+                    setTimeout(function() {
+                        location.href = response.data.route
+                    }, 2000); // 2000 milliseconds = 2 seconds
+
+                },
+                error: function(xhr, status, error) {
+                    spinner.hide()
+                    buttonTest.show()
+                    button.attr('disabled', false)
+                    // Handle error response
+
+                    // Handle other error statuses
+                    // console.log(xhr.responseJSON)
+                    displayMessage(xhr.responseJSON.message, "error")
+
+                }
+            });
+
+        })
+    </script>
 @endpush

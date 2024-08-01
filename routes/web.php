@@ -124,6 +124,7 @@ Route::middleware(['auth'])->group(function () {
         // Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');
         Route::get('/stripe-success', 'stripeSuccess')->name('stripe.success');
+        Route::post('/mark-default/{paymentMethod}', 'makeDefault')->name('mark.default');
     });
 });
 

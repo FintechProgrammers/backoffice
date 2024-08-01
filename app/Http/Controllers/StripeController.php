@@ -135,44 +135,53 @@ class StripeController extends Controller
 
     function createPaymentMethod($request)
     {
-        $user = $request->user();
+        try {
+            $user = $request->user();
 
-        // check if user already have an account with stripe
-        // check if user exist on stripe
-        $stripUser = StripeUser::where('user_id', $user->id)->first();
+            // check if user already have an account with stripe
+            // check if user exist on stripe
+            $stripUser = StripeUser::where('user_id', $user->id)->first();
 
-        if (!$stripUser) {
-            $userData = [
-                'email'  => $user->email,
-                'name'  => $user->full_name,
-            ];
+            if (!$stripUser) {
+                $userData = [
+                    'email'  => $user->email,
+                    'name'  => $user->full_name,
+                ];
 
-            $createUser = $this->stripeService->createCustomer($userData);
+                $createUser = $this->stripeService->createCustomer($userData);
 
-            if (empty($createUser)) {
-                sendToLog($createUser);
+                if (empty($createUser)) {
+                    sendToLog($createUser);
 
-                return throw new HttpResponseException(response()->json([
-                    'success' => false,
-                    'message' => serviceDownMessage(),
-                ], Response::HTTP_UNPROCESSABLE_ENTITY));
+                    return throw new HttpResponseException(response()->json([
+                        'success' => false,
+                        'message' => serviceDownMessage(),
+                    ], Response::HTTP_UNPROCESSABLE_ENTITY));
+                }
+
+                $stripUser = StripeUser::create([
+                    'user_id'       => $user->id,
+                    'customer_id'   => $createUser->id
+                ]);
             }
 
-            $stripUser = StripeUser::create([
-                'user_id'       => $user->id,
-                'customer_id'   => $createUser->id
-            ]);
+            $payload = [
+                'customer_id' => $stripUser->customer_id,
+                'success_url' => route('payment-method.stripe.success') . '?session_id={CHECKOUT_SESSION_ID}',
+                'cancel_url' => route('profile.edit'),
+            ];
+
+            $response = $this->stripeService->createSession($payload);
+
+            return $this->sendResponse(['route' => $response->url]);
+        } catch (\Exception $e) {
+            sendToLog($e);
+
+            return throw new HttpResponseException(response()->json([
+                'success' => false,
+                'message' => serviceDownMessage(),
+            ], Response::HTTP_UNPROCESSABLE_ENTITY));
         }
-
-        $payload = [
-            'customer_id' => $stripUser->customer_id,
-            'success_url' => route('payment-method.stripe.success') . '?session_id={CHECKOUT_SESSION_ID}',
-            'cancel_url' => route('profile.edit'),
-        ];
-
-        $response = $this->stripeService->createSession($payload);
-
-        return $response->url;
     }
 
     function webhook(Request $request, StripeService $stripeService)

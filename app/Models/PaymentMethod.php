@@ -11,4 +11,17 @@ class PaymentMethod extends Model
     use HasFactory, GeneratesUuid;
 
     protected $guarded = [];
+
+    /**
+     * Define the route model binding key for a given model.
+     */
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
+
+    function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 }

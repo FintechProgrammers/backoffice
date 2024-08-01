@@ -97,6 +97,11 @@ class User extends Authenticatable
         return $code;
     }
 
+    function paymentMethods()
+    {
+        return $this->hasMany(PaymentMethod::class, 'user_id', 'id')->latest();
+    }
+
     /**
      * Calculate the profile completion percentage.
      *

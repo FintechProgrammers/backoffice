@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PaymentMethod;
 use App\Models\Provider;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PaymentMethodController extends Controller
 {
@@ -19,6 +21,25 @@ class PaymentMethodController extends Controller
         }
 
         return $this->sendError(serviceDownMessage(), [], 500);
+    }
+
+    function makeDefault(PaymentMethod $paymentMethod)
+    {
+        // Begin a database transaction
+        DB::transaction(function () use ($paymentMethod) {
+            // Get the user associated with this payment method
+            $user = $paymentMethod->user;
+
+            // Set all other payment methods for this user to not be default
+            PaymentMethod::where('user_id', $user->id)->update(['is_default' => false]);
+
+            // Set the specified payment method to be the default
+            $paymentMethod->is_default = true;
+
+            $paymentMethod->save();
+        });
+
+        return $this->sendResponse([], "Default payment method updated successfully.");
     }
 
     function stripeSuccess(Request $request)
