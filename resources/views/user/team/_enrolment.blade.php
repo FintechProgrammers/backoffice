@@ -5,10 +5,10 @@
  <div class="row mb-3">
      @forelse($packages as $item)
          <div class="col-lg-12 mb-2">
-             <div class="form-check shipping-method-container mb-0">
-                 <input class="service" name="package_id" value="{{ $item->uuid }}" type="radio" class="form-check-input"
-                     data-name="{{ $item->name }}" data-image="{{ $item->image }}" data-price="{{ $item->price }}"
-                     required>
+             <div class="form-check shipping-method-container mb-0 bxi-package" style="cursor: pointer;">
+                 <input class="service d-none" name="package_id" value="{{ $item->uuid }}" type="radio"
+                     class="form-check-input" data-name="{{ $item->name }}" data-image="{{ $item->image }}"
+                     data-price="{{ $item->price }}" required>
                  <div class="form-check-label">
                      <div class="d-sm-flex align-items-center justify-content-between">
                          <div class="d-flex">

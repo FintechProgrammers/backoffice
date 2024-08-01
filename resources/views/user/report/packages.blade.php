@@ -26,11 +26,12 @@
                                 <div class="flex-fill">
                                     <div class="d-flex align-items-center">
                                         <div class="mt-sm-0 mt-2">
-                                            @if ($item->service->serviceProduct->isNotEmpty())
-                                                @foreach ($item->service->serviceProduct as $service)
-                                                    <p class="mb-0 fs-14 fw-semibold">{{ $service->product->name }}</p>
-                                                @endforeach
-                                            @endif
+                                            <small class="text-muted">
+                                                <h6 class="mb-0 fs-14 fw-semibold">{{ $item->service->name }}</h6>
+                                                @if ($item->service->serviceProduct->isNotEmpty())
+                                                    {{ $item->service->serviceProduct->pluck('product.name')->implode(', ') }}
+                                                @endif
+                                            </small>
                                         </div>
                                     </div>
                                 </div>

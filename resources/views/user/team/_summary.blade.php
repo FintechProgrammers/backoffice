@@ -1,43 +1,5 @@
   <h4 class="text-center">Summary</h4>
   <p class="text-center">Please review your details before proceeding.</p>
-  {{-- <div class="row">
-      <div class="col-lg-6">
-          <div class="mb-3">
-              <strong>First Name:</strong>
-              <p id="summary-first_name"></p>
-          </div>
-      </div>
-      <div class="col-lg-6">
-          <div class="mb-3">
-              <strong>Last Name:</strong>
-              <p id="summary-last_name"></p>
-          </div>
-      </div>
-      <div class="col-lg-6">
-          <div class="mb-3">
-              <strong>Username:</strong>
-              <p id="summary-username"></p>
-          </div>
-      </div>
-      <div class="col-lg-6">
-          <div class="mb-3">
-              <strong>Email:</strong>
-              <p id="summary-email"></p>
-          </div>
-      </div>
-      <div class="col-lg-6">
-          <div class="mb-3">
-              <strong>Country:</strong>
-              <p id="summary-country"></p>
-          </div>
-      </div>
-      <div class="col-lg-6">
-          <div class="mb-3">
-              <strong>Phone Number:</strong>
-              <p id="summary-phone_number"></p>
-          </div>
-      </div>
-  </div> --}}
   <div class="row">
       <div class="col-lg-6 mb-3 form-group">
           <label for="first_name">First Name</label>

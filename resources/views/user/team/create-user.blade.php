@@ -23,18 +23,24 @@
                     </div>
                     <div class="form-step ">
                         @include('user.team._enrolment')
-                        <button type="button" class="btn btn-dark btn-prev">Previous</button>
-                        <button type="button" class="btn btn-primary btn-next">Next</button>
+                        <div class="p-3">
+                            <button type="button" class="btn btn-dark btn-prev">Previous</button>
+                            <button type="button" class="btn btn-primary btn-next">Next</button>
+                        </div>
                     </div>
                     <div class="form-step">
-                        @include('user.team._summary')
-                        <button type="button" class="btn btn-dark btn-prev">Previous</button>
-                        <button type="submit" class="btn btn-primary">
-                            <div class="spinner-border" style="display: none" role="status">
-                                <span class="sr-only">Loading...</span>
-                            </div>
-                            <span id="text">Proceed</span>
-                        </button>
+                        <div>
+                            @include('user.team._summary')
+                        </div>
+                        <div class="p-3">
+                            <button type="button" class="btn btn-dark btn-prev">Previous</button>
+                            <button type="submit" class="btn btn-primary">
+                                <div class="spinner-border" style="display: none" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                                <span id="text">Proceed</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -133,25 +139,32 @@
                 document.getElementById('summary-phone_number').value = phoneNumber;
             }
 
-            serviceRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    const selectedService = document.querySelector(
-                        'input[name="package_id"]:checked');
-                    const name = selectedService.getAttribute('data-name');
-                    const image = selectedService.getAttribute('data-image');
-                    const price = selectedService.getAttribute('data-price');
+            document.querySelectorAll('.bxi-package').forEach(container => {
+                container.addEventListener('click', function() {
+                    const radio = this.querySelector('input[name="package_id"]');
+                    if (radio) {
+                        radio.checked = true;
 
-                    // Update preview section
-                    previewImage.src = image;
-                    previewName.innerHTML = name;
-                    previewPrice.innerHTML = `$${price}`;
-                    previewTotalPrice.innerHTML = `$${price}`;
-                    // `$${parseFloat(price) + parseFloat(previewDeliveryFee.textContent.replace('+$', ''))}`;
+                        // Remove highlight from all containers
+                        document.querySelectorAll('.bxi-package').forEach(function(container) {
+                            container.classList.remove('highlighted');
+                        });
 
-                    // Update summary step
-                    // document.getElementById('summary-package').textContent = `${name} - $${price}`;
+                        // Add highlight to the selected container
+                        this.classList.add('highlighted');
+
+                        // Update preview section
+                        const name = radio.getAttribute('data-name');
+                        const image = radio.getAttribute('data-image');
+                        const price = radio.getAttribute('data-price');
+
+                        previewImage.src = image;
+                        previewName.innerHTML = name;
+                        previewPrice.innerHTML = `$${price}`;
+                        previewTotalPrice.innerHTML = `$${price}`;
+                    }
                 });
-            })
+            });
         });
     </script>
     <style>
