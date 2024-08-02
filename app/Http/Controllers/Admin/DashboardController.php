@@ -19,14 +19,18 @@ class DashboardController extends Controller
     function index()
     {
         $data['stats'] = $this->statistics();
-        $topSellingServiceIds = DB::table('sales')
-            ->select('service_id', DB::raw('COUNT(*) AS total_sales'))
+        $topSellingServices = DB::table('sales')
+            ->select('service_id', DB::raw('COUNT(*) AS total_sales_count'), DB::raw('SUM(amount) AS total_amount_sold'))
             ->groupBy('service_id')
-            ->orderBy('total_sales', 'desc')
+            ->orderBy('total_sales_count', 'desc')
             ->limit(10) // Adjust limit as needed
-            ->pluck('service_id');
+            ->get()
+            ->map(function ($sale) {
+                $sale->service = Service::find($sale->service_id);
+                return $sale;
+            });
 
-        $topSellingServices = Service::whereIn('id', $topSellingServiceIds)->get();
+        // $topSellingServices = Service::whereIn('id', $topSellingServiceIds)->get();
 
         $data['topSellingServices'] = $topSellingServices;
 

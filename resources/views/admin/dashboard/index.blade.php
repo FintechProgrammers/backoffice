@@ -29,6 +29,7 @@
                                         <th scope="col">Service Name</th>
                                         <th scope="col" class="text-center">Price</th>
                                         <th scope="col" class="text-center">Amount Sold</th>
+                                        <th scope="col" class="text-center">Total Sold</th>
                                         <th scope="col" class="text-center">BV</th>
                                     </tr>
                                 </thead>
@@ -38,18 +39,25 @@
                                             <tr>
                                                 <td class="text-center">{{ $key + 1 }}</td>
                                                 <td>
-                                                    <x-package-title title="{{ $item->name }}" image="{{ $item->image }}"
-                                                        price="{{ $item->price }}" />
-                                                </td>
-                                                <td class="text-center">
-                                                    <span class="fw-semibold">${{ number_format($item->price, 2) }}</span>
+                                                    <x-package-title title="{{ $item->service->name }}"
+                                                        image="{{ $item->service->image }}"
+                                                        price="{{ $item->service->price }}" />
                                                 </td>
                                                 <td class="text-center">
                                                     <span
-                                                        class="fw-semibold">${{ number_format($item->totalSales, 2) }}</span>
+                                                        class="fw-semibold">${{ number_format($item->service->price, 2) }}</span>
                                                 </td>
                                                 <td class="text-center">
-                                                    <span class="fw-semibold">{{ number_format($item->bv_amount, 2) }}
+                                                    <span
+                                                        class="fw-semibold">${{ number_format($item->total_amount_sold, 2) }}</span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span
+                                                        class="fw-semibold">{{ number_format($item->total_sales_count) }}</span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span
+                                                        class="fw-semibold">{{ number_format($item->service->bv_amount, 2) }}
                                                         BV</span>
                                                 </td>
                                             </tr>
