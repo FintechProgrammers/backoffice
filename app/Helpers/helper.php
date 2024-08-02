@@ -529,7 +529,7 @@ if (!function_exists('getDownlinesWithActiveSubscriptions')) {
     {
         $activeSubscriptions = collect();
         foreach ($user->directInvitees as $invitee) {
-            if ($invitee->subscriptions()->active()->exists()) {
+            if ($invitee->subscription()->active()->exists()) {
                 $activeSubscriptions->push($invitee);
             }
             $activeSubscriptions = $activeSubscriptions->merge(getDownlinesWithActiveSubscriptions($invitee));
