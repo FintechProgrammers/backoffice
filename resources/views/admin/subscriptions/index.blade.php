@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @push('styles')
-
 @endpush
 
 @section('content')
@@ -18,7 +17,8 @@
                         <thead>
                             <tr>
                                 <th>User</th>
-                                <th>Service Name</th>
+                                <th>Sponsor</th>
+                                <th>Service</th>
                                 <th>Start Date</th>
                                 <th>End Date</th>
                                 <th class="text-center">Status</th>

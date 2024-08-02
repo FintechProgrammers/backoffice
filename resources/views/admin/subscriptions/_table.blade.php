@@ -7,6 +7,12 @@
             </a>
         </td>
         <td>
+            @if (!empty($item->user->sponsor))
+                <x-profile-component name="{{ $item->user->sponsor->full_name }}"
+                    email="{{ $item->user->sponsor->email }}" image="{{ $item->user->sponsor->profile_picture }}" />
+            @endif
+        </td>
+        <td>
             @if (!empty($item->service))
                 <x-package-title title="{{ $item->service->name }}" image="{{ $item->service->image }}"
                     price="{{ $item->service->price }}" />
