@@ -53,7 +53,7 @@ class DashboardController extends Controller
 
             $data['activeUsers'] = getDownlinesWithActiveSubscriptionsList($user->id)->count();
             $data['totalUsers'] =   $data['teamAmbassadors'] + $data['teamCustomers'];
-            $data['upcomingRenewals'] = $user->subscriptions()->expiringInOneWeek()->count();
+            $data['upcomingRenewals'] = $user->subscription()->expiringInOneWeek()->count();
             $data['topTeamSellers'] = getTopTeamSellers($user->id);
             $data['topGlobalSellers'] = Sale::with('user')->get()->groupBy('user_id')->map(function ($sales) {
                 return [
