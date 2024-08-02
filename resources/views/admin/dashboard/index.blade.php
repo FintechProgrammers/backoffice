@@ -28,7 +28,7 @@
                                         <th scope="col" class="text-center">S.no</th>
                                         <th scope="col">Service Name</th>
                                         <th scope="col" class="text-center">Price</th>
-                                        <th scope="col" class="text-center">Amount</th>
+                                        <th scope="col" class="text-center">Amount Sold</th>
                                         <th scope="col" class="text-center">BV</th>
                                     </tr>
                                 </thead>

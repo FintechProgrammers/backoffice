@@ -186,9 +186,25 @@ class User extends Authenticatable
         return $this->hasMany(UserActivities::class, 'user_id', 'id')->latest();
     }
 
-    function subscriptions()
+    function subscription()
     {
         return $this->hasOne(UserSubscription::class, 'user_id', 'id');
+    }
+
+    function subscriptions()
+    {
+        return $this->hasOne(UserSubscription::class, 'user_id', 'id')
+            ->whereHas('service', function ($query) {
+                $query->where('ambassadorship', false);
+            })->first();
+    }
+
+    function ambassadorship()
+    {
+        return $this->hasOne(UserSubscription::class, 'user_id', 'id')
+            ->whereHas('service', function ($query) {
+                $query->where('ambassadorship', true);
+            })->first();
     }
 
     function rank()

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AmbassedorPayments;
+use App\Models\CommissionTransaction;
 use App\Models\Rank;
 use App\Models\Sale;
 use App\Models\Service;
@@ -55,19 +56,19 @@ class DashboardController extends Controller
 
         $withdrawalsSum = Withdrawal::where('status', 'completed')->sum('amount');
 
-        $expenses =  $withdrawalsSum;
+        $expenses =  CommissionTransaction::where('is_converted', false)->sum('amount');
 
         $withdrawalRequest = Withdrawal::where('status', 'pending')->count();
 
-        $activeUsers = User::has('subscriptions', '>=', 1)
-            ->whereHas('subscriptions', function ($query) {
+        $activeUsers = User::has('subscription')
+            ->whereHas('subscription', function ($query) {
                 $query->where('is_active', true);
             })
             ->count();
 
-        $inactiveUsers = User::doesntHave('subscriptions')->count();
-        $usersWithInactiveSubscriptions = User::has('subscriptions')
-            ->whereHas('subscriptions', function ($query) {
+        $inactiveUsers = User::doesntHave('subscription')->count();
+        $usersWithInactiveSubscriptions = User::has('subscription')
+            ->whereHas('subscription', function ($query) {
                 $query->where('is_active', false);
             })
             ->count();

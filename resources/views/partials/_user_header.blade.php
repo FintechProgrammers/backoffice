@@ -72,6 +72,12 @@
                     aria-labelledby="mainHeaderProfile">
                     <li><a class="dropdown-item d-flex" href="{{ route('profile.edit') }}"><i
                                 class="ti ti-user-circle fs-18 me-2 op-7"></i>Profile</a></li>
+                    @if (auth()->user()->is_ambassador)
+                        <li><a class="dropdown-item d-flex border-block-end" href="javascript:void(0);"><i
+                                    class="ti ti-wallet fs-18 me-2 op-7"></i>Bal:
+                                ${{ number_format(auth()->user()->wallet->amount, 2, '.', ',') }}</a></li>
+                    @endif
+
                     <li>
                         <a class="dropdown-item d-flex" href="{{ route('logout') }}"><i
                                 class="ti ti-logout fs-18 me-2 op-7"></i>Log Out</a>

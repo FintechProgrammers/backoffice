@@ -3,75 +3,58 @@
 @section('title', 'Subscriptions')
 
 @section('content')
-    <div class="card custom-card">
-        <div class="card-header justify-content-between">
-            <div class="card-title">
-                Subscriptions History
-            </div>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table text-nowrap table-bordered">
-                    {{-- <thead>
-                        <tr>
-                            <th scope="col">Service Name</th>
-                            <th scope="col">Status</th>
-                            <th scope="col" width="30%">Date</th>
-                        </tr>
-                    </thead> --}}
-                    <tbody>
-                        @forelse ($subscriptions as $item)
-                            <tr>
-                                <td>
-                                    @if (!empty($item->service))
-                                        <x-package-title title="{{ $item->service->name }}"
-                                            image="{{ $item->service->image }}" price="{{ $item->service->price }}" />
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($item->is_active)
-                                        <span class="badge bg-success">Active</span>
-                                    @else
-                                        <span class="badge bg-warning">Inactive</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($item->end_date->isPast())
-                                        <span class="badge bg-danger">Expired</span>
-                                    @else
-                                        <span class="badge bg-success">Running</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    <b>Expiry Date:</b> {{ $item->end_date->format('jS,M Y') }}
-                                </td>
-                                <td>
-                                    @if ($item->end_date->isPast())
-                                        <a href="{{ route('package.details', $item->uuid) }}"
-                                            class="btn btn-primary">Renew</a>
-                                    @endif
-                                </td>
-                                <td>
-                                    @php
-                                        $higherPackages = $packages->filter(function ($package) use ($item) {
-                                            return $package->price > $item->service->price;
-                                        });
-                                    @endphp
+    <div class="row justify-content-center align-items-center authentication-basic h-100">
+        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-8 col-12">
+            @if ($subscriptions)
+                <div class="card custom-card text-center">
+                    <div class="card-body">
+                        <span class="avatar avatar-xl avatar-rounded me-2 mb-2">
+                            <img src="{{ $subscriptions->service->image }}" alt="img">
+                        </span>
+                        <div class="fw-semibold fs-16">{{ $subscriptions->service->name }}</div>
+                        @if ($subscriptions->service->serviceProduct->isNotEmpty())
+                            <p class="mb-4 text-muted fs-11">
+                                {{ $subscriptions->service->serviceProduct->pluck('product.name')->implode(', ') }}</p>
+                        @endif
 
-                                    @if ($higherPackages->isNotEmpty())
-                                        <a href="{{ route('package.index') }}" class="btn btn-success">Upgrade</a>
-                                    @endif
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="4" class="text-center"><span class="text-warning">no data available</span>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+                        @if ($subscriptions->end_date->isPast())
+                            <h6 class="badge bg-danger">Expired</h6>
+                        @else
+                            <h6 class="badge bg-success">Running</h6>
+                        @endif
+
+                        <h6>
+                            <b>Expiry Date:</b> {{ $subscriptions->end_date->format('jS,M Y') }}
+                        </h6>
+
+                        @if ($subscriptions->end_date->isPast())
+                            <p class="text-danger">Your subscription has expired on
+                                {{ $subscriptions->end_date->format('d F, Y') }}.</p>
+                            <a href="{{ route('package.details', $subscriptions->uuid) }}" class="btn btn-primary">Renew
+                                Subscription</a>
+                        @endif
+
+
+                        @php
+                            $higherPackages = $packages->filter(function ($package) use ($subscriptions) {
+                                return $package->price > $subscriptions->service->price;
+                            });
+                        @endphp
+
+                        @if ($higherPackages->isNotEmpty())
+                            <a href="{{ route('package.index') }}" class="btn btn-success btn-sm">Upgrade Package</a>
+                        @endif
+                    </div>
+                </div>
+            @else
+                <div class="d-flex flex-column align-items-center h-100">
+                    <img src="{{ asset('assets/images/referral.png') }}" width="400px" height="400px" alt="">
+                    <h5 class="text-uppercase text-center">You Haven't Subscribed Yet</h5>
+                    <p class="text-center">Enjoy exclusive benefits by choosing a subscription plan that suits your needs.
+                    </p>
+                    <a href="{{ route('package.index') }}" class="btn btn-primary btn-sm">Explore Plans</a>
+                </div>
+            @endif
         </div>
     </div>
 @endsection
