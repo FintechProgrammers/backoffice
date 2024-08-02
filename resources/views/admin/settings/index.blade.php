@@ -71,7 +71,7 @@
                         </div>
                         <div class="row">
                             <h6><b>{{ __('Payment Settings') }}</b></h6>
-                            <div class="col-lg-6 mb-3">
+                            {{-- <div class="col-lg-6 mb-3">
                                 <label>{{ __('Payment Day') }}</label>
                                 <select name="withdrawal_day" id="withdrawal_day" class="form-control">
                                     <option value="">--SELECT--DAY--</option>
@@ -80,7 +80,7 @@
                                     @endforeach
                                 </select>
                                 <small class="text-muted">{{ __('Set Day for commision withdrawal') }} </small>
-                            </div>
+                            </div> --}}
                             <div class="col-lg-6 mb-3">
                                 <label>{{ __('Cash Back Window') }}</label>
                                 <div class="input-group">
