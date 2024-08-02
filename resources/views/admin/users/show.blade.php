@@ -77,34 +77,31 @@
                         </div>
                     </div>
                     <div class="p-4">
-                        <p class="fs-15 mb-2 me-4 fw-semibold">Subscriptions :</p>
-                        @if (count($user->subscriptions) > 0)
+                        <p class="fs-15 mb-2 me-4 fw-semibold">Subscription :</p>
+                        @if (!empty($user->subscriptions()))
                             <ul class="list-group">
-                                @forelse ($user->subscriptions as $item)
-                                    <li class="list-group-item">
-                                        <div class="d-sm-flex align-items-top">
-                                            <span class="avatar avatar-sm">
-                                                <img src="{{ $item->service->image }}" alt="img">
+                                <li class="list-group-item">
+                                    <div class="d-sm-flex">
+                                        <span class="avatar avatar-sm">
+                                            <img src="{{ $user->subscriptions()->service->image }}" alt="img">
+                                        </span>
+                                        <div class="ms-sm-2 ms-0 mt-sm-0 mt-1 fw-semibold flex-fill">
+                                            <p class="mb-0 lh-1">{{ $user->subscriptions()->service->name }}</p>
+                                            <span class="fs-11 text-muted op-7">
+                                                @if ($user->subscriptions()->service->serviceProduct->isNotEmpty())
+                                                    {{ $user->subscriptions()->service->serviceProduct->pluck('product.name')->implode(', ') }}
+                                                @else
+                                                    No products available.
+                                                @endif
                                             </span>
-                                            <div class="ms-sm-2 ms-0 mt-sm-0 mt-1 fw-semibold flex-fill">
-                                                <p class="mb-0 lh-1">{{ $item->service->name }}</p>
-                                                <span class="fs-11 text-muted op-7">
-                                                    @if ($item->service->serviceProduct->isNotEmpty())
-                                                        {{ $item->service->serviceProduct->pluck('product.name')->implode(', ') }}
-                                                    @else
-                                                        No products available.
-                                                    @endif
-                                                </span>
-                                            </div>
-                                            @if ($item->is_active)
-                                                <span class="badge bg-success">{{ __('Active') }}</span>
-                                            @else
-                                                <span class="badge bg-warning">{{ __('Expired') }}</span>
-                                            @endif
                                         </div>
-                                    </li>
-                                @empty
-                                @endforelse
+                                        @if ($user->subscriptions()->end_date->isPast())
+                                            <span class="bg-warning">{{ __('Expired') }}</span>
+                                        @else
+                                            <span class="text-success">{{ __('Running') }}</span>
+                                        @endif
+                                    </div>
+                                </li>
                             </ul>
                         @else
                             <div class="d-flex justify-content-center">
