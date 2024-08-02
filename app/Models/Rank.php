@@ -25,4 +25,9 @@ class Rank extends Model
     {
         return 'uuid';
     }
+
+    public function getImageAttribute(): string
+    {
+        return !empty($this->file_url) ? $this->file_url : url('/') . '/assets/images/avatar.svg';
+    }
 }

@@ -14,33 +14,24 @@
                 <table class="table text-nowrap table-bordered">
                     <thead>
                         <tr>
-                            <th scope="col">Service Name</th>
-                            <th scope="col">Price</th>
+                            <th scope="col">User</th>
+                            <th scope="col">Account Type</th>
+                            <th scope="col">Sponsor</th>
+                            <th scope="col">Package</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">BV Point</th>
                             <th scope="col" width="30%">Date</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @forelse ($sales as $item)
-                            <tr>
-                                <td>
-                                    <span class="text-success fw-semibold">{{ optional($item->service)->name }}</span>
-                                </td>
-                                <td>
-                                    ${{ $item->amount }}
-                                </td>
-                                <td>
-                                    {{ $item->created_at->format('jS,M Y H:i A') }}
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="3" class="text-center"><span class="text-warning">no data available</span>
-                                </td>
-                            </tr>
-                        @endforelse
+                    <tbody id="content">
+
                     </tbody>
                 </table>
             </div>
         </div>
+        <input type="hidden" name="hidden_page" id="hidden_page" value="1" />
     </div>
 @endsection
+@push('scripts')
+    @include('user.sales.scripts._load-table')
+@endpush

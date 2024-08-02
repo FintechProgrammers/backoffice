@@ -38,15 +38,19 @@
         const page = $('#hidden_page').val();
 
         $.ajax({
-            url: `/team/filter?page=${page}`,
+            url: `{{ route('team.filter') }}?page=${page}`,
             type: 'GET',
             beforeSend: function() {
                 table.html(`
-                    <div class="d-flex justify-content-center">
+                    <tr>
+                    <td class="text-center" colspan="7">
+                        <div class="d-flex justify-content-center">
                         <div class="spinner-border" role="status">
                             <span class="sr-only">Loading...</span>
                         </div>
                     </div>
+                        </td>
+                    </tr>
                  `)
             },
             success: function(response) {

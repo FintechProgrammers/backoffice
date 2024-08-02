@@ -214,8 +214,13 @@ class Navigation
                         'hasPermission' => auth()->user()->is_ambassador ?? false
                     ],
                     (object) [
-                        'name'  => 'My Customers',
+                        'name'  => 'My Team',
                         'route' => 'team.index',
+                        'hasPermission' => auth()->user()->is_ambassador ?? false
+                    ],
+                    (object) [
+                        'name'  => 'My Customers',
+                        'route' => 'customers.index',
                         'hasPermission' => auth()->user()->is_ambassador ?? false
                     ],
                     (object) [

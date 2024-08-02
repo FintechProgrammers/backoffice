@@ -1,11 +1,11 @@
 @extends('layouts.user.app')
 
-@section('title', 'Team')
+@section('title', 'Customers')
 
 @section('content')
     <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
         <div>
-            <p class="fw-semibold fs-18 mb-0">Team</p>
+            <p class="fw-semibold fs-18 mb-0">Customers</p>
         </div>
     </div>
     {{-- <div id="content"></div> --}}
@@ -18,9 +18,6 @@
                         <tr>
                             <th>Name</th>
                             <th>Sponsor</th>
-                            <th class="text-center">Account Type</th>
-                            <th class="text-center">Sale</th>
-                            <th>Rank</th>
                             <th>Curent Package</th>
                             <th>Date Join</th>
                         </tr>
@@ -34,5 +31,5 @@
     </div>
 @endsection
 @push('scripts')
-    @include('user.team.scripts._load-table')
+    @include('user.customers.scripts._load-table')
 @endpush

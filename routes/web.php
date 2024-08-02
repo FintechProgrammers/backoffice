@@ -72,6 +72,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::controller(SalesController::class)->prefix('sales')->name('sales.')->group(function () {
         Route::get('', 'index')->name('index');
+        Route::get('/filter', 'filter')->name('filter');
     });
 
     Route::controller(WithdrawalController::class)->prefix('withdrawal')->name('withdrawal.')->group(function () {
@@ -94,12 +95,19 @@ Route::middleware(['auth'])->group(function () {
         Route::get('packages', 'packages')->name('packages');
     });
 
-    Route::controller(TeamController::class)->prefix('team')->name('team.')->group(function () {
-        Route::get('', 'index')->name('index');
-        Route::get('/filter', 'filter')->name('fileter');
-        Route::get('/genealogy', 'genealogy')->name('genealogy');
-        Route::get('/user/info/{user}', 'userInfo')->name('user.info');
-        Route::get('/create/member', 'createCustomer')->name('create.customer');
+    Route::controller(TeamController::class)->group(function () {
+        Route::prefix('team')->name('team.')->group(function () {
+            Route::get('', 'index')->name('index');
+            Route::get('/filter', 'filter')->name('filter');
+            Route::get('/genealogy', 'genealogy')->name('genealogy');
+            Route::get('/user/info/{user}', 'userInfo')->name('user.info');
+            Route::get('/create/member', 'createCustomer')->name('create.customer');
+        });
+
+        Route::prefix('customers')->name('customers.')->group(function () {
+            Route::get('/', 'customers')->name('index');
+            Route::get('/filter', 'customersFilter')->name('filter');
+        });
     });
 
     Route::controller(ProviderController::class)->prefix('provider')->name('provider.')->group(function () {
