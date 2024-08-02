@@ -18,7 +18,7 @@
                         <input type="hidden" name="package_id" value="{{ $package->uuid }}">
                         @include('user.checkout.package')
                         @include('user.checkout.payment-methods')
-                        @if (!in_array($package->id, Auth::user()->subscriptions()->pluck('service_id')->toArray()))
+                        @if ($package->id !== Auth::user()->subscription->service_id)
                             <div class="px-4 py-3 border-top border-block-start-dashed d-sm-flex justify-content-between">
                                 <button type="submit" class="btn btn-success-light m-1">
                                     <div class="spinner-border" style="display: none" role="status">
