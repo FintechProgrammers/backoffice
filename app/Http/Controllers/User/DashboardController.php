@@ -27,7 +27,7 @@ class DashboardController extends Controller
             $startOfWeek = Carbon::now()->startOfWeek();
             $endOfWeek = Carbon::now()->endOfWeek();
 
-            $directSale = Sale::where('parent_id', $user->id);
+            $directSale = $user->getDirectReferralSales();
             $directCommission = CommissionTransaction::where('user_id', $user->id);
 
             $data['walletBalance'] = Wallet::where('user_id', $user->id)->select('amount')->sum('amount');

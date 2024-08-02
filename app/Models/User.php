@@ -349,9 +349,9 @@ class User extends Authenticatable
         $directReferrals = $this->children()->pluck('id')->toArray();
 
         // Calculate total sales made by direct referrals
-        $totalSales = Sale::whereIn('user_id', $directReferrals)->sum('amount');
+        $sales = Sale::whereIn('user_id', $directReferrals);
 
-        return $totalSales;
+        return $sales;
     }
 
     public function getIndirectReferralSales()
@@ -369,9 +369,9 @@ class User extends Authenticatable
         $indirectReferralIds = $indirectReferrals->pluck('id')->toArray();
 
         // Calculate total sales made by indirect referrals
-        $totalSales = Sale::whereIn('user_id', $indirectReferralIds)->sum('amount');
+        $sales = Sale::whereIn('user_id', $indirectReferralIds);
 
-        return $totalSales;
+        return $sales;
     }
 
     /**
