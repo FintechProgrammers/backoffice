@@ -354,13 +354,15 @@ class StripeController extends Controller
 
             $subscriptionService = new SubscriptionService();
 
-            $userSubscription = UserSubscription::where('user_id', $user->id)->where('service_id', $service->id)->first();
+            $subscriptionService->createSubscription($service, $user);
 
-            if ($userSubscription) {
-                $subscriptionService->updateSubscription($service, $userSubscription);
-            } else {
-                $subscriptionService->createSubscription($service, $user);
-            }
+            // $userSubscription = UserSubscription::where('user_id', $user->id)->where('service_id', $service->id)->first();
+
+            // if ($userSubscription) {
+            //     $subscriptionService->updateSubscription($service, $userSubscription);
+            // } else {
+            //     $subscriptionService->createSubscription($service, $user);
+            // }
 
             $invoice->update([
                 'is_paid' => true,

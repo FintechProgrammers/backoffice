@@ -14,14 +14,16 @@ class SubscriptionService
 {
     function createSubscription($service, $user)
     {
-        $subscription = UserSubscription::create([
-            'user_id' => $user->id,
-            'service_id' => $service->id,
-            'reference'  => generateReference(),
-            'start_date' =>  Carbon::now(),
-            'end_date' =>  Carbon::now()->addDays($service->duration),
-            'is_active' => true
-        ]);
+        $subscription = UserSubscription::updateOrCreate(
+            ['user_id' => $user->id], // Attributes to check for existing record
+            [
+                'service_id' => $service->id,
+                'reference'  => generateReference(),
+                'start_date' => Carbon::now(),
+                'end_date' => Carbon::now()->addDays($service->duration),
+                'is_active' => true
+            ]
+        );
 
         $this->ambassadorAccount($user, $service);
 

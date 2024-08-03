@@ -22,12 +22,13 @@
             <div class="col-lg-3">
                 {{-- @include('user.dashboard._upgrade') --}}
                 @include('user.dashboard._profile-card')
+                <x-user-subscription />
             </div>
             <div class="col-lg-9">
                 <x-user.dashboard.stats-component />
-                @if (!empty(auth()->user()->subscriptions))
+                {{-- @if (!empty(auth()->user()->subscriptions))
                     @include('user.dashboard._purchases')
-                @endif
+                @endif --}}
                 @include('user.dashboard._activities')
             </div>
         </div>

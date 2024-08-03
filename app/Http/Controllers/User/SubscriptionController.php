@@ -16,7 +16,7 @@ class SubscriptionController extends Controller
     {
         $user = User::whereId(auth()->user()->id)->first();
 
-        $data['subscriptions'] = $user->subscriptions();
+        $data['subscriptions'] = $user->subscriptions;
 
         $data['packages'] = Service::where('is_published', true)->get();
 

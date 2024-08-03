@@ -13,16 +13,16 @@ class TicketReply extends Model
 
     function ticket()
     {
-        return $this->belongsTo(Ticket::class);
+        return $this->belongsTo(Ticket::class)->withTrashed();
     }
 
     function admin()
     {
-        return $this->belongsTo(Admin::class);
+        return $this->belongsTo(Admin::class)->withTrashed();
     }
 
     function attachments()
     {
-        return $this->hasMany(TicketAttachment::class,'ticket_replies_id','id');
+        return $this->hasMany(TicketAttachment::class, 'ticket_replies_id', 'id');
     }
 }

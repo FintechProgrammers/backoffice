@@ -15,16 +15,16 @@ class Sale extends Model
 
     function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id')->withTrashed();
     }
 
     function parent()
     {
-        return $this->belongsTo(User::class, 'parent_id', 'id');
+        return $this->belongsTo(User::class, 'parent_id', 'id')->withTrashed();
     }
 
     function service()
     {
-        return $this->belongsTo(Service::class, 'service_id', 'id');
+        return $this->belongsTo(Service::class, 'service_id', 'id')->withTrashed();
     }
 }

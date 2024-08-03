@@ -250,13 +250,15 @@ class NowpaymentController extends Controller
 
         $subscriptionService = new SubscriptionService();
 
-        $userSubscription = UserSubscription::where('user_id', $user->id)->where('service_id', $package->id)->first();
+        $subscriptionService->createSubscription($package, $user);
 
-        if ($userSubscription) {
-            $subscriptionService->updateSubscription($package, $userSubscription);
-        } else {
-            $subscriptionService->createSubscription($package, $user);
-        }
+        // $userSubscription = UserSubscription::where('user_id', $user->id)->where('service_id', $package->id)->first();
+
+        // if ($userSubscription) {
+        //     $subscriptionService->updateSubscription($package, $userSubscription);
+        // } else {
+        //     $subscriptionService->createSubscription($package, $user);
+        // }
 
         $invoice->update([
             'is_paid' => true

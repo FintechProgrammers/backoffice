@@ -26,7 +26,7 @@ class DashboardController extends Controller
             ->limit(10) // Adjust limit as needed
             ->get()
             ->map(function ($sale) {
-                $sale->service = Service::find($sale->service_id);
+                $sale->service = Service::withTrashed()->find($sale->service_id);
                 return $sale;
             });
 

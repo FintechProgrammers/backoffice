@@ -14,11 +14,11 @@ class Transaction extends Model
 
     function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id')->withTrashed();
     }
 
     function associatedUser()
     {
-        return $this->belongsTo(User::class, 'associated_user_id', 'id');
+        return $this->belongsTo(User::class, 'associated_user_id', 'id')->withTrashed();
     }
 }

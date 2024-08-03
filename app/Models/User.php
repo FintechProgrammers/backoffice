@@ -58,7 +58,7 @@ class User extends Authenticatable
 
     function sponsor()
     {
-        return $this->belongsTo(User::class, 'parent_id', 'id');
+        return $this->belongsTo(User::class, 'parent_id', 'id')->withTrashed();
     }
 
     public function getProfilePictureAttribute(): string
@@ -209,7 +209,7 @@ class User extends Authenticatable
 
     function rank()
     {
-        return $this->hasOne(Rank::class, 'id', 'rank_id');
+        return $this->hasOne(Rank::class, 'id', 'rank_id')->withTrashed();
     }
 
     public function highestRank()
@@ -246,7 +246,7 @@ class User extends Authenticatable
     // Direct invitees (children)
     public function directInvitees()
     {
-        return $this->hasMany(User::class, 'parent_id');
+        return $this->hasMany(User::class, 'parent_id')->withTrashed();
     }
 
     // Indirect invitees (grandchildren)
@@ -282,7 +282,7 @@ class User extends Authenticatable
 
     public function children()
     {
-        return $this->hasMany(User::class, 'parent_id');
+        return $this->hasMany(User::class, 'parent_id')->withTrashed();
     }
 
     public function allChildren()

@@ -78,24 +78,24 @@
                     </div>
                     <div class="p-4">
                         <p class="fs-15 mb-2 me-4 fw-semibold">Subscription :</p>
-                        @if (!empty($user->subscriptions()))
+                        @if (!empty($user->subscriptions))
                             <ul class="list-group">
                                 <li class="list-group-item">
                                     <div class="d-sm-flex">
                                         <span class="avatar avatar-sm">
-                                            <img src="{{ $user->subscriptions()->service->image }}" alt="img">
+                                            <img src="{{ $user->subscriptions->service->image }}" alt="img">
                                         </span>
                                         <div class="ms-sm-2 ms-0 mt-sm-0 mt-1 fw-semibold flex-fill">
-                                            <p class="mb-0 lh-1">{{ $user->subscriptions()->service->name }}</p>
+                                            <p class="mb-0 lh-1">{{ $user->subscriptions->service->name }}</p>
                                             <span class="fs-11 text-muted op-7">
-                                                @if ($user->subscriptions()->service->serviceProduct->isNotEmpty())
-                                                    {{ $user->subscriptions()->service->serviceProduct->pluck('product.name')->implode(', ') }}
+                                                @if ($user->subscriptions->service->serviceProduct->isNotEmpty())
+                                                    {{ $user->subscriptions->service->serviceProduct->pluck('product.name')->implode(', ') }}
                                                 @else
                                                     No products available.
                                                 @endif
                                             </span>
                                         </div>
-                                        @if ($user->subscriptions()->end_date->isPast())
+                                        @if ($user->subscriptions->end_date->isPast())
                                             <span class="bg-warning">{{ __('Expired') }}</span>
                                         @else
                                             <span class="text-success">{{ __('Running') }}</span>
