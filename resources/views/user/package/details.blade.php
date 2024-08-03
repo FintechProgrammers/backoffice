@@ -21,10 +21,12 @@
 
                         @php
                             $user = Auth::user();
-                            $subscription = $user->subscriptions;
+                            $subscription = $user->subscription;
                         @endphp
 
-                        @if (is_null($subscription) || $subscription->end_date->isPast())
+                        @if (is_null($subscription) ||
+                                $subscription->service_id !== $package->id ||
+                                ($subscription->service_id === $package->id && $subscription->end_date->isPast()))
                             <div class="px-4 py-3 border-top border-block-start-dashed d-sm-flex justify-content-between">
                                 <button type="submit" class="btn btn-success-light m-1">
                                     <div class="spinner-border" style="display: none" role="status">
@@ -35,6 +37,7 @@
                                 </button>
                             </div>
                         @endif
+
                     </form>
                 </div>
             </div>

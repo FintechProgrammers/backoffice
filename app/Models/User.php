@@ -209,7 +209,7 @@ class User extends Authenticatable
 
     function rank()
     {
-        return $this->hasOne(Rank::class, 'id', 'rank_id')->withTrashed();
+        return $this->hasOne(Rank::class, 'id', 'rank_id');
     }
 
     public function highestRank()
