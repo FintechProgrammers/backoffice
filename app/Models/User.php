@@ -196,7 +196,7 @@ class User extends Authenticatable
         return $this->hasOne(UserSubscription::class, 'user_id', 'id')
             ->whereHas('service', function ($query) {
                 $query->where('ambassadorship', false);
-            })->first();
+            });
     }
 
     function ambassadorship()
@@ -204,7 +204,7 @@ class User extends Authenticatable
         return $this->hasOne(UserSubscription::class, 'user_id', 'id')
             ->whereHas('service', function ($query) {
                 $query->where('ambassadorship', true);
-            })->first();
+            });
     }
 
     function rank()
