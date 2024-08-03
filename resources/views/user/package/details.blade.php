@@ -21,7 +21,7 @@
 
                         @php
                             $user = Auth::user();
-                            $subscription = $user->subscriptions();
+                            $subscription = $user->subscriptions;
                         @endphp
 
                         @if (is_null($subscription) || $subscription->end_date->isPast())
