@@ -3,13 +3,53 @@
         loadTable()
     })
 
+    $('body').on('click', '.pagination a', function(event) {
+        event.preventDefault();
+        let page = $(this).attr('href').split('page=')[1];
+        $('#hidden_page').val(page);
+
+        loadTable()
+    });
+
+    $('#filter').click(function(e) {
+        e.preventDefault()
+        $('#hidden_page').val(1);
+        loadTable()
+    })
+
+    $('#reset').click(function(e) {
+        e.preventDefault();
+
+        $('#search').val('')
+        $('#type').val('')
+        $('#status').val('')
+        $("#search-date").val('');
+        $('#hidden_page').val(1)
+
+        loadTable()
+    })
+
     function loadTable() {
 
         const table = $('#table-body')
 
+        const page = $('#hidden_page').val();
+        const search = $('#search').val()
+        const type = $('#type').val()
+        const status = $('#status').val()
+        const date = $("#search-date").val();
+        const [startDate, endDate] = date.split(" - ");
+
         $.ajax({
-            url: '/withdrawal/filter',
+            url: `{{ route('wallet.filter') }}?page=${page}`,
             type: 'GET',
+            data: {
+                search: search,
+                type: type,
+                status: status,
+                startDate: startDate,
+                endDate: endDate,
+            },
             beforeSend: function() {
                 table.html(`<tr>
                     <td class="text-center" colspan="9">

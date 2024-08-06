@@ -76,7 +76,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/filter', 'filter')->name('filter');
     });
 
-    Route::controller(WithdrawalController::class)->prefix('withdrawal')->name('withdrawal.')->group(function () {
+    Route::controller(WithdrawalController::class)->prefix('wallet')->name('wallet.')->group(function () {
         Route::get('', 'index')->name('index');
         Route::get('/filter', 'filter')->name('filter');
         Route::get('/create', 'create')->name('create');

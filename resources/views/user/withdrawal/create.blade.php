@@ -12,7 +12,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-xl-5 col-lg-5 col-md-6 border-end">
-                        <form action="{{ route('withdrawal.store') }}" class="payoutForm" method="POST" id="withdrawalForm">
+                        <form action="{{ route('wallet.store') }}" class="payoutForm" method="POST" id="withdrawalForm">
                             @csrf
                             <input type="hidden" name="token" id="tokenInput">
                             <input type="hidden" name="provider_id" value="" id="provider">
@@ -38,8 +38,8 @@
                             </div>
                             <div class="px-4 py-3 border-top border-block-start-dashed d-sm-flex">
                                 <button type="submit" class="btn btn-primary m-1 trigerModal" data-bs-toggle="modal"
-                                    data-bs-target="#primaryModal" id="continue"
-                                    data-url="{{ route('withdrawal.send.otp') }}" disabled>
+                                    data-bs-target="#primaryModal" id="continue" data-url="{{ route('wallet.send.otp') }}"
+                                    disabled>
                                     Continue
                                 </button>
                             </div>

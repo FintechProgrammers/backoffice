@@ -149,7 +149,7 @@ class User extends Authenticatable
 
     function withdrawals()
     {
-        return $this->hasMany(Withdrawal::class, 'user_id', 'id')->latest();
+        return $this->hasMany(Transaction::class, 'user_id', 'id')->where('type', 'withdrawal')->latest();
     }
 
     function sales()
@@ -278,6 +278,11 @@ class User extends Authenticatable
     {
         return $this->hasManyThrough(CommissionTransaction::class, User::class, 'parent_id', 'user_id', 'id', 'id')
             ->where('level', '!=', '0');
+    }
+
+    function getTotalEarningsAttribute()
+    {
+        return $this->commissionTransactions->where('is_converted', true)->select('amount')->sum('amount');
     }
 
     public function children()

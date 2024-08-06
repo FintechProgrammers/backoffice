@@ -191,8 +191,8 @@ class Navigation
                 ]
             ],
             (object) [
-                'name'  => 'Withdrawals',
-                'route' => 'withdrawal.index',
+                'name'  => 'Wallet',
+                'route' => 'wallet.index',
                 'icon'  => 'bx bx-wallet-alt',
                 'hasPermission' => auth()->user()->is_ambassador ?? false
             ],
