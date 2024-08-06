@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\NexioController;
 use App\Http\Controllers\NowpaymentController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PaymentMethodController;
@@ -79,7 +80,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('', 'index')->name('index');
         Route::get('/filter', 'filter')->name('filter');
         Route::get('/create', 'create')->name('create');
-        Route::post('/store', 'store')->name('store');
+        Route::get('/store', 'store')->name('store');
         Route::get('/send-otp', 'sendOTP')->name('send.otp');
     });
 
@@ -138,6 +139,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::prefix('webhook')->name('webhook')->group(function () {
     Route::post('/stripe', [StripeController::class, 'webhook'])->name('stripe');
+    Route::post('/nexio', [NexioController::class, 'webhook'])->name('nexio');
 });
 
 Route::prefix('ipn')->name('ipn.')->group(function () {
@@ -166,6 +168,15 @@ Route::get('text-con', function () {
     $sale = \App\Models\Sale::where('id', 3)->first();
 
     $service->distributeCommissions($sale);
+});
+
+Route::get('test-masspay', function () {
+
+    $massPay = new \App\Services\NexioService();
+
+    $walletBalanceResponse = $massPay->getPayout("2440568");
+
+    dd($walletBalanceResponse);
 });
 
 

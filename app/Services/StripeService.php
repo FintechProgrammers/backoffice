@@ -10,7 +10,7 @@ class StripeService
 
     function __construct()
     {
-        $this->stripe = new StripeClient(config('contstants.stripe.secret'));
+        $this->stripe = new StripeClient(config('constants.stripe.secret'));
     }
 
     function createCustomer(array $data)
@@ -144,7 +144,7 @@ class StripeService
         $event = \Stripe\Webhook::constructEvent(
             $data['payload'],
             $data['sig_header'],
-            config('contstants.stripe.webhook_secret')
+            config('constants.stripe.webhook_secret')
         );
 
         return $event;

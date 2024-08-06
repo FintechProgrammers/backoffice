@@ -9,7 +9,7 @@
         </div>
         <div class="btn-list mt-md-0 mt-2">
             <a type="button" class="btn btn-primary btn-wave"
-               href="{{ route('withdrawal.create') }}">{{ __('Make Withdrawal') }}
+                href="{{ route('withdrawal.create') }}">{{ __('Make Withdrawal') }}
             </a>
         </div>
     </div>
@@ -20,9 +20,14 @@
                     <thead>
                         <tr>
                             <th scope="col">Reference</th>
+                            <th scope="col">Associated User</th>
                             <th scope="col">Amount</th>
+                            <th scope="col">Balance</th>
+                            <th scope="col">Action</th>
+                            <th scope="col">Type</th>
                             <th scope="col">status</th>
                             <th scope="col" width="30%">Date</th>
+                            <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody id="table-body">

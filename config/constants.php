@@ -17,5 +17,12 @@ return  [
     'masspay' => [
         'base_url' => env('MASSPAY_BASE_URL'),
         'api_key' => env('MASSPAY_API_KEY'),
+    ],
+    'nexio' => [
+        'base_url' => env('NEXIO_BASE_URL'),
+        'username' => env('NEXIO_USERNAME'),
+        'password' => env('NEXIO_PASSWORD'),
+        'merchant_id' => env('NEXIO_MERCHANT_ID'),
+        'payout_account_id' => env('NEXIO_PAYOUT_ACCOUNT_ID')
     ]
 ];

@@ -19,4 +19,15 @@ class Provider extends Model
     {
         return 'uuid';
     }
+
+    public function getTypeAttribute(): string
+    {
+        if ($this->is_crypto) {
+            $type = "crypto";
+        } else {
+            $type = "transfer";
+        }
+
+        return $type;
+    }
 }

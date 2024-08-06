@@ -127,15 +127,15 @@ class NowpaymentsService
             $client = new Client();
 
             $params = [
-                'email' => config('contstants.nowpayment.email'),
-                'password' => config('contstants.nowpayment.password')
+                'email' => config('constants.nowpayment.email'),
+                'password' => config('constants.nowpayment.password')
             ];
 
             $headers = [
                 'Content-Type' => 'application/json',
             ];
 
-            $request = new Request("POST", config('contstants.nowpayment.base_url') . '/v1/auth', $headers, json_encode($params));
+            $request = new Request("POST", config('constants.nowpayment.base_url') . '/v1/auth', $headers, json_encode($params));
 
             $res = $client->send($request);
 
@@ -160,14 +160,14 @@ class NowpaymentsService
 
             $headers = [
                 'Content-Type' => 'application/json',
-                'x-api-key' => config('contstants.nowpayment.api_key'),
+                'x-api-key' => config('constants.nowpayment.api_key'),
             ];
 
             if (!empty($token)) {
                 $headers['Authorization'] = "Bearer {$token}";
             }
 
-            $request = new Request($method, config('contstants.nowpayment.base_url') . $uri, $headers, json_encode($params));
+            $request = new Request($method, config('constants.nowpayment.base_url') . $uri, $headers, json_encode($params));
 
             $res = $client->send($request);
 

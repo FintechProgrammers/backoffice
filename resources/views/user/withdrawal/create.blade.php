@@ -25,13 +25,10 @@
                                 <label for="payment-method">Payment Method</label>
                                 <select class="form-control" name="payment_method" id="payment-method" required>
                                     <option value="">--select--method--</option>
-                                    @if (!empty($bankTransferProvider))
-                                        <option value="bank_transfer" data-provider="{{ $bankTransferProvider->uuid }}">Bank
-                                            Transfer</option>
-                                    @endif
-                                    @if (!empty($cryptoProvider))
-                                        <option value="crypto" data-provider="{{ $cryptoProvider->uuid }}">Crypto</option>
-                                    @endif
+                                    @foreach ($paymentMethods as $item)
+                                        <option value="{{ $item->uuid }}" data-type="{{ $item->type }}">
+                                            {{ $item->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="mb-3 form-group" id="crypto" style="display: none">
@@ -84,8 +81,10 @@
                 const amount = amountInput ? amountInput.value.trim() : '';
                 const paymentMethod = paymentMethodSelect ? paymentMethodSelect.value.trim() : '';
                 const walletAddress = walletAddressInput ? walletAddressInput.value.trim() : '';
+                const selectedOption = paymentMethodSelect.options[paymentMethodSelect.selectedIndex];
+                const dataType = selectedOption ? selectedOption.getAttribute('data-type') : '';
 
-                if (amount && paymentMethod && (paymentMethod !== 'crypto' || walletAddress)) {
+                if (amount && paymentMethod && (dataType !== 'crypto' || walletAddress)) {
                     continueButton.disabled = false;
                 } else {
                     continueButton.disabled = true;
@@ -95,17 +94,19 @@
             form.addEventListener('input', validateForm);
 
             paymentMethodSelect.addEventListener('change', function() {
-                if (this.value === 'crypto') {
+
+                var selectedOption = this.options[this.selectedIndex];
+                var dataType = selectedOption.getAttribute('data-type');
+
+                if (dataType === 'crypto') {
                     cryptoSection.style.display = 'block';
                     walletAddressInput.setAttribute('required', 'required');
                 } else {
                     cryptoSection.style.display = 'none';
                     walletAddressInput.removeAttribute('required');
                 }
-                var selectedOption = this.options[this.selectedIndex];
-                var providerUuid = selectedOption.getAttribute('data-provider');
 
-                $('#provider').val(providerUuid);
+                $('#provider').val(this.value);
 
                 validateForm(); // Validate form after showing/hiding the crypto section
             });

@@ -180,12 +180,6 @@ class NowpaymentController extends Controller
             return response('Payload is empty.', Response::HTTP_OK)->header('Content-Type', 'text/plain');
         }
 
-        if (empty($decoded)) {
-            sendToLog('Nowpayment sent an empty transaction webhook response payload.');
-
-            return response('Payload is empty.', Response::HTTP_OK)->header('Content-Type', 'text/plain');
-        }
-
         // Compute the HMAC using the SHA-512 hash algorithm
         $signature = hash_hmac('SHA512', $data, config('contstants.nowpayment.ipn_key'));
 

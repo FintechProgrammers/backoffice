@@ -375,7 +375,7 @@ if (!function_exists('refundWallet')) {
         $wallet = \App\Models\Wallet::where('user_id', auth()->user()->id)->first();
 
         $wallet->update([
-            'amount' => $wallet->amount + $amount,
+            'balance' => $wallet->balance + $amount,
         ]);
     }
 }

@@ -124,7 +124,7 @@ class MassPaymentController extends Controller
 
                 if (in_array($payload['status'], ['completed', 'pending'])) {
                     $wallet->update([
-                        'amount' => $wallet->amount - $validated->amount
+                        'balance' => $wallet->amount - $validated->amount
                     ]);
                 }
 
@@ -133,7 +133,7 @@ class MassPaymentController extends Controller
             });
 
             if ($success) {
-                return $this->sendResponse("Your withdrawal has been received successfully.");
+                return $this->sendResponse([], "Your withdrawal has been received successfully.");
             } else {
                 return $this->sendError(serviceDownMessage(), [], Response::HTTP_SERVICE_UNAVAILABLE);
             }

@@ -78,7 +78,7 @@ class MassPayService
         try {
             $client = new Client();
 
-            $apiKey = config('contstants.masspay.api_key');
+            $apiKey = config('constants.masspay.api_key');
 
             $headers = [
                 'Accept' => 'application/json',
@@ -89,7 +89,7 @@ class MassPayService
                 $headers['Authorization'] = "Bearer {$token}";
             }
 
-            $request = new Request($method, config('contstants.masspay.base_url') . $uri, $headers, json_encode($params));
+            $request = new Request($method, config('constants.masspay.base_url') . $uri, $headers, json_encode($params));
 
             $res = $client->send($request);
 

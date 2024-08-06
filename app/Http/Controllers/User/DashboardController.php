@@ -30,7 +30,9 @@ class DashboardController extends Controller
             $directSale = $user->getDirectReferralSales();
             $directCommission = CommissionTransaction::where('user_id', $user->id);
 
-            $data['walletBalance'] = Wallet::where('user_id', $user->id)->select('amount')->sum('amount');
+            $wallet = Wallet::where('user_id', $user->id)->select('balance')->first();
+
+            $data['walletBalance'] = $wallet->balance;
 
             $data['currentWeekDirectVolume'] =  $directSale->whereBetween('created_at', [$startOfWeek, $endOfWeek])->select('bv_amount')->sum('bv_amount');
 

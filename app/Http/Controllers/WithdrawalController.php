@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\WithdrawalRequest;
 use App\Models\Provider;
 use App\Models\Transaction;
+use App\Models\User;
 use App\Models\UserActivities;
 use App\Models\UserOtp;
 use App\Models\Wallet;
@@ -32,15 +33,17 @@ class WithdrawalController extends Controller
 
     function filter(Request $request)
     {
-        $data['withdrawals'] = Withdrawal::where('user_id', Auth::user()->id)->get();
+
+        $query = Transaction::where('user_id', Auth::user()->id)->where('type', 'withdrawal');
+
+        $data['withdrawals'] = $query->paginate(50);
 
         return view('user.withdrawal._table', $data);
     }
 
     function create()
     {
-        $data['cryptoProvider'] = Provider::where('is_active', true)->where('is_crypto', true)->where('can_payout', true)->where('is_default', true)->first();
-        $data['bankTransferProvider'] = Provider::where('is_active', true)->where('is_crypto', false)->where('can_payout', true)->where('is_default', true)->first();
+        $data['paymentMethods'] = Provider::where('is_active', true)->where('can_payout', true)->get();
 
         return view('user.withdrawal.create', $data);
     }
@@ -48,7 +51,7 @@ class WithdrawalController extends Controller
     function sendOTP(Request $request)
     {
         try {
-            $user = auth()->user();
+            $user = User::where('id', auth()->user()->id)->first();
 
             $mail = [
                 'name' => ucfirst($user->name),
@@ -59,8 +62,7 @@ class WithdrawalController extends Controller
             ];
 
             // Mail::to($user->email)->send(new \App\Mail\OtpMail($mail));
-
-            $user->notify(new WithdrawalToken($mail));
+            // $user->notify(new WithdrawalToken($mail));
 
             return view('user.withdrawal._token-input');
         } catch (\Exception $e) {
@@ -77,19 +79,19 @@ class WithdrawalController extends Controller
 
         $validated->user = $user;
 
-        $code = UserOtp::where('token', $validated->token)
-            ->where('purpose', 'withdrawal_request')
-            ->where('user_id', $user->id)
-            ->where('created_at', '>', now()->subMinute())
-            ->first();
+        // $code = UserOtp::where('token', $validated->token)
+        //     ->where('purpose', 'withdrawal_request')
+        //     ->where('user_id', $user->id)
+        //     ->where('created_at', '>', now()->subMinute())
+        //     ->first();
 
-        if (!$code) {
-            return $this->sendError('Invalid token', Response::HTTP_UNAUTHORIZED);
-        }
+        // if (!$code) {
+        //     return $this->sendError('Invalid token', Response::HTTP_UNAUTHORIZED);
+        // }
 
         $wallet = Wallet::where('user_id', $user->id)->first();
 
-        if ($validated->amount > $wallet->amount) {
+        if ($validated->amount > $wallet->balance) {
             return $this->sendError("Insufficient funds to place withdrawal", []);
         }
 
@@ -100,16 +102,15 @@ class WithdrawalController extends Controller
             return $this->sendError(serviceDownMessage(), [], 500);
         }
 
-        $openingBalance = $wallet->amount;
+        $openingBalance = $wallet->balance;
 
-        $closingBalance = $wallet->amount - $validated->amount;
+        $closingBalance = $wallet->balance - $validated->amount;
 
         $Withdrawal = [
             'internal_reference' => generateReference(),
             'user_id'  => $user->id,
             'associated_user_id' => $user->id,
             'amount' =>  $validated->amount,
-            'cycle_id' => currentCycle(),
             'provider_id' => $provider->id,
             'type' => 'withdrawal',
             'narration' => 'External Withdrawal',
@@ -142,6 +143,10 @@ class WithdrawalController extends Controller
             $masspay = new \App\Http\Controllers\MassPaymentController();
 
             return $masspay->makeWithdrawal($validated);
+        } elseif ($provider->short_name === 'masspaynexio') {
+            $nexio = new \App\Http\Controllers\NexioController();
+
+            return $nexio->payout($validated);
         }
 
         return $this->sendError(serviceDownMessage(), [], 500);
