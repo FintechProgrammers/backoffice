@@ -80,7 +80,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('', 'index')->name('index');
         Route::get('/filter', 'filter')->name('filter');
         Route::get('/create', 'create')->name('create');
-        Route::get('/store', 'store')->name('store');
+        Route::post('/store', 'store')->name('store');
         Route::get('/send-otp', 'sendOTP')->name('send.otp');
     });
 

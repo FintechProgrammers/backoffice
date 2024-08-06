@@ -54,15 +54,11 @@ class WithdrawalController extends Controller
             $user = User::where('id', auth()->user()->id)->first();
 
             $mail = [
-                'name' => ucfirst($user->name),
-                'email' => $user->email,
-                'content' => 'We have received your request to withdraw funds from your account.
-                 To proceed with this request, please use the following One-Time Password (OTP) to verify your identity:',
+                'name' => ucfirst($user->full_name),
                 'code' => $this->generateUserOtp($user->id, 'withdrawal_request'),
             ];
 
-            // Mail::to($user->email)->send(new \App\Mail\OtpMail($mail));
-            // $user->notify(new WithdrawalToken($mail));
+            $user->notify(new WithdrawalToken($mail));
 
             return view('user.withdrawal._token-input');
         } catch (\Exception $e) {
@@ -79,15 +75,15 @@ class WithdrawalController extends Controller
 
         $validated->user = $user;
 
-        // $code = UserOtp::where('token', $validated->token)
-        //     ->where('purpose', 'withdrawal_request')
-        //     ->where('user_id', $user->id)
-        //     ->where('created_at', '>', now()->subMinute())
-        //     ->first();
+        $code = UserOtp::where('token', $validated->token)
+            ->where('purpose', 'withdrawal_request')
+            ->where('user_id', $user->id)
+            ->where('created_at', '>', now()->subMinute())
+            ->first();
 
-        // if (!$code) {
-        //     return $this->sendError('Invalid token', Response::HTTP_UNAUTHORIZED);
-        // }
+        if (!$code) {
+            return $this->sendError('Invalid token', Response::HTTP_UNAUTHORIZED);
+        }
 
         $wallet = Wallet::where('user_id', $user->id)->first();
 
@@ -127,7 +123,7 @@ class WithdrawalController extends Controller
             'log'  => "Places withdrawal request of {$amount}"
         ]);
 
-        // $code->delete();
+        $code->delete();
 
         $validated->provider = $provider;
         $validated->wallet = $wallet;

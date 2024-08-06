@@ -10,7 +10,7 @@
                     </div>
                     <div class="flex-fill">
                         <h5 class="fw-semibold mb-1 text-fixed-white">
-                            ${{ !empty(Auth::user()->wallet) ? number_format(Auth::user()->wallet->amount, 2, '.', ',') : number_format(0.0, 2, '.', ',') }}
+                            ${{ !empty(Auth::user()->wallet) ? number_format(Auth::user()->wallet->balance, 2, '.', ',') : number_format(0.0, 2, '.', ',') }}
                         </h5>
                         <p class="op-7 mb-0 fs-12">Current Balance</p>
                     </div>

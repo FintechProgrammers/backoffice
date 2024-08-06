@@ -7,16 +7,18 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class WithdrawalToken extends Notification
+class WithdrawalToken extends Notification implements ShouldQueue
 {
     use Queueable;
+
+    public $data;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(public $data)
+    public function __construct($data)
     {
-        //
+        $this->data = $data;
     }
 
     /**
@@ -24,7 +26,7 @@ class WithdrawalToken extends Notification
      *
      * @return array<int, string>
      */
-    public function via(object $notifiable): array
+    public function via($notifiable)
     {
         return ['mail'];
     }
@@ -32,16 +34,19 @@ class WithdrawalToken extends Notification
     /**
      * Get the mail representation of the notification.
      */
-    public function toMail(object $notifiable): MailMessage
+    public function toMail($notifiable)
     {
         $code = $this->data['code'];
         $name = $this->data['name'];
 
         return (new MailMessage)
-            ->salutation("Hello {$name}")
-            ->lines("We have received your request to withdraw funds from your account.
-                 To proceed with this request, please use the following One-Time Password (OTP) to verify your identity:")
-            ->line("{$code}");
+            ->greeting("Hello {$name},")
+            ->line('We have received your request to withdraw funds from your account.')
+            ->line('To proceed with this request, please use the following One-Time Password (OTP) to verify your identity:')
+            ->line("**{$code}**")
+            ->line('Thank you for using our application!')
+            ->salutation('Best regards,')
+            ->salutation(config('app.name'));
     }
 
     /**
@@ -49,10 +54,8 @@ class WithdrawalToken extends Notification
      *
      * @return array<string, mixed>
      */
-    public function toArray(object $notifiable): array
+    public function toArray($notifiable)
     {
-        return [
-            'data' => $this->data
-        ];
+        return [];
     }
 }
