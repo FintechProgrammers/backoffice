@@ -162,6 +162,14 @@ Route::controller(PaymentController::class)->prefix('payment')->name('payment.')
     Route::get('cancel', 'cancel')->name('cancel');
 });
 
+Route::get('queue-work', function () {
+    return Illuminate\Support\Facades\Artisan::call('queue:work', ['--stop-when-empty' => true]);
+})->name('queue.work');
+
+Route::get('cron', function () {
+    return Illuminate\Support\Facades\Artisan::call('schedule:run');
+})->name('cron');
+
 Route::get('text-con', function () {
     $service = new \App\Services\CommissionService();
 

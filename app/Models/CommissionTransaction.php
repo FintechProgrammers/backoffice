@@ -21,4 +21,9 @@ class CommissionTransaction extends Model
     {
         return $this->belongsTo(User::class, 'child_id', 'id')->withTrashed();
     }
+
+    function sale()
+    {
+        return $this->belongsTo(Sale::class, 'sale_id', 'id')->withTrashed();
+    }
 }
