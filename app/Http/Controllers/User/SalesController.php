@@ -20,7 +20,7 @@ class SalesController extends Controller
     {
         $user = User::whereId(auth()->user()->id)->first();
 
-        $data['sales'] = $user->getDescendantSales()->paginate(12);
+        $data['sales'] = $user->sales()->paginate(12);
 
         return view('user.sales._table', $data);
     }

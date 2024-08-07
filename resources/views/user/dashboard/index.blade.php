@@ -57,6 +57,11 @@
             new SimpleBar(myElement21, {
                 autoHide: true
             });
+
+            var myElementEn = document.getElementById('teams-nav-enrol');
+            new SimpleBar(myElementEn, {
+                autoHide: true
+            });
         });
     </script>
     @if (Auth::user()->profile_completion_percentage < 100)

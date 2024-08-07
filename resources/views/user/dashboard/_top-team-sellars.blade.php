@@ -12,16 +12,16 @@
                                  <div class="d-flex align-items-center">
                                      <div class="me-2 d-flex align-items-center">
                                          <span class="avatar avatar-sm avatar-rounded online">
-                                             <img src="{{ $item['user']['profile_picture'] }}" alt="">
+                                             <img src="{{ $item->profile_picture }}" alt="">
                                          </span>
                                      </div>
                                      <div class="flex-fill text-white">
-                                         <span>{{ $item['user']['full_name'] }}</span>
-                                         <p class="mb-0">{{ $item['user']['email'] }}</p>
+                                         <span>{{ $item->full_name }}</span>
+                                         <p class="mb-0">{{ $item->email }}</p>
                                      </div>
                                      <div>
                                          <h4 class="fs-10 fw-semibold text-white mb-0">
-                                             ${{ $item['total_amount'] }}
+                                             ${{ $item->total_sales }}
                                          </h4>
                                      </div>
                                  </div>

@@ -152,11 +152,6 @@ class User extends Authenticatable
         return $this->hasMany(Transaction::class, 'user_id', 'id')->where('type', 'withdrawal')->latest();
     }
 
-    function sales()
-    {
-        return $this->hasMany(Sale::class, 'provider_id', 'id');
-    }
-
     function getTotalWithdrawalsAmountAttribute()
     {
         return number_format($this->withdrawals()->where('status', 'completed')->sum('amount'), 2, '.', ',');
@@ -167,19 +162,6 @@ class User extends Authenticatable
         return number_format($this->withdrawals()->where('status', 'pending')->sum('amount'), 2, '.', ',');
     }
 
-    function getTotalSalesAttribute()
-    {
-        $total = $this->sales()->sum('amount');
-
-        return number_format($total, 2, '.', ',');
-    }
-
-    function getTotalSalesBvAttribute()
-    {
-        $total = $this->sales()->sum('bv_amount');
-
-        return number_format($total, 2, '.', ',');
-    }
 
     function activities()
     {
@@ -231,16 +213,25 @@ class User extends Authenticatable
         return $this->hasOne(UserKyc::class, 'user_id');
     }
 
+    /**
+     * Get the last enrolled users referred by this user.
+     *
+     * @param int $limit Number of users to retrieve.
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getLastEnrolledUsers($limit = 10)
+    {
+        // Get the last enrolled users by ordering them by the creation date
+        return User::where('parent_id', $this->id)
+            ->orderBy('created_at', 'desc')
+            ->take($limit)
+            ->get();
+    }
+
     // Scope to filter ambassadors
     public function scopeAmbassadors($query)
     {
         return $query->where('is_ambassador', true);
-    }
-
-    // All commission transactions (both direct and indirect)
-    public function commissionTransactions()
-    {
-        return $this->hasMany(CommissionTransaction::class, 'user_id');
     }
 
     // Direct invitees (children)
@@ -255,16 +246,10 @@ class User extends Authenticatable
         return $this->hasManyThrough(User::class, User::class, 'parent_id', 'parent_id', 'id', 'id');
     }
 
-    // Direct sales
-    public function directSales()
+    // All commission transactions (both direct and indirect)
+    public function commissionTransactions()
     {
-        return $this->hasMany(Sale::class, 'user_id');
-    }
-
-    // Indirect sales
-    public function indirectSales()
-    {
-        return $this->hasManyThrough(Sale::class, User::class, 'parent_id', 'user_id', 'id', 'id');
+        return $this->hasMany(CommissionTransaction::class, 'user_id')->latest();
     }
 
     // Direct commission transactions
@@ -276,8 +261,7 @@ class User extends Authenticatable
     // Indirect commission transactions
     public function indirectCommissionTransactions()
     {
-        return $this->hasManyThrough(CommissionTransaction::class, User::class, 'parent_id', 'user_id', 'id', 'id')
-            ->where('level', '!=', '0');
+        return $this->hasMany(CommissionTransaction::class, 'user_id')->where('level', '!=', '0');
     }
 
     function getTotalEarningsAttribute()
@@ -310,30 +294,6 @@ class User extends Authenticatable
         }
     }
 
-    public function getDescendantSales()
-    {
-        // Fetch all descendants
-        $descendants = $this->getDescendants();
-
-        // Get IDs of all descendants
-        $descendantIds = $descendants->pluck('id')->toArray();
-
-        // Fetch sales records of all descendants
-        $sales = Sale::whereIn('user_id', $descendantIds)->latest();
-
-        return $sales;
-    }
-
-    public function getTotalSalesByDescendants()
-    {
-        $descendants = $this->getDescendants();
-        $descendantIds = $descendants->pluck('id')->toArray();
-
-        $totalSales = Sale::whereIn('user_id', $descendantIds)->sum('amount');
-
-        return $totalSales;
-    }
-
     public function getAmbassadorDescendants()
     {
         $descendants = $this->getDescendants();
@@ -354,17 +314,61 @@ class User extends Authenticatable
         return $ambassadors;
     }
 
-    public function getTotalBVByDescendants()
+    // Get descendants with any active subscription
+    public function getActiveSubscriptionDescendants()
     {
         $descendants = $this->getDescendants();
-        $descendantIds = $descendants->pluck('id')->toArray();
+        $activeSubscriptions = $descendants->filter(function ($user) {
+            return $user->subscriptions()->active()->exists();
+        });
 
-        $totalSales = Sale::whereIn('user_id', $descendantIds)->sum('bv_amount');
-
-        return $totalSales;
+        return $activeSubscriptions;
     }
 
-    public function getDirectReferralSales()
+    // Get top sellers in the user's team
+    public function getTopSellers($limit = 10)
+    {
+        $descendants = $this->getDescendants();
+
+        // Calculate total sales for each descendant and exclude those with zero sales
+        $topSellers = $descendants->map(function ($user) {
+            $totalSales = $user->getTotalSales();
+            if ($totalSales > 0) {
+                $user->total_sales = $totalSales;
+                return $user;
+            }
+            return null;
+        })->filter() // Remove null values (users with zero sales)
+            ->sortByDesc('total_sales')
+            ->take($limit);
+
+        return $topSellers;
+    }
+
+
+    // get list of all sales
+    public function sales()
+    {
+        // Fetch all descendants
+        $descendants = $this->getDescendants();
+
+        // Get IDs of all descendants
+        $descendantIds = $descendants->pluck('id')->toArray();
+
+        // Fetch sales records of all descendants
+        $sales = Sale::whereIn('user_id', $descendantIds)->latest();
+
+        return $sales;
+    }
+
+    // Calculate total sales for a user
+    public function getTotalSales()
+    {
+        return $this->sales()->sum('amount');
+    }
+
+    // gets the list of direct sales
+    public function directSales()
     {
         // Get direct referrals
         $directReferrals = $this->children()->pluck('id')->toArray();
@@ -375,7 +379,8 @@ class User extends Authenticatable
         return $sales;
     }
 
-    public function getIndirectReferralSales()
+    // gets the list of indirect sales
+    public function indirectSales()
     {
         // Get direct referrals
         $directReferrals = $this->children()->with('allChildren')->get();
@@ -393,6 +398,34 @@ class User extends Authenticatable
         $sales = Sale::whereIn('user_id', $indirectReferralIds);
 
         return $sales;
+    }
+
+    function getTotalSalesAttribute()
+    {
+        $total = $this->sales()->sum('amount');
+
+        return number_format($total, 2, '.', ',');
+    }
+
+    function getTotalBvAttribute()
+    {
+        $total = $this->sales()->sum('bv_amount');
+
+        return number_format($total, 2, '.', ',');
+    }
+
+    public function getTeamCommissions()
+    {
+        // Direct commission transactions
+        $directCommissions = $this->directCommissionTransactions()->sum('amount');
+
+        // Indirect commission transactions
+        $indirectCommissions = $this->indirectCommissionTransactions()->sum('amount');
+
+        // Total team commissions
+        $totalTeamCommissions = $directCommissions + $indirectCommissions;
+
+        return number_format($totalTeamCommissions, 2, '.', ',');
     }
 
     /**

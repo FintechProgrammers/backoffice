@@ -99,7 +99,7 @@
                                         <p class="mb-0 text-muted">Current week direct Commissions</p>
                                         <div class="d-flex align-items-center">
                                             <span
-                                                class="fs-5 fw-semibold">${{ number_format($currentMonthDirectVolume, 2, '.', ',') }}</span>
+                                                class="fs-5 fw-semibold">${{ number_format($currentWeekDirectCommissions, 2, '.', ',') }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -164,7 +164,7 @@
                                             <p class="mb-0 text-muted">Total BV this month</p>
                                             <div class="d-flex align-items-center">
                                                 <span
-                                                    class="fs-5 fw-semibold">{{ number_format($currentMonthDirectVolume, 2, '.', ',') }}BV</span>
+                                                    class="fs-5 fw-semibold">{{ number_format($currentMonthVolume, 2, '.', ',') }}BV</span>
                                             </div>
                                         </div>
                                     </div>
@@ -295,7 +295,7 @@
                 @include('user.dashboard._top-team-sellars')
             </div>
             <div class="col-lg-6">
-                @include('user.dashboard._top-team-sellars')
+                @include('user.dashboard._top-global-sellers')
             </div>
         </div>
     </div>

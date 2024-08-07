@@ -27,8 +27,10 @@ class DashboardController extends Controller
             $startOfWeek = Carbon::now()->startOfWeek();
             $endOfWeek = Carbon::now()->endOfWeek();
 
-            $directSale = $user->getDirectReferralSales();
-            $directCommission = CommissionTransaction::where('user_id', $user->id);
+            $sales = $user->sales();
+            $directSale = $user->directSales();
+            $commissions = $user->commissionTransactions();
+            $directCommission = $user->directCommissionTransactions;
 
             $wallet = Wallet::where('user_id', $user->id)->select('balance')->first();
 
@@ -36,33 +38,30 @@ class DashboardController extends Controller
 
             $data['currentWeekDirectVolume'] =  $directSale->whereBetween('created_at', [$startOfWeek, $endOfWeek])->select('bv_amount')->sum('bv_amount');
 
-            $data['currentWeekDirectCommissions'] = $user->directCommissionTransactions->whereBetween('created_at', [$startOfWeek, $endOfWeek])->select('amount')->sum('amount');
+            $data['currentWeekDirectCommissions'] = $directCommission->whereBetween('created_at', [$startOfWeek, $endOfWeek])->select('amount')->sum('amount');
 
-            $data['currentMonthDirectVolume'] = $directSale->whereMonth('created_at', $currentMonth)->whereYear('created_at', $currentYear)->select('bv_amount')->sum('bv_amount');
+            $data['currentMonthVolume'] = $sales->whereMonth('created_at', $currentMonth)->whereYear('created_at', $currentYear)->select('bv_amount')->sum('bv_amount');
 
-            $data['currentMonthCommissions'] = $directCommission->whereMonth('created_at', $currentMonth)->whereYear('created_at', $currentYear)->select('amount')->sum('amount');
+            $data['currentMonthCommissions'] = $commissions->whereMonth('created_at', $currentMonth)->whereYear('created_at', $currentYear)->select('amount')->sum('amount');
 
-            $data['currentWeekCommissions'] = $directCommission->whereBetween('created_at', [$startOfWeek, $endOfWeek])->select('amount')->sum('amount');
+            $data['currentWeekCommissions'] = $commissions->whereBetween('created_at', [$startOfWeek, $endOfWeek])->select('amount')->sum('amount');
 
-            $data['teamVolume'] = calculateTeamSales($user->id);
+            $data['teamVolume'] = $user->total_bv;
 
-            $data['teamCommissions'] = calculateTeamCommissions($user->id);
+            $data['teamCommissions'] = $user->getTeamCommissions();
 
-            $data['teamAmbassadors'] = getAmbassadorDownlinesList($user->id)->count();
-            $data['teamCustomers'] = getCustomerDownlinesList($user->id)->count();
+            $data['teamAmbassadors'] = $user->getAmbassadorDescendants()->count();
+            $data['teamCustomers'] = $user->getCustomerDescendants()->count();
 
-            $data['lifeTimeEarnings'] = $directCommission->where('is_converted', true)->select('amount')->sum('amount');
+            $data['lifeTimeEarnings'] = $user->total_earnings;
 
-            $data['activeUsers'] = getDownlinesWithActiveSubscriptionsList($user->id)->count();
+            $data['activeUsers'] = $user->getActiveSubscriptionDescendants()->count();
             $data['totalUsers'] =   $data['teamAmbassadors'] + $data['teamCustomers'];
             $data['upcomingRenewals'] = $user->subscription()->expiringInOneWeek()->count();
-            $data['topTeamSellers'] = getTopTeamSellers($user->id);
-            $data['topGlobalSellers'] = Sale::with('user')->get()->groupBy('user_id')->map(function ($sales) {
-                return [
-                    'user' => $sales->first()->user,
-                    'total_amount' => $sales->sum('amount'),
-                ];
-            })->sortByDesc('total_amount')->take(20);
+            $data['topTeamSellers'] = $user->getTopSellers(20);
+
+            $data['topGlobalSellers'] = topGlobalSellers(20);
+            $data['enrollments'] = $user->getLastEnrolledUsers();
         }
 
 

@@ -26,7 +26,7 @@ class UserSubscription extends Model
     // Alternatively, if using expiration dates:
     public function scopeActive($query)
     {
-        return $query->where('end_date', '>', Carbon::now());
+        return $query->where('is_active', true)->where('end_date', '>', Carbon::now());
     }
 
     public function scopeExpiringInOneWeek($query)
