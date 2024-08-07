@@ -134,7 +134,9 @@ class User extends Authenticatable
             return 100; // If no required fields are defined, consider profile as fully complete
         }
 
-        return ($filledFields / $totalFields) * 100;
+        $percentage = ($filledFields / $totalFields) * 100;
+
+        return round($percentage, 2); // Round to 2 decimal places
     }
 
     function bonuWallet()
@@ -175,7 +177,7 @@ class User extends Authenticatable
 
     function subscriptions()
     {
-        return $this->hasOne(UserSubscription::class, 'user_id', 'id')
+        return $this->hasMany(UserSubscription::class, 'user_id', 'id')
             ->whereHas('service', function ($query) {
                 $query->where('ambassadorship', false);
             });

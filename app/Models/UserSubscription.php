@@ -26,7 +26,7 @@ class UserSubscription extends Model
     // Alternatively, if using expiration dates:
     public function scopeActive($query)
     {
-        return $query->where('is_active', true)->where('end_date', '>', Carbon::now());
+        return $query->where('end_date', '>', Carbon::now());
     }
 
     public function scopeExpiringInOneWeek($query)
@@ -34,6 +34,23 @@ class UserSubscription extends Model
         $now = Carbon::now();
         $oneWeekFromNow = $now->addWeek();
         return $query->whereBetween('end_date', [$now, $oneWeekFromNow]);
+    }
+
+    public function progressPercentage()
+    {
+        $start = $this->start_date;
+        $end = $this->end_date;
+        $now = now();
+
+        if ($end < $start || $now > $end) {
+            return 100;
+        } elseif ($now < $start) {
+            return 0;
+        } else {
+            $totalDuration = $end->diffInSeconds($start);
+            $elapsedDuration = $now->diffInSeconds($start);
+            return ($elapsedDuration / $totalDuration) * 100;
+        }
     }
 
     protected $casts = [
