@@ -18,8 +18,9 @@
                         <tr>
                             <th>Name</th>
                             <th>Sponsor</th>
-                            <th>Curent Package</th>
+                            {{-- <th>Curent Package</th> --}}
                             <th>Date Join</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody id="content">
@@ -29,7 +30,9 @@
         </div>
         <input type="hidden" name="hidden_page" id="hidden_page" value="1" />
     </div>
+    @include('user.team._user-details-modal')
 @endsection
 @push('scripts')
     @include('user.customers.scripts._load-table')
+    @include('user.team.scripts._user-details')
 @endpush

@@ -55,7 +55,7 @@ class TeamController extends Controller
         $data['user'] = $user;
         $data['totalSales'] = Sale::where('parent_id', $user->id)->sum('amount');
         $data['currentCycleSales'] = Sale::where('parent_id', $user->id)->where('cycle_id', currentCycle())->sum('amount');
-        $data['subscription'] = UserSubscription::where('user_id', $user->id)->latest()->first();
+        $data['subscriptions'] = UserSubscription::where('user_id', $user->id)->latest()->get();
 
         return view('user.team.user-info', $data);
     }

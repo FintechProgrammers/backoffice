@@ -18,12 +18,12 @@
             @endif
         </td>
         <td class="text-center">
-            {{ number_format($item->getTotalBVByDescendants(), 2, '.', ',') }} BV
+            {{ number_format($item->total_bv, 2, '.', ',') }} BV
         </td>
         <td>
             <x-rank-card rank="{{ $item->rank_id }}" />
         </td>
-        <td>
+        {{-- <td>
             @if (!empty($item->subscriptions))
                 <x-package-title title="{{ $item->subscriptions->service->name }}"
                     image="{{ $item->subscriptions->service->image }}"
@@ -31,8 +31,13 @@
             @else
                 <span>No subscription</span>
             @endif
-        </td>
+        </td> --}}
         <td>{{ $item->created_at->format('jS, M Y H:i A') }}</td>
+        <td>
+            <button data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
+                class="show-detail btn btn-primary btn-sm"
+                data-url="{{ route('team.user.info', $item->uuid) }}">Details</button>
+        </td>
     </tr>
 @empty
     <tr>

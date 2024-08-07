@@ -21,8 +21,9 @@
                             <th class="text-center">Account Type</th>
                             <th class="text-center">Sale</th>
                             <th>Rank</th>
-                            <th>Curent Package</th>
+                            {{-- <th>Curent Package</th> --}}
                             <th>Date Join</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody id="content">
@@ -32,7 +33,9 @@
         </div>
         <input type="hidden" name="hidden_page" id="hidden_page" value="1" />
     </div>
+    @include('user.team._user-details-modal')
 @endsection
 @push('scripts')
     @include('user.team.scripts._load-table')
+    @include('user.team.scripts._user-details')
 @endpush

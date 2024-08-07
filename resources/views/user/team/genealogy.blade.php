@@ -12,7 +12,7 @@
         <div class="card card-body h-70">
             <div class="d-flex flex-column align-items-center">
                 <div class="tree">
-                    <ul>
+                    <ul id="content">
                         <li>
                             @if (count(directReferrals($user->id)) > 0)
                                 @include('user.team.team-head', ['user' => $user])
@@ -75,44 +75,8 @@
             </div>
         </div>
     @endif
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel1">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasRightLabel1"></h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body" id="user-details">
-
-        </div>
-    </div>
+    @include('user.team._user-details-modal')
 @endsection
 @push('scripts')
-    <script>
-        const canBody = $('#user-details')
-
-        $('.show-detail').click(function(e) {
-            e.preventDefault();
-
-            const url = $(this).data('url');
-
-            $.ajax({
-                url: url,
-                method: "GET",
-                beforeSend: function() {
-                    canBody.html(`<div class="d-flex justify-content-center h-75">
-                    <div class="spinner-border" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </div>`)
-                },
-                success: function(result) {
-                    canBody.empty().html(result);
-                },
-                error: function(jqXHR, testStatus, error) {
-                    console.log(jqXHR.responseText, testStatus, error);
-                    displayMessage("An error occurred", "error")
-                },
-                timeout: 8000,
-            });
-        })
-    </script>
+    @include('user.team.scripts._user-details')
 @endpush
