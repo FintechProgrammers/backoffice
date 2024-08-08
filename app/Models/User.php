@@ -427,7 +427,7 @@ class User extends Authenticatable
         // Total team commissions
         $totalTeamCommissions = $directCommissions + $indirectCommissions;
 
-        return number_format($totalTeamCommissions, 2, '.', ',');
+        return $totalTeamCommissions;
     }
 
     /**
