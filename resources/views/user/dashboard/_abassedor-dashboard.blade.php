@@ -45,7 +45,7 @@
                         <p class="op-7  text-dark">Highest Rank</p>
                         <div class="d-flex align-items-center w-100">
                             <div class="me-2">
-                                @if (!empty(Auth::user()->highestRank->highest_criteria))
+                                @if (!empty(Auth::user()->highestRank))
                                     <span class="avatar avatar-rounded">
                                         <img src="{{ Auth::user()->highestRank->file_url }}" alt="img">
                                     </span>
@@ -55,10 +55,11 @@
                                     </span>
                                 @endif
                             </div>
+
                             <div class="flex-fill">
                                 <h3 class="fw-semibold mb-0 text-fixed-white">
-                                    @if (!empty(Auth::user()->highestRank->highest_criteria))
-                                        {{ Auth::user()->highestRank->highest_criteria }}
+                                    @if (!empty(Auth::user()->highestRank))
+                                        <span class="text-dark">{{ Auth::user()->highestRank->name }}</span>
                                     @else
                                         <small class="text-dark">no rank</small>
                                     @endif
@@ -239,14 +240,24 @@
                 <div class="col-lg-12">
                     <div class="card custom-card">
                         <div class="card-body">
-                            <p class="mb-1 text-muted">Next rank Delta500</p>
-                            <div class="d-flex justify-content-between">
-                                <p>300</p>
-                                <div id="circular-semi"></div>
-                                <p>500</p>
-                            </div>
+                            @if ($nextRank)
+                                <p class="mb-1 text-muted mb-3">Next rank {{ $nextRank->name }}</p>
+                                <div class="d-flex justify-content-between">
+                                    <p>{{ $currentRank ? $currentRank->creteria : 0 }}</p>
+                                    <div id="circular-semi"></div>
+                                    <p>{{ $nextRank->creteria }}</p>
+                                </div>
+                                {{-- <div class="progress">
+                                    <div class="progress-bar" role="progressbar"
+                                        style="width: {{ $progress }}%;" aria-valuenow="{{ $progress }}"
+                                        aria-valuemin="0" aria-valuemax="100">{{ $progress }}%</div>
+                                </div> --}}
+                            @else
+                                <h6 class="mb-1 text-info">You have reached the highest rank!</h6>
+                            @endif
                         </div>
                     </div>
+
                 </div>
                 @include('user.dashboard._last_enrollment')
             </div>

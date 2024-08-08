@@ -11,4 +11,9 @@ class RankHistory extends Model
     use HasFactory, GeneratesUuid;
 
     protected $guarded = [];
+
+    function rank()
+    {
+        return $this->belongsTo(Rank::class, 'rank_id', 'id');
+    }
 }

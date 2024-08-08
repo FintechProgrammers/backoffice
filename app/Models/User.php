@@ -199,10 +199,40 @@ class User extends Authenticatable
     public function highestRank()
     {
         return $this->hasOne(RankHistory::class)
-            ->selectRaw('MAX(ranks.creteria) AS highest_criteria')
-            ->join('ranks', function ($join) {
-                $join->on('rank_histories.rank_id', '=', 'ranks.id');
-            });
+            ->join('ranks', 'rank_histories.rank_id', '=', 'ranks.id')
+            ->select('ranks.*')
+            ->orderBy('ranks.creteria', 'desc')
+            ->limit(1);
+    }
+
+    public function nextRank()
+    {
+        return Rank::where('creteria', '>', $this->rank->creteria)
+            ->orderBy('creteria')
+            ->first();
+    }
+
+    public function getSalesForCurrentMonth()
+    {
+        return $this->sales()
+            ->whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()])->select('amount')
+            ->sum('amount');
+    }
+
+    public function getRankProgress()
+    {
+        $currentRank = $this->rank;
+
+        $nextRank = $this->nextRank();
+
+        if (!$currentRank || !$nextRank) {
+            return 0;
+        }
+
+        $currentSales = $this->getSalesForCurrentMonth();
+        $progress = ($currentSales - $currentRank->creteria) / ($nextRank->creteria - $currentRank->creteria) * 100;
+
+        return $progress > 100 ? 100 : ($progress < 0 ? 0 : round($progress, 2));
     }
 
     function bonuses()

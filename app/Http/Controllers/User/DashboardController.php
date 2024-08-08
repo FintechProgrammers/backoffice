@@ -34,6 +34,10 @@ class DashboardController extends Controller
 
             $wallet = Wallet::where('user_id', $user->id)->select('balance')->first();
 
+            $data['currentRank'] = $user->rank;
+            $data['nextRank'] = $user->nextRank();
+            $data['progress'] = $user->getRankProgress();
+
             $data['walletBalance'] = $wallet->balance;
 
             $data['currentWeekDirectVolume'] =  $directSale->whereBetween('created_at', [$startOfWeek, $endOfWeek])->select('bv_amount')->sum('bv_amount');

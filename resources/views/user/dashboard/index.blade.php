@@ -140,7 +140,7 @@
     </script>
     <script>
         var smioptions = {
-            series: [76],
+            series: [{{ $progress }}],
             chart: {
                 type: 'radialBar',
                 height: 100,
