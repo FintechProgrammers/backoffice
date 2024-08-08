@@ -157,7 +157,7 @@
     </script>
     <script>
         var smioptions = {
-            series: [{{ $progress }}],
+            series: [{{ isset($progress) ? $progress : 0 }}],
             chart: {
                 type: 'radialBar',
                 height: 100,
