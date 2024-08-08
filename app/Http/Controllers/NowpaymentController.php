@@ -47,7 +47,7 @@ class NowpaymentController extends Controller
                 'amount'           => $service->price,
                 'order_id'          => $validated['invoice']['order_id'],
                 'description'       => "{$service->name} Purchase",
-                'ipn_callback_url'  => config('contstants.nowpayment.ipn_base_url') . '/ipn/nowpayment/service/payment'
+                'ipn_callback_url'  => config('constants.nowpayment.ipn_base_url') . '/ipn/nowpayment/service/payment'
             ];
 
             $response = $this->nowpaymentService->createInvoice($payload);
@@ -181,7 +181,7 @@ class NowpaymentController extends Controller
         }
 
         // Compute the HMAC using the SHA-512 hash algorithm
-        $signature = hash_hmac('SHA512', $data, config('contstants.nowpayment.ipn_key'));
+        $signature = hash_hmac('SHA512', $data, config('constants.nowpayment.ipn_key'));
 
         $headerKey = $request->headers->get('x-nowpayments-sig');
 
@@ -209,7 +209,7 @@ class NowpaymentController extends Controller
         }
 
         // Compute the HMAC using the SHA-512 hash algorithm
-        $signature = hash_hmac('SHA512', $data, config('contstants.nowpayment.ipn_key'));
+        $signature = hash_hmac('SHA512', $data, config('constants.nowpayment.ipn_key'));
 
         $headerKey = $request->headers->get('x-nowpayments-sig');
 
