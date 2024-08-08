@@ -36,8 +36,6 @@ class AssignRanks extends Command
     public function handle()
     {
 
-        sendToLog("cron started");
-
         $this->info('Starting to assign ranks...');
 
         $now = Carbon::now();
@@ -53,8 +51,7 @@ class AssignRanks extends Command
         // })->get();
 
         foreach ($users as $user) {
-            $totalSales = $user->sales()->whereBetween('created_at', [$startOfMonth, $endOfMonth])
-                ->sum('amount');
+            $totalSales = $user->sales()->select('amount')->sum('amount');
 
             // Get the highest rank that the user qualifies for
             $rank = Rank::where('creteria', '<=', $totalSales)
