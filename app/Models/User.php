@@ -156,12 +156,12 @@ class User extends Authenticatable
 
     function getTotalWithdrawalsAmountAttribute()
     {
-        return number_format($this->withdrawals()->where('status', 'completed')->sum('amount'), 2, '.', ',');
+        return $this->withdrawals()->where('status', 'completed')->sum('amount');
     }
 
     function getTotalPendingWithdrawalsAmountAttribute()
     {
-        return number_format($this->withdrawals()->where('status', 'pending')->sum('amount'), 2, '.', ',');
+        return $this->withdrawals()->where('status', 'pending')->sum('amount');
     }
 
 
@@ -406,14 +406,14 @@ class User extends Authenticatable
     {
         $total = $this->sales()->sum('amount');
 
-        return number_format($total, 2, '.', ',');
+        return $total;
     }
 
     function getTotalBvAttribute()
     {
         $total = $this->sales()->sum('bv_amount');
 
-        return number_format($total, 2, '.', ',');
+        return $total;
     }
 
     public function getTeamCommissions()
