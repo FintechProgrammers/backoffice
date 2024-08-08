@@ -242,8 +242,6 @@ class NowpaymentController extends Controller
             return response()->json([], Response::HTTP_UNAUTHORIZED);
         }
 
-        logger("here payment");
-
         $subscriptionService = new SubscriptionService();
 
         $subscriptionService->startService($package, $user);

@@ -352,8 +352,6 @@ class StripeController extends Controller
                 return false;
             }
 
-            logger("here payment");
-
             $subscriptionService = new SubscriptionService();
 
             $subscriptionService->startService($service, $user);

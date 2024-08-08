@@ -51,7 +51,7 @@
                                     {{ convertDaysToUnit($item->duration, $item->duration_unit) . ' ' . $item->duration_unit }}
                                 </p>
                                 <div class="fs-16 mb-0 d-flex align-items-center fw-semibold">
-                                    ${{ $item->price }}
+                                    ${{ number_format($item->price, 2, '.', ',') }}
                                 </div>
                             </div>
                             <a href="{{ route('package.details', $item->uuid) }}"

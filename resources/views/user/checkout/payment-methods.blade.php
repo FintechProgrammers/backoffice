@@ -1,5 +1,5 @@
 <div class="p-4">
-    <p class="mb-1 fw-semibold text-muted op-5 fs-20">03</p>
+    <p class="mb-1 fw-semibold text-muted op-5 fs-20">02</p>
     <div class="fs-15 fw-semibold d-sm-flex d-block align-items-center justify-content-between mb-3">
         <div>Payment Methods:</div>
     </div>
