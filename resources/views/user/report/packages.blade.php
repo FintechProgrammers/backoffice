@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
-        <h1 class="page-title fw-semibold fs-18 mb-0">Package history </h1>
+        <h1 class="page-title fw-semibold fs-18 mb-0">Package Payment history </h1>
     </div>
     <div class="container">
         @if (count($packages) > 0)
