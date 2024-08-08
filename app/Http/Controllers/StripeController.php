@@ -199,10 +199,10 @@ class StripeController extends Controller
 
             $event = $stripeService->getWebhookEvent($data);
         } catch (\UnexpectedValueException $e) {
-            logger($e->getMessage());
+            logger($e);
             exit();
         } catch (\Stripe\Exception\SignatureVerificationException $e) {
-            logger($e->getMessage());
+            logger($e);
             exit();
         }
 
@@ -348,9 +348,11 @@ class StripeController extends Controller
             $service = Service::whereUuid($metadata->service_id)->first();
 
             if (!$service) {
-                sendToLog("user {$metadata->service_id} not found");
+                sendToLog("service {$metadata->service_id} not found");
                 return false;
             }
+
+            logger("here payment");
 
             $subscriptionService = new SubscriptionService();
 

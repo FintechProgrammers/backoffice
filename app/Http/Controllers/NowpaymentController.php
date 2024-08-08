@@ -160,7 +160,7 @@ class NowpaymentController extends Controller
 
             return $success;
         } catch (\Exception $e) {
-            sendToLog($e->getMessage());
+            sendToLog($e);
             return throw new HttpResponseException(response()->json([
                 'success' => false,
                 'message' => serviceDownMessage(),
@@ -241,6 +241,8 @@ class NowpaymentController extends Controller
 
             return response()->json([], Response::HTTP_UNAUTHORIZED);
         }
+
+        logger("here payment");
 
         $subscriptionService = new SubscriptionService();
 

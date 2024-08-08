@@ -15,6 +15,8 @@ class SubscriptionService
 
     function startService($service, $user)
     {
+        logger("subscription");
+
         $userSubscription = UserSubscription::where('user_id', $user->id)->where('service_id', $service->id)->first();
 
         if ($userSubscription) {
