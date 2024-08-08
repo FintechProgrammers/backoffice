@@ -35,6 +35,9 @@ class AssignRanks extends Command
      */
     public function handle()
     {
+
+        sendToLog("cron started");
+
         $this->info('Starting to assign ranks...');
 
         $now = Carbon::now();
