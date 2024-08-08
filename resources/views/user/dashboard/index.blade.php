@@ -108,6 +108,7 @@
                 const weekStart = new Date(response.data.week_start);
                 const weekEnd = new Date(response.data.week_end);
                 startTimer(weekStart, weekEnd);
+                setInterval(() => updateClock(weekEnd), 1000); // Update clock every second
             },
             error: function(xhr, status, error) {
                 console.log(error)
@@ -136,6 +137,22 @@
             // Update progress bar (percentage)
             const progress = Math.min(elapsedTime / totalTime, 1) * 100;
             document.getElementById('progress-bar').style.width = `${progress}%`;
+        }
+
+        function updateClock(weekEnd) {
+            const now = new Date();
+            const remainingTime = Math.max(weekEnd.getTime() - now.getTime(), 0); // Ensure non-negative value
+
+            const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
+            // Update clock display
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
         }
     </script>
     <script>

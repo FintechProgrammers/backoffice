@@ -28,8 +28,8 @@
                     {{-- <h6 class="mb-0">Week 2</h6> --}}
                 </div>
                 <div class="progress progress-xs">
-                    <div class="progress-bar bg-success" role="progressbar" id="progress-bar"
-                        style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar bg-success" role="progressbar" id="progress-bar" style="width: 0%"
+                        aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                     </div>
                 </div>
             </div>
