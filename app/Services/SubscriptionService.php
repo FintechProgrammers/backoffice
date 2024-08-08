@@ -12,11 +12,23 @@ use Illuminate\Support\Facades\Mail;
 
 class SubscriptionService
 {
+
+    function startService($service, $user)
+    {
+        $userSubscription = UserSubscription::where('user_id', $user->id)->where('service_id', $service->id)->first();
+
+        if ($userSubscription) {
+            $this->updateSubscription($service, $userSubscription);
+        } else {
+            $this->createSubscription($service, $user);
+        }
+    }
+
     function createSubscription($service, $user)
     {
-        $subscription = UserSubscription::updateOrCreate(
-            ['user_id' => $user->id], // Attributes to check for existing record
+        $subscription = UserSubscription::create(
             [
+                'user_id' => $user->id,
                 'service_id' => $service->id,
                 'reference'  => generateReference(),
                 'start_date' => Carbon::now(),

@@ -22,7 +22,7 @@ class DashboardController extends Controller
         $topSellingServices = DB::table('sales')
             ->select('service_id', DB::raw('COUNT(*) AS total_sales_count'), DB::raw('SUM(amount) AS total_amount_sold'))
             ->groupBy('service_id')
-            ->orderBy('total_sales_count', 'desc')
+            ->orderBy('total_amount_sold', 'desc')
             ->limit(10) // Adjust limit as needed
             ->get()
             ->map(function ($sale) {
