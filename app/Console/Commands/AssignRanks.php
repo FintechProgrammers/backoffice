@@ -51,7 +51,8 @@ class AssignRanks extends Command
         // })->get();
 
         foreach ($users as $user) {
-            $totalSales = $user->sales()->select('amount')->sum('amount');
+            $totalSales = $user->sales()->whereBetween('created_at', [$startOfMonth, $endOfMonth])
+                ->select('amount')->sum('amount');
 
             // Get the highest rank that the user qualifies for
             $rank = Rank::where('creteria', '<=', $totalSales)

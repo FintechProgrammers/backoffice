@@ -53,8 +53,9 @@ class TeamController extends Controller
     function userInfo(User $user)
     {
         $data['user'] = $user;
-        $data['totalSales'] = Sale::where('parent_id', $user->id)->sum('amount');
-        $data['currentCycleSales'] = Sale::where('parent_id', $user->id)->where('cycle_id', currentCycle())->sum('amount');
+        $data['totalSales'] = $user->total_sales;
+        $data['currentCycleSales'] = $user->sales()->whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()])
+            ->select('amount')->sum('amount');
         $data['subscriptions'] = UserSubscription::where('user_id', $user->id)->latest()->get();
 
         return view('user.team.user-info', $data);

@@ -27,7 +27,7 @@
                     </div>
                     <div>
                         <span class="d-block text-muted">Sales</span>
-                        <span class="d-block fw-semibold">{{ number_format(0, 2, '.', ',') }} <span
+                        <span class="d-block fw-semibold">{{ number_format($totalSales, 2, '.', ',') }} <span
                                 class="fs-12 text-muted fw-normal">BV</span></span>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
                         </span>
                     </div>
                     <div>
-                        <span class="d-block text-muted">Current Cycle Sales</span>
+                        <span class="d-block text-muted">Current Month Sales</span>
                         <span class="d-block fw-semibold">{{ number_format($currentCycleSales, 2, '.', ',') }} <span
                                 class="fs-12 text-muted fw-normal">BV</span></span>
                     </div>
