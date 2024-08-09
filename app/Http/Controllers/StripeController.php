@@ -46,35 +46,37 @@ class StripeController extends Controller
             $stripUser = StripeUser::where('user_id', $user->id)->first();
 
             if (!$stripUser) {
-                $userData = [
-                    'email'  => $user->email,
-                    'name'  => $user->full_name,
-                ];
+                // $userData = [
+                //     'email'  => $user->email,
+                //     'name'  => $user->full_name,
+                // ];
 
-                $createUser = $this->stripeService->createCustomer($userData);
+                // $createUser = $this->stripeService->createCustomer($userData);
 
-                if (empty($createUser)) {
-                    sendToLog($createUser);
+                // if (empty($createUser)) {
+                //     sendToLog($createUser);
 
-                    return throw new HttpResponseException(response()->json([
-                        'success' => false,
-                        'message' => serviceDownMessage(),
-                    ], Response::HTTP_UNPROCESSABLE_ENTITY));
-                }
+                //     return throw new HttpResponseException(response()->json([
+                //         'success' => false,
+                //         'message' => serviceDownMessage(),
+                //     ], Response::HTTP_UNPROCESSABLE_ENTITY));
+                // }
 
-                $stripUser = StripeUser::create([
-                    'user_id'       => $user->id,
-                    'customer_id'   => $createUser->id
-                ]);
+                // $stripUser = StripeUser::create([
+                //     'user_id'       => $user->id,
+                //     'customer_id'   => $createUser->id
+                // ]);
 
                 $data = [
                     'amount'        => $service->price * 100,
                     'product_data'  => [
-                        'name'      => $service->name
+                        'name'      => $service->name,
+                        'images'     => [$service->image],
+                        'description' => $service->description,
                     ],
-                    'customer_email' => $user->email,
+                    // 'customer_email' => $user->email,
                     'customer_name' => $user->name,
-                    'customer_id'    => $stripUser->customer_id,
+                    // 'customer_id'    => $stripUser->customer_id,
                     'metadata'       => ['user_id' => $user->uuid, 'service_id' => $service->uuid, 'invoice' => $invoice->uuid],
                     'success_url'    => route('payment.success') . '?session_id={CHECKOUT_SESSION_ID}',
                     'cancel_url'     => route('payment.cancel')
@@ -246,9 +248,7 @@ class StripeController extends Controller
         return response('Successful', Response::HTTP_OK)->header('Content-Type', 'text/plain');
     }
 
-    function chargeCompleted($data)
-    {
-    }
+    function chargeCompleted($data) {}
 
     function setupIntendSucceeded($data)
     {

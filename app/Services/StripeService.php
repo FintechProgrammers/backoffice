@@ -38,21 +38,23 @@ class StripeService
         return $response;
     }
 
+
     function  processCheckout($data)
     {
         $response = $this->stripe->checkout->sessions->create([
-            'payment_intent_data' => ['setup_future_usage' => 'off_session'],
+            // 'payment_intent_data' => ['setup_future_usage' => 'off_session'],
             // 'customer_creation' => 'always',
-            'customer' => $data['customer_id'],
+            // 'customer' => $data['customer_id'],
+            // 'customer_email' => $data['customer_email'],
             'line_items' => [[
                 'price_data' => [
                     'currency' => "usd",
                     'product_data' => $data['product_data'],
-                    'unit_amount' => $data['amount'],
+                    'unit_amount' => $data['amount']
                 ],
                 'quantity' => 1,
             ]],
-            'saved_payment_method_options' => ['payment_method_save' => 'enabled'],
+            // 'saved_payment_method_options' => ['payment_method_save' => 'enabled'],
             // 'customer_email' => $data['customer_email'],
             'metadata' => $data['metadata'],
             'mode' => 'payment',

@@ -29,15 +29,19 @@
                                     <span class="mb-0 d-block fs-14 fw-semibold">{{ $item->name }}</span>
                                     <span class="fs-13 text-muted">
                                         <i class="bi bi-patch-check-fill text-success ms-1 fs-15"></i>
-                                        @if ($item->serviceProduct->isNotEmpty())
-                                            {{ $item->serviceProduct->pluck('product.name')->implode(', ') }}
+                                        @if ($item->ambassadorship)
+                                            Ambassadorship
                                         @else
-                                            No products available.
+                                            @if ($item->serviceProduct->isNotEmpty())
+                                                {{ $item->serviceProduct->pluck('product.name')->implode(', ') }}
+                                            @else
+                                                No products available.
+                                            @endif
                                         @endif
                                     </span>
                                 </div>
                             </div>
-                            @if (auth()->user()->is_ambassador)
+                            @if (auth()->user()->is_ambassador && !$item->ambassadorship)
                                 <a href="javascript:void(0);" class="btn rounded-circle btn-sm text-light copy-btn btn-dark"
                                     data-bs-toggle="tooltip" aria-label="Share package link"
                                     copy_value="{{ route('checkout.index') }}?amb={{ auth()->user()->uuid }}&service={{ $item->uuid }}"><i
