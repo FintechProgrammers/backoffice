@@ -13,14 +13,14 @@ class RoleController extends Controller
     {
         $data['roles'] = Role::latest()->latest()->paginate(50);
 
-        return view('administrative.roles.index', $data);
+        return view('admin.roles.index', $data);
     }
 
     function create()
     {
         $data['permissions'] =  Permission::where('guard_name', 'admin')->get();
 
-        return view('administrative.roles.create', $data);
+        return view('admin.roles.create', $data);
     }
 
     function store(Request $request)
@@ -50,7 +50,7 @@ class RoleController extends Controller
     {
         $role = Role::where('uuid', $role)->firstOrFail();
 
-        $role_permissions = count($role->permissions) > 0 ? $role->permissions->map(fn ($permissions) => $permissions->id) : $role->permissions;
+        $role_permissions = count($role->permissions) > 0 ? $role->permissions->map(fn($permissions) => $permissions->id) : $role->permissions;
 
         return view('admin.roles.edit', [
             'role'      => $role,

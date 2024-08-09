@@ -1,7 +1,9 @@
 @forelse ($services as $item)
     <tr>
         <td>
-            {{ $item->name }}
+            {{ $item->name }} @if ($item->ambassadorship)
+                <span class="badge bg-secondary">{{ __('Ambassadorship') }}</span>
+            @endif
         </td>
         <td class="text-center">${{ $item->price }}</td>
         <td class="text-center">{{ $item->bv_amount }} BV</td>

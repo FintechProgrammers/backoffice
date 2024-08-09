@@ -1,5 +1,23 @@
 <script>
     $(document).ready(function() {
+        // Function to show/hide the products div based on the selected value
+        function toggleProductsDiv() {
+            var selectedValue = $('#packageType').val();
+            if (selectedValue === 'service') {
+                $('#products').show();
+            } else {
+                $('#products').hide();
+            }
+        }
+
+        // Initial check when the form is loaded
+        toggleProductsDiv();
+
+        // Event listener for change in the select element
+        $('#modalBody').on('change', '#packageType', function() {
+            toggleProductsDiv();
+        });
+
         $('#modalBody').on('change', '#photo', function(event) {
             event.preventDefault();
 

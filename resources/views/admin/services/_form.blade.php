@@ -34,7 +34,18 @@
         </div>
     </div>
 </div>
-<div class="mb-3">
+<div class="col-lg-12">
+    <div class="mb-3">
+        <label for="packageType" class="form-label fs-14 text-dark">Package Type</label>
+        <select id="packageType" class="form-select" name="package_type">
+            <option value="" disabled>--select--</option>
+            <option value="service" @selected(isset($service) && !$service->ambassadorship)>Service</option>
+            <option value="ambassadorship" @selected(isset($service) && $service->ambassadorship)>Ambassadorship</option>
+        </select>
+    </div>
+</div>
+<div class="mb-3" id="products"
+    style="display: {{ isset($service) && !$service->ambassadorship ? 'block' : 'none' }}">
     <label for="form-text" class="form-label fs-14 text-dark">Products</label>
     <div class="row" data-bs-spy="scroll" data-bs-offset="0" data-bs-smooth-scroll="true" tabindex="0">
         @foreach ($products as $key => $item)

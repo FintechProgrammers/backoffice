@@ -207,9 +207,14 @@ class User extends Authenticatable
 
     public function nextRank()
     {
-        return Rank::where('creteria', '>', $this->rank->creteria)
-            ->orderBy('creteria')
-            ->first();
+        if ($this->rank) {
+            return Rank::where('creteria', '>', $this->rank->creteria)
+                ->orderBy('creteria')
+                ->first();
+        }
+
+        // If there is no current rank, return the rank with the lowest creteria
+        return Rank::orderBy('creteria')->first();
     }
 
     public function getSalesForCurrentMonth()

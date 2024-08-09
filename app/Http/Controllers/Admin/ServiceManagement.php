@@ -43,8 +43,9 @@ class ServiceManagement extends Controller
             'duration' => 'required|numeric',
             'duration_unit' => 'required|string',
             'description' => 'nullable',
-            'products' => 'required|array',
-            'products.*' => 'required|exists:products,id',
+            'package_type' => 'required|in:service,ambassadorship',
+            'products' => 'required_if:package_type,service|array',
+            'products.*' => 'required_if:package_type,service|exists:products,id',
             'image' => 'required|image',
         ]);
 
@@ -64,11 +65,13 @@ class ServiceManagement extends Controller
 
             $service = Service::create($this->prepareData($request));
 
-            foreach ($request->products as $product) {
-                ServiceProduct::create([
-                    'service_id' => $service->id,
-                    'product_id' => $product
-                ]);
+            if ($request->package_type === "service") {
+                foreach ($request->products as $product) {
+                    ServiceProduct::create([
+                        'service_id' => $service->id,
+                        'product_id' => $product
+                    ]);
+                }
             }
 
             DB::commit();
@@ -106,6 +109,10 @@ class ServiceManagement extends Controller
             'duration' => 'required|numeric',
             'duration_unit' => 'required|string',
             'description' => 'nullable',
+            'package_type' => 'required|in:service,ambassadorship',
+            'products' => 'required_if:package_type,service|array',
+            'products.*' => 'required_if:package_type,service|exists:products,id',
+            'image' => 'nullable|image',
         ]);
 
         // Handle validation errors
@@ -127,13 +134,17 @@ class ServiceManagement extends Controller
 
             $service->update($this->prepareData($request));
 
-            ServiceProduct::where('service_id', $service->id)->delete();
+            if (($request->package_type === "service")) {
+                ServiceProduct::where('service_id', $service->id)->delete();
 
-            foreach ($request->products as $product) {
-                ServiceProduct::create([
-                    'service_id' => $service->id,
-                    'product_id' => $product
-                ]);
+                foreach ($request->products as $product) {
+                    ServiceProduct::create([
+                        'service_id' => $service->id,
+                        'product_id' => $product
+                    ]);
+                }
+            } else {
+                ServiceProduct::where('service_id', $service->id)->delete();
             }
 
             DB::commit();
@@ -190,6 +201,7 @@ class ServiceManagement extends Controller
             'duration_unit' => $request->duration_unit,
             'auto_renewal' => $request->auto_renewal === "on" ? true : false,
             'is_published' => $request->is_published === "on" ? true : false,
+            'ambassadorship' => $request->package_type === "ambassadorship" ? true : false,
             'description' => $request->description,
             'image_url'  => $request->image_url,
         ];
