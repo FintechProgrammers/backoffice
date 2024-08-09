@@ -20,7 +20,8 @@
                                     </div>
                                     <div>
                                         <span class="fs-10 fw-semibold text-muted">
-
+                                            <p class="mb-0">Date Joined:</p>
+                                            <p class="mb-0">{{ $item->created_at->format('jS,M Y') }}</p>
                                         </span>
                                     </div>
                                 </div>

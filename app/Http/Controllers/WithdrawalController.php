@@ -12,6 +12,7 @@ use App\Models\Wallet;
 use App\Models\Withdrawal;
 use App\Notifications\WithdrawalToken;
 use App\Traits\RecursiveActions;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -34,7 +35,23 @@ class WithdrawalController extends Controller
     function filter(Request $request)
     {
 
-        $query = Transaction::where('user_id', Auth::user()->id)->where('type', 'withdrawal');
+        $dateFrom = ($request->filled('date_from')) ? Carbon::parse($request->date_from)->startOfDay() : null;
+
+        $dateTo = ($request->filled('date_to')) ? Carbon::parse($request->date_to)->endOfDay() : null;
+
+        $search = $request->filled('search') ? $request->search : null;
+        $status = $request->filled('status')  ? $request->status : null;
+
+        $type = $request->filled('type') ? $request->type : null;
+
+        $query = Transaction::query();
+
+        $query->where('user_id', Auth::user()->id)->when(!empty($search), fn($query) => $query->where('internal_reference', 'LIKE', "%{$search}%"))
+            ->when(!empty($status), fn($query) => $query->where('status', $status))
+            ->when(!empty($type), fn($query) => $query->where('type', $type))
+            ->when(!empty($dateFrom) && !empty($dateTo), fn($query) => $query->whereBetween('created_at', [$dateFrom, $dateTo]))
+            ->when(!empty($status) && !empty($dateFrom) && !empty($dateTo), fn($query) => $query->where('status', $status)->whereBetween('created_at', [$dateFrom, $dateTo]))
+            ->when(!empty($type) && !empty($dateFrom) && !empty($dateTo), fn($query) =>  $query->where('type', $type)->whereBetween('created_at', [$dateFrom, $dateTo]));
 
         $data['withdrawals'] = $query->paginate(50);
 

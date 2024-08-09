@@ -78,16 +78,18 @@
                         <label for="searchInputSearch">Type</label>
                         <select class="form-control" id="type">
                             <option value="">--select--</option>
-                            <option value="customer">Customer</option>
-                            <option value="ambassador">Ambassador</option>
+                            <option value="commission">Commission</option>
+                            <option value="withdrawal">Withdrawal</option>
+                            <option value="purchase">Purchase</option>
                         </select>
                     </div>
                     <div class="col-lg-2 mb-lg-0 mb-4">
                         <label for="searchInputSearch">Status</label>
                         <select class="form-control" id="status">
                             <option value="">--select--</option>
-                            <option value="active">Active</option>
-                            <option value="suspended">Suspended</option>
+                            <option value="pending">Pending</option>
+                            <option value="completed">Completed</option>
+                            <option value="failed">Failed</option>
                         </select>
                     </div>
                     <div class="col-lg-2 mb-lg-0 mb-4">

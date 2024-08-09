@@ -7,7 +7,7 @@
         <td>
             {{ optional($item->service)->name }}
         </td>
-        <td class="text-center">${{ $item->amount }}</td>
+        <td class="text-center">${{ number_format($item->amount, 2) }}</td>
         <td class="text-center">
             {{ $item->created_at->format('jS, M Y H:i A') }}
         </td>

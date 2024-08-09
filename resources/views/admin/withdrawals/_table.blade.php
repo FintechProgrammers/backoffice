@@ -1,14 +1,34 @@
-@forelse ($withdrawals as $item)
+@forelse ($transactions as $item)
     <tr>
         <td>
-            <x-profile-component name="{{ $item->user->full_name }}" email="{{ $item->user->email }}"
-                image="{{ $item->user->profile_picture }}" />
+            <span class="text-success fw-semibold">{{ $item->internal_reference }}</span>
         </td>
         <td>
-            <span class="text-success fw-semibold">{{ $item->reference }}</span>
+            @if (!empty($item->user))
+                <x-profile-component name="{{ $item->user->full_name }}" email="{{ $item->user->email }}"
+                    image="{{ $item->user->profile_picture }}" />
+            @endif
+        </td>
+
+        <td>
+            @if (!empty($item->associatedUser))
+                <x-profile-component name="{{ $item->associatedUser->full_name }}"
+                    email="{{ $item->associatedUser->email }}" image="{{ $item->associatedUser->profile_picture }}" />
+            @endif
+        </td>
+        <td> ${{ number_format($item->amount, 2, '.', ',') }}</td>
+        <td>
+            ${{ number_format($item->closing_balance, 2, '.', ',') }}
         </td>
         <td>
-            ${{ $item->amount }}
+            @if ($item->action == 'credit')
+                <span class="badge bg-success">Credit</span>
+            @else
+                <span class="badge bg-danger">Debit</span>
+            @endif
+        </td>
+        <td>
+            <span class="badge bg-secondary text-capitalize">{{ $item->type }}</span>
         </td>
         <td>
             @if ($item->status === 'completed')
@@ -22,22 +42,17 @@
         <td>
             {{ $item->created_at->format('jS,M Y H:i A') }}
         </td>
-        <td>
-            <button type="button" class="btn btn-primary trigerModal"
-                data-url="{{ route('admin.withdrawals.details', $item->uuid) }}" data-bs-toggle="modal"
-                data-bs-target="#primaryModal">Details
-            </button>
-        </td>
+        <td></td>
     </tr>
 @empty
     <tr>
-        <td colspan="6" class="text-center">
+        <td colspan="10" class="text-center">
             <span class="text-warning">no data available</span>
         </td>
     </tr>
 @endforelse
 <tr style="border: none;">
-    <td colspan="6" style="border: none;">
-        {{ $withdrawals->links('vendor.pagination.custom') }}
+    <td colspan="10" style="border: none;">
+        {{ $transactions->links('vendor.pagination.custom') }}
     </td>
 </tr>

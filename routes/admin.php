@@ -167,10 +167,10 @@ Route::middleware('admin.auth')->group(function () {
         Route::get('filter', 'filter')->name('filter');
     });
 
-    Route::controller(WithdrawalController::class)->prefix('withdrawals')->name('withdrawals.')->group(function () {
+    Route::controller(WithdrawalController::class)->prefix('transactions')->name('transactions.')->group(function () {
         Route::get('', 'index')->name('index');
         Route::get('filter', 'filter')->name('filter');
-        Route::get('/details/{withdrawal}', 'details')->name('details');
+        Route::get('/details/{transaction}', 'details')->name('details');
     });
 
     Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function () {

@@ -5,8 +5,8 @@
                 <span class="badge bg-secondary">{{ __('Ambassadorship') }}</span>
             @endif
         </td>
-        <td class="text-center">${{ $item->price }}</td>
-        <td class="text-center">{{ $item->bv_amount }} BV</td>
+        <td class="text-center">${{ number_format($item->price, 2) }}</td>
+        <td class="text-center">{{ number_format($item->bv_amount, 2) }} BV</td>
         <td class="text-center">
             {{ convertDaysToUnit($item->duration, $item->duration_unit) . ' ' . $item->duration_unit }}
         </td>

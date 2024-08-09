@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\AdminAuthenticate;
 use App\Http\Middleware\AdminRedirectIfAuthenticated;
+use App\Http\Middleware\KycVerified;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -20,7 +21,8 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'admin.guest' => AdminRedirectIfAuthenticated::class,
-            'admin.auth' => AdminAuthenticate::class
+            'admin.auth' => AdminAuthenticate::class,
+            'kyc.verified' => KycVerified::class
         ])->validateCsrfTokens(except: [
             'webhook/*',
             'ipn/*'

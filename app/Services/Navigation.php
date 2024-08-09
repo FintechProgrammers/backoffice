@@ -75,8 +75,8 @@ class Navigation
                 'hasPermission' => true
             ],
             (object) [
-                'name'  => 'Withdrawals',
-                'route' => 'admin.withdrawals.index',
+                'name'  => 'Transactions',
+                'route' => 'admin.transactions.index',
                 'icon'  => 'las la-wallet',
                 'hasPermission' => true
             ],
