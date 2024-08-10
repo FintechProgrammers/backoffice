@@ -72,7 +72,7 @@ class StripeController extends Controller
                     'product_data'  => [
                         'name'      => $service->name,
                         'images'     => [$service->image],
-                        'description' => $service->description,
+                        // 'description' => $service->description,
                     ],
                     // 'customer_email' => $user->email,
                     'customer_name' => $user->name,
