@@ -9,6 +9,7 @@ use App\Models\Admin;
 use App\Models\Sale;
 use App\Observers\SaleObserver;
 use App\Services\CommissionService;
+use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,6 +28,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Gate::before(function ($user, $ability) {
+            return $user->hasRole('super admin') ? true : null;
+        });
+
         Sale::observe(SaleObserver::class);
 
         ResetPassword::createUrlUsing(function ($user, string $token) {

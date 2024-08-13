@@ -1,5 +1,5 @@
 <div class="team-groups">
-    <div class="card custom-card">
+    <div class="card custom-card" style="height: 410px">
         <div class="card-header d-flex align-items-center justify-content-between">
             <h6 class="fw-semibold mb-0">Last Enrollments</h6>
         </div>
@@ -20,7 +20,7 @@
                                     </div>
                                     <div>
                                         <span class="fs-10 fw-semibold text-muted">
-                                            <p class="mb-0">Date Joined:</p>
+                                            {{-- <p class="mb-0">Date Joined:</p> --}}
                                             <p class="mb-0">{{ $item->created_at->format('jS,M Y') }}</p>
                                         </span>
                                     </div>

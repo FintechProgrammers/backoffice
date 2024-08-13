@@ -50,8 +50,8 @@
                                         <img src="{{ Auth::user()->highestRank->file_url }}" alt="img">
                                     </span>
                                 @else
-                                    <span class="avatar avatar-md avatar-rounded bg-white text-dark shadow-sm">
-                                        <i class="las la-medal fs-18"></i>
+                                    <span class="avatar avatar-md avatar-rounded">
+                                        <img src="{{ asset('assets/images/no-rank.jpg') }}" alt="">
                                     </span>
                                 @endif
                             </div>
@@ -141,47 +141,45 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="row">
-                        <div class="col-lg-4">
-                            <div class="card custom-card card-bg-primary">
-                                <div class="card-body">
-                                    <div class="d-flex flex-wrap align-items-top justify-content-between">
-                                        <div class="flex-fill">
-                                            <p class="mb-0 text-light">Commissions this week</p>
-                                            <div class="d-flex align-items-center">
-                                                <span
-                                                    class="fs-5 fw-semibold">${{ number_format($currentWeekCommissions, 2, '.', ',') }}</span>
-                                            </div>
+                    <div class="col-lg-6">
+                        <div class="card custom-card card-bg-primary">
+                            <div class="card-body">
+                                <div class="d-flex flex-wrap align-items-top justify-content-between">
+                                    <div class="flex-fill">
+                                        <p class="mb-0 text-light">Weekly Commission</p>
+                                        <div class="d-flex align-items-center">
+                                            <span
+                                                class="fs-5 fw-semibold">${{ number_format($currentWeekCommissions, 2, '.', ',') }}</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4">
-                            <div class="card custom-card">
-                                <div class="card-body">
-                                    <div class="d-flex flex-wrap align-items-top justify-content-between">
-                                        <div class="flex-fill">
-                                            <p class="mb-0 text-muted">Total BV this month</p>
-                                            <div class="d-flex align-items-center">
-                                                <span
-                                                    class="fs-5 fw-semibold">{{ number_format($currentMonthVolume, 2, '.', ',') }}BV</span>
-                                            </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card custom-card">
+                            <div class="card-body">
+                                <div class="d-flex flex-wrap align-items-top justify-content-between">
+                                    <div class="flex-fill">
+                                        <p class="mb-0 text-muted">Total BV this month</p>
+                                        <div class="d-flex align-items-center">
+                                            <span
+                                                class="fs-5 fw-semibold">{{ number_format($currentMonthVolume, 2, '.', ',') }}BV</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4">
-                            <div class="card custom-card">
-                                <div class="card-body">
-                                    <div class="d-flex flex-wrap align-items-top justify-content-between">
-                                        <div class="flex-fill">
-                                            <p class="mb-0 text-muted">Commissions this month</p>
-                                            <div class="d-flex align-items-center">
-                                                <span
-                                                    class="fs-5 fw-semibold">${{ number_format($currentMonthCommissions, 2, '.', ',') }}</span>
-                                            </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="card custom-card">
+                            <div class="card-body">
+                                <div class="d-flex flex-wrap align-items-top justify-content-between">
+                                    <div class="flex-fill">
+                                        <p class="mb-0 text-muted">Monthly Commission</p>
+                                        <div class="d-flex align-items-center">
+                                            <span
+                                                class="fs-5 fw-semibold">${{ number_format($currentMonthCommissions, 2, '.', ',') }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -192,25 +190,30 @@
                 @include('user.dashboard._revenue-stats')
             </div>
             <div class="col-xl-4">
-                <div class="col-lg-12">
-                    <div class="card custom-card card-bg-dark text-fixed-white">
-                        <div class="card-body p-0">
-                            <div class="d-flex align-items-top p-4 flex-wrap">
-                                <div class="me-3 lh-1">
-                                    <span class="avatar avatar-md avatar-rounded bg-white text-primary shadow-sm">
-                                        <i class="las la-medal fs-18"></i>
+                <div class="card custom-card card-bg-dark text-fixed-white">
+                    <div class="card-body p-4">
+                        <p class="op-7">Current Rank</p>
+                        <div class="d-flex align-items-center w-100">
+                            <div class="me-2">
+                                @if (!empty(Auth::user()->rank))
+                                    <span class="avatar avatar-rounded">
+                                        <img src="{{ Auth::user()->rank->file_url }}" alt="img">
                                     </span>
-                                </div>
-                                <div class="flex-fill">
-                                    <h5 class="fw-semibold mb-1 text-fixed-white">
-                                        @if (!empty(Auth::user()->rank))
-                                            {{ Auth::user()->rank->name }}
-                                        @else
-                                            <small class="text-muted">no rank</small>
-                                        @endif
-                                    </h5>
-                                    <p class="op-7 mb-0 fs-12">Current Rank</p>
-                                </div>
+                                @else
+                                    <span class="avatar avatar-md avatar-rounded bg-white text-dark shadow-sm">
+                                        <img src="{{ asset('assets/images/no-rank.jpg') }}" alt="img">
+                                    </span>
+                                @endif
+                            </div>
+
+                            <div class="flex-fill">
+                                <h3 class="fw-semibold mb-1 text-fixed-white">
+                                    @if (!empty(Auth::user()->rank))
+                                        <span>{{ Auth::user()->rank->name }}</span>
+                                    @else
+                                        <small>no rank</small>
+                                    @endif
+                                </h3>
                             </div>
                         </div>
                     </div>

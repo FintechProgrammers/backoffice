@@ -29,7 +29,7 @@ class AuthenticatedSessionController extends Controller
 
             $request->session()->regenerate();
 
-            return $this->sendResponse(['route' => route('dashboard', absolute: false)], 'Loggin Successfully.');
+            return $this->sendResponse(['route' => route('dashboard', absolute: false)], 'Login Successfully.');
         } catch (\Exception $e) {
             logger($e);
 

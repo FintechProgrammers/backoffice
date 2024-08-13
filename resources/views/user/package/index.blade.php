@@ -41,7 +41,7 @@
                                     </span>
                                 </div>
                             </div>
-                            @if (auth()->user()->is_ambassador && !$item->ambassadorship)
+                            @if (auth()->user()->is_ambassador)
                                 <a href="javascript:void(0);" class="btn rounded-circle btn-sm text-light copy-btn btn-dark"
                                     data-bs-toggle="tooltip" aria-label="Share package link"
                                     copy_value="{{ route('checkout.index') }}?amb={{ auth()->user()->uuid }}&service={{ $item->uuid }}"><i

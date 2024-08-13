@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Auth;
 
 class Navigation
 {
@@ -114,7 +115,7 @@ class Navigation
                 'name'  => 'Role Management',
                 'route' => 'admin.roles.index',
                 'icon'  => 'las la-bezier-curve',
-                'hasPermission' => true
+                'hasPermission' => auth()->guard('admin')->user()->can('manage roles') ? true : false
             ],
             (object) [
                 'name'      => 'Settings',

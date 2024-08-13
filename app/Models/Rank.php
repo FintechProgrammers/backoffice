@@ -28,6 +28,6 @@ class Rank extends Model
 
     public function getImageAttribute(): string
     {
-        return !empty($this->file_url) ? $this->file_url : url('/') . '/assets/images/avatar.svg';
+        return !empty($this->file_url) ? $this->file_url : url('/') . '/assets/images/no-rank.jpg';
     }
 }
