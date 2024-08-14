@@ -63,7 +63,7 @@ class User extends Authenticatable
 
     public function getProfilePictureAttribute(): string
     {
-        return !empty($this->profile_image) ? $this->profile_image : url('/') . '/assets/images/avatar.svg';
+        return !empty($this->profile_image) ? $this->profile_image : url('/') . '/assets/images/pin-sin-rango.png';
     }
 
     /**
