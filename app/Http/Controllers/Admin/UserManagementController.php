@@ -36,14 +36,14 @@ class UserManagementController extends Controller
         $query = User::withTrashed();
 
         $query = $query
-            ->when(!empty($search), fn ($query) => $query->where('first_name', 'LIKE', "%{$search}%")->orWhere('last_name', 'LIKE', "%{$search}%")->orWhere('email', 'LIKE', "%{$search}%")->orWhere('username', 'LIKE', "%{$search}%"))
-            ->when(!empty($status), fn ($query) => $query->where('status', $status))
-            ->when(!empty($accountType), fn ($query) => $accountType == 'ambassador' ? $query->where('is_ambassador', true) : $query->where('is_ambassador', false))
-            ->when(!empty($dateFrom) && !empty($dateTo), fn ($query) => $query->whereBetween('created_at', [$dateFrom, $dateTo]))
-            ->when(!empty($status) && !empty($dateFrom) && !empty($dateTo), fn ($query) => $query->where('status', $status)->whereBetween('created_at', [$dateFrom, $dateTo]))
-            ->when(!empty($accountType) && !empty($dateFrom) && !empty($dateTo), fn ($query) => $accountType == 'ambassador' ? $query->where('is_ambassador', true)->whereBetween('created_at', [$dateFrom, $dateTo]) : $query->where('is_ambassador', false)->whereBetween('created_at', [$dateFrom, $dateTo]));
+            ->when(!empty($search), fn($query) => $query->where('first_name', 'LIKE', "%{$search}%")->orWhere('last_name', 'LIKE', "%{$search}%")->orWhere('email', 'LIKE', "%{$search}%")->orWhere('username', 'LIKE', "%{$search}%"))
+            ->when(!empty($status), fn($query) => $query->where('status', $status))
+            ->when(!empty($accountType), fn($query) => $accountType == 'ambassador' ? $query->where('is_ambassador', true) : $query->where('is_ambassador', false))
+            ->when(!empty($dateFrom) && !empty($dateTo), fn($query) => $query->whereBetween('created_at', [$dateFrom, $dateTo]))
+            ->when(!empty($status) && !empty($dateFrom) && !empty($dateTo), fn($query) => $query->where('status', $status)->whereBetween('created_at', [$dateFrom, $dateTo]))
+            ->when(!empty($accountType) && !empty($dateFrom) && !empty($dateTo), fn($query) => $accountType == 'ambassador' ? $query->where('is_ambassador', true)->whereBetween('created_at', [$dateFrom, $dateTo]) : $query->where('is_ambassador', false)->whereBetween('created_at', [$dateFrom, $dateTo]));
 
-        $data['users'] = $query->paginate(50);
+        $data['users'] = $query->latest()->paginate(50);
 
         return view('admin.users._table', $data);
     }

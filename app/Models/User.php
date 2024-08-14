@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Traits\GeneratesUuid;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -256,7 +257,7 @@ class User extends Authenticatable
      * @param int $limit Number of users to retrieve.
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getLastEnrolledUsers($limit = 10)
+    public function getLastEnrolledUsers($limit = 6)
     {
         // Get the last enrolled users by ordering them by the creation date
         return User::where('parent_id', $this->id)
@@ -269,18 +270,6 @@ class User extends Authenticatable
     public function scopeAmbassadors($query)
     {
         return $query->where('is_ambassador', true);
-    }
-
-    // Direct invitees (children)
-    public function directInvitees()
-    {
-        return $this->hasMany(User::class, 'parent_id')->withTrashed();
-    }
-
-    // Indirect invitees (grandchildren)
-    public function indirectInvitees()
-    {
-        return $this->hasManyThrough(User::class, User::class, 'parent_id', 'parent_id', 'id', 'id');
     }
 
     // All commission transactions (both direct and indirect)
@@ -382,7 +371,6 @@ class User extends Authenticatable
         return $topSellers;
     }
 
-
     // get list of all sales
     public function sales()
     {
@@ -392,49 +380,28 @@ class User extends Authenticatable
         // Get IDs of all descendants
         $descendantIds = $descendants->pluck('id')->toArray();
 
-        // Fetch sales records of all descendants
-        $sales = Sale::whereIn('user_id', $descendantIds)->latest();
+        // Fetch both direct and team sales without repetition
+        $sales = Sale::where('parent_id', $this->id)->orWhereIn('parent_id', $descendantIds)->latest();
 
         return $sales;
+    }
+
+    public function getTotalBvThisMonthAttribute()
+    {
+        $currentMonth = now()->month;
+        $currentYear = now()->year;
+
+        return $this->sales()
+            ->whereMonth('created_at', $currentMonth)
+            ->whereYear('created_at', $currentYear)
+            ->select('bv_amount')
+            ->sum('bv_amount');
     }
 
     // Calculate total sales for a user
     public function getTotalSales()
     {
         return $this->sales()->sum('amount');
-    }
-
-    // gets the list of direct sales
-    public function directSales()
-    {
-        // Get direct referrals
-        $directReferrals = $this->children()->pluck('id')->toArray();
-
-        // Calculate total sales made by direct referrals
-        $sales = Sale::whereIn('user_id', $directReferrals);
-
-        return $sales;
-    }
-
-    // gets the list of indirect sales
-    public function indirectSales()
-    {
-        // Get direct referrals
-        $directReferrals = $this->children()->with('allChildren')->get();
-        $indirectReferrals = collect();
-
-        // Collect all indirect referrals
-        foreach ($directReferrals as $directReferral) {
-            $this->getAllDescendants($directReferral, $indirectReferrals);
-        }
-
-        // Get IDs of indirect referrals
-        $indirectReferralIds = $indirectReferrals->pluck('id')->toArray();
-
-        // Calculate total sales made by indirect referrals
-        $sales = Sale::whereIn('user_id', $indirectReferralIds);
-
-        return $sales;
     }
 
     function getTotalSalesAttribute()
@@ -451,20 +418,44 @@ class User extends Authenticatable
         return $total;
     }
 
+    function directSales()
+    {
+        $directSales = Sale::where('parent_id', $this->id);
+
+        return $directSales;
+    }
+
+    public function getTeamSale()
+    {
+        // Get all descendants of the current user
+        $descendants = $this->getDescendants();
+
+        // Get the IDs of the descendants
+        $descendantIds = $descendants->pluck('id')->toArray();
+
+        // Get the sales where the parent_id is in the descendant IDs
+        $teamSales = Sale::whereIn('parent_id', $descendantIds);
+
+        return $teamSales;
+    }
+
+    function getTeamVolumeAttribute()
+    {
+        $total = $this->getTeamSale()
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->sum('bv_amount');
+
+        return $total;
+    }
+
     public function getTeamCommissions()
     {
-        // Direct commission transactions
-        $directCommissions = $this->directCommissionTransactions()->sum('amount');
-
         // Indirect commission transactions
         $indirectCommissions = $this->indirectCommissionTransactions()->sum('amount');
 
-        // Total team commissions
-        $totalTeamCommissions = $directCommissions + $indirectCommissions;
-
-        return $totalTeamCommissions;
+        return $indirectCommissions;
     }
-
     /**
      * The attributes that should be hidden for serialization.
      *

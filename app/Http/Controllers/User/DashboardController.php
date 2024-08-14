@@ -27,7 +27,6 @@ class DashboardController extends Controller
             $startOfWeek = Carbon::now()->startOfWeek();
             $endOfWeek = Carbon::now()->endOfWeek();
 
-            $sales = $user->sales();
             $directSale = $user->directSales();
             $commissions = $user->commissionTransactions();
             $directCommission = $user->directCommissionTransactions;
@@ -44,13 +43,13 @@ class DashboardController extends Controller
 
             $data['currentWeekDirectCommissions'] = $directCommission->whereBetween('created_at', [$startOfWeek, $endOfWeek])->select('amount')->sum('amount');
 
-            $data['currentMonthVolume'] = $sales->whereMonth('created_at', $currentMonth)->whereYear('created_at', $currentYear)->select('bv_amount')->sum('bv_amount');
+            $data['currentMonthVolume'] = $user->total_bv_this_month;
 
             $data['currentMonthCommissions'] = $commissions->whereMonth('created_at', $currentMonth)->whereYear('created_at', $currentYear)->select('amount')->sum('amount');
 
             $data['currentWeekCommissions'] = $commissions->whereBetween('created_at', [$startOfWeek, $endOfWeek])->select('amount')->sum('amount');
 
-            $data['teamVolume'] = $user->total_bv;
+            $data['teamVolume'] = $user->team_volume;
 
             $data['teamCommissions'] = $user->getTeamCommissions();
 
