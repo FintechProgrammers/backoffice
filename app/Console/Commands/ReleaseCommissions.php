@@ -40,11 +40,13 @@ class ReleaseCommissions extends Command
 
             $cash_back_window = !empty(systemSettings()->cash_back_window) ? systemSettings()->cash_back_window : 7;
 
+            logger("cas back {$cash_back_window}");
+
             // Get commissions that are due for release and conditions are met
             $commissions = CommissionTransaction::where('is_converted', false)
                 ->whereHas('sale', function ($query) use ($now, $cash_back_window) {
                     $query->where('is_refunded', false)
-                        ->where('created_at', '>=', $now->subDays($cash_back_window));
+                        ->where('created_at', '<=', $now->subDays($cash_back_window));
                 })
                 ->get();
 
