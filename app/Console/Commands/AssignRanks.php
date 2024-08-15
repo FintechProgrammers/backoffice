@@ -60,7 +60,8 @@ class AssignRanks extends Command
             }
 
             // Get the user's total sales for the current month
-            $totalSales = $user->sales()->whereMonth('created_at', $currentMonth)->whereYear('created_at', $currentYear)->sum('amount');
+            // $totalSales = $user->sales()->whereMonth('created_at', $currentMonth)->whereYear('created_at', $currentYear)->sum('amount');
+            $totalSales = $user->commissionTransactions()->whereMonth('created_at', $currentMonth)->whereYear('created_at', $currentYear)->sum('amount');
 
             // Get the highest rank that the user qualifies for
             $rank = Rank::where('creteria', '>=', $totalSales)
