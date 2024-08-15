@@ -31,7 +31,6 @@ class ReleaseCommissions extends Command
      */
     public function handle()
     {
-        logger('Starting to assign commission...');
 
         DB::beginTransaction();
 
