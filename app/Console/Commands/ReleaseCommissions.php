@@ -48,8 +48,6 @@ class ReleaseCommissions extends Command
                 })
                 ->get();
 
-            logger($commissions);
-
             foreach ($commissions as $commission) {
                 $user = User::find($commission->user_id);
 
@@ -94,6 +92,7 @@ class ReleaseCommissions extends Command
             $this->info('All due commissions have been released successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
+            sendToLog($e);
             $this->error('An error occurred: ' . $e->getMessage());
         }
     }
