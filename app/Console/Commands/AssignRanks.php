@@ -51,6 +51,10 @@ class AssignRanks extends Command
 
         foreach ($users as $user) {
 
+            // Get the user's total sales for the current month
+            // $totalSales = $user->sales()->whereMonth('created_at', $currentMonth)->whereYear('created_at', $currentYear)->sum('amount');
+            $totalSales = $user->commissionTransactions()->whereMonth('created_at', $currentMonth)->whereYear('created_at', $currentYear)->sum('amount');
+
             // Check if the current month is different from the month of the last rank update
             if ($user->rank_updated_at && $user->rank_updated_at->month != $currentMonth) {
                 // Clear the rank
@@ -59,34 +63,50 @@ class AssignRanks extends Command
                 $user->save();
             }
 
-            // Get the user's total sales for the current month
-            // $totalSales = $user->sales()->whereMonth('created_at', $currentMonth)->whereYear('created_at', $currentYear)->sum('amount');
-            $totalSales = $user->commissionTransactions()->whereMonth('created_at', $currentMonth)->whereYear('created_at', $currentYear)->sum('amount');
+            // Get all ranks ordered by criteria in descending order
+            $ranks = Rank::orderBy('creteria', 'desc')->get();
 
-            // Get the highest rank that the user qualifies for
-            $rank = Rank::where('creteria', '<=', $totalSales)
-                // ->orderBy('creteria', 'desc')
-                ->first();
-
-            logger("{$rank->name} for {$user->full_name}");
-
-            if ($rank) {
-                // Check if the user's rank has changed
-                if ($user->rank_id != $rank->id) {
-                    // Update user's rank
-                    $user->rank_id = $rank->id;
-                    $user->rank_updated_at = Carbon::now();
-                    $user->save();
-
-                    // Log the rank change
-                    RankHistory::create([
-                        'user_id' => $user->id,
-                        'rank_id' => $rank->id,
-                    ]);
-
-                    $this->info("User {$user->id} has been assigned rank {$rank->name}.");
+            // Find the highest rank that the user qualifies for
+            $rank = null;
+            foreach ($ranks as $r) {
+                if ($totalSales >= $r->creteria) {
+                    $rank = $r;
+                    break; // Stop once we find the first (i.e., highest) qualifying rank
                 }
             }
+
+            // Assign the rank to the user
+            if ($rank) {
+                $user->rank_id = $rank->id;
+                $user->rank_updated_at = Carbon::now();
+                $user->save();
+            }
+
+
+            // // Get the highest rank that the user qualifies for
+            // $rank = Rank::where('creteria', '<=', $totalSales)
+            //     // ->orderBy('creteria', 'desc')
+            //     ->first();
+
+            // logger("{$rank->name} for {$user->full_name}");
+
+            // if ($rank) {
+            //     // Check if the user's rank has changed
+            //     if ($user->rank_id != $rank->id) {
+            //         // Update user's rank
+            //         $user->rank_id = $rank->id;
+            //         $user->rank_updated_at = Carbon::now();
+            //         $user->save();
+
+            //         // Log the rank change
+            //         RankHistory::create([
+            //             'user_id' => $user->id,
+            //             'rank_id' => $rank->id,
+            //         ]);
+
+            //         $this->info("User {$user->id} has been assigned rank {$rank->name}.");
+            //     }
+            // }
         }
     }
 }
