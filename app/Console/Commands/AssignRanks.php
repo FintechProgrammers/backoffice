@@ -63,12 +63,12 @@ class AssignRanks extends Command
             // $totalSales = $user->sales()->whereMonth('created_at', $currentMonth)->whereYear('created_at', $currentYear)->sum('amount');
             $totalSales = $user->commissionTransactions()->whereMonth('created_at', $currentMonth)->whereYear('created_at', $currentYear)->sum('amount');
 
-            logger("total sale for {$user->full_name}  {$totalSales}");
-
             // Get the highest rank that the user qualifies for
-            $rank = Rank::where('creteria', '>=', $totalSales)
-                ->orderBy('creteria', 'desc')
+            $rank = Rank::where('creteria', '<=', $totalSales)
+                // ->orderBy('creteria', 'desc')
                 ->first();
+
+            logger("{$rank->name} for {$user->full_name}");
 
             if ($rank) {
                 // Check if the user's rank has changed
