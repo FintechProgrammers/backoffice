@@ -44,7 +44,7 @@ class ReleaseCommissions extends Command
             $commissions = CommissionTransaction::where('is_converted', false)
                 ->whereHas('sale', function ($query) use ($now, $cash_back_window) {
                     $query->where('is_refunded', false)
-                        ->where('created_at', '<=', $now->subDays($cash_back_window));
+                        ->where('created_at', '>=', $now->subDays($cash_back_window));
                 })
                 ->get();
 
