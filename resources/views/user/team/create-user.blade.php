@@ -113,7 +113,7 @@
                 if (selectedService) {
                     const name = selectedService.getAttribute('data-name');
                     const image = selectedService.getAttribute('data-image');
-                    const price = selectedService.getAttribute('data-price');
+                    const price = parseFloat(selectedService.getAttribute('data-price')).toFixed(2);
 
                     packageDetails = `${name} - $${price}`;
 
@@ -156,7 +156,7 @@
                         // Update preview section
                         const name = radio.getAttribute('data-name');
                         const image = radio.getAttribute('data-image');
-                        const price = radio.getAttribute('data-price');
+                        const price = parseFloat(radio.getAttribute('data-price')).toFixed(2)
 
                         previewImage.src = image;
                         previewName.innerHTML = name;

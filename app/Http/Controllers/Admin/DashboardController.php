@@ -9,6 +9,7 @@ use App\Models\Rank;
 use App\Models\Sale;
 use App\Models\Service;
 use App\Models\Ticket;
+use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Withdrawal;
 use Illuminate\Http\Request;
@@ -54,15 +55,11 @@ class DashboardController extends Controller
 
         $totalSales = Sale::sum('amount');
 
-        $totalAmbassadorSales = AmbassedorPayments::sum('amount');
-
-        $revenueCount = $totalSales + $totalAmbassadorSales;
-
-        $withdrawalsSum = Withdrawal::where('status', 'completed')->sum('amount');
+        $withdrawalsSum = Transaction::where('type', 'withdrawal')->sum('amount');
 
         $expenses =  CommissionTransaction::where('is_converted', false)->sum('amount');
 
-        $withdrawalRequest = Withdrawal::where('status', 'pending')->count();
+        $withdrawalRequest = Transaction::where('type', 'withdrawal')->where('status', 'pending')->count();
 
         $activeUsers = User::has('subscription')
             ->whereHas('subscription', function ($query) {
@@ -81,26 +78,27 @@ class DashboardController extends Controller
 
         return  [
             (object) [
-                'title' => 'Sales',
-                'value' =>  "$" . number_format($totalSales, 2),
+                'title' => 'Revenue',
+                'value' =>  "$" . number_format($totalSales, 2, '.', ','),
                 'color' => 'text-bg-success',
                 'icon' => 'bx bx-chart',
                 'link' => null,
             ],
             (object) [
-                'title' => 'Revenue',
-                'value' =>  "$" . number_format($revenueCount, 2),
-                'color' => 'text-bg-info',
-                'icon' => 'las la-money-bill-alt',
-                'link' => null,
-            ],
-            (object) [
                 'title' => 'Expenses',
-                'value' =>  "$" . number_format($expenses, 2),
+                'value' =>  "$" . number_format($expenses, 2, '.', ','),
                 'color' => 'text-bg-danger',
                 'icon' => 'las la-money-bill-wave-alt',
                 'link' => null,
             ],
+            (object) [
+                'title' => 'Profit',
+                'value' =>  "$" . number_format($totalSales - $expenses, 2, '.', ','),
+                'color' => 'text-bg-info',
+                'icon' => 'las la-money-bill-alt',
+                'link' => null,
+            ],
+
             (object) [
                 'title' => 'Withdrawal Request',
                 'value' => $withdrawalRequest,

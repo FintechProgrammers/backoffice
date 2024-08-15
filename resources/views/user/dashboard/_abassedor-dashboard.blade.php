@@ -51,7 +51,7 @@
                                     </span>
                                 @else
                                     <span class="avatar avatar-md avatar-rounded">
-                                        <img src="{{ asset('assets/images/no-rank.jpg') }}" alt="">
+                                        <img src="{{ asset('assets/images/pin-sin-rango.png') }}" alt="">
                                     </span>
                                 @endif
                             </div>
@@ -201,7 +201,7 @@
                                     </span>
                                 @else
                                     <span class="avatar avatar-md avatar-rounded bg-white text-dark shadow-sm">
-                                        <img src="{{ asset('assets/images/no-rank.jpg') }}" alt="img">
+                                        <img src="{{ asset('assets/images/pin-sin-rango.png') }}" alt="img">
                                     </span>
                                 @endif
                             </div>
@@ -272,7 +272,7 @@
                         <div class="text-center">
                             <p class="fs-14 fw-semibold mb-2 text-light">Active User</p>
                             <div class="d-flex align-items-center justify-content-center flex-wrap">
-                                <h5 class="mb-0 fw-semibold  text-light">{{ $activeUsers, 0, '.', ',' }}</h5>
+                                <h5 class="mb-0 fw-semibold  text-light">{{ $activeUsers }}</h5>
                             </div>
                         </div>
                     </div>
@@ -284,7 +284,7 @@
                         <div class="text-center">
                             <p class="fs-14 fw-semibold mb-2 text-light">Total User</p>
                             <div class="d-flex align-items-center justify-content-center flex-wrap">
-                                <h5 class="mb-0 fw-semibold  text-light">{{ $totalUsers, 0, '.', ',' }}</h5>
+                                <h5 class="mb-0 fw-semibold  text-light">{{ $totalUsers }}</h5>
                             </div>
                         </div>
                     </div>
@@ -296,7 +296,7 @@
                         <div class="text-center">
                             <p class="fs-14 fw-semibold mb-2 text-light">Upcoming Renewals</p>
                             <div class="d-flex align-items-center justify-content-center flex-wrap">
-                                <h5 class="mb-0 fw-semibold  text-light">{{ $upcomingRenewals, 0, '.', ',' }}</h5>
+                                <h5 class="mb-0 fw-semibold  text-light">{{ $upcomingRenewals }}</h5>
                             </div>
                         </div>
                     </div>

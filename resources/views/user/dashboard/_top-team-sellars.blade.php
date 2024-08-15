@@ -1,5 +1,5 @@
  <div class="team-groups">
-     <div class="card custom-card card-bg-dark text-white">
+     <div class="card custom-card card-bg-dark text-white" style="height: 500px">
 
          <div class="card-body p-0 ">
              <h6 class="fw-semibold mb-0 text-light p-3">Top 20 my Team</h6>
@@ -21,7 +21,7 @@
                                      </div>
                                      <div>
                                          <h4 class="fs-10 fw-semibold text-white mb-0">
-                                             ${{ $item->total_sales }}
+                                             ${{ number_format($item->total_sales, 2, '.', ',') }}
                                          </h4>
                                      </div>
                                  </div>

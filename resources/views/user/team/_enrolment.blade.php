@@ -25,7 +25,7 @@
                              </div>
                          </div>
                          <div class="fw-semibold me-sm-5 me-0">
-                             ${{ $item->price }}
+                             ${{ number_format($item->price, 2, '.', ',') }}
                          </div>
                      </div>
                  </div>
