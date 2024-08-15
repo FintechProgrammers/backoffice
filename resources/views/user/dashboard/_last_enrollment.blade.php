@@ -4,7 +4,7 @@
             <h6 class="fw-semibold mb-0">Last Enrollments</h6>
         </div>
         <div class="card-body p-0">
-            <div class="teams-nav" id="teams-nav-enrol">
+            <div class="teams-nav scrollable-card" id="teams-nav-enrol">
                 <ul class="list-unstyled mb-0 mt-2">
                     @forelse ($enrollments as $item)
                         <li>

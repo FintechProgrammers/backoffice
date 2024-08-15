@@ -50,33 +50,35 @@
             </div>
         </div>
     </div>
-@endif
 
-<div class="row mb-3">
-    <div class="col-lg-12">
-        <div class="card card-body">
-            @if (!empty($user->rank))
-                <div class="d-flex align-items-center">
-                    <span class="avatar avatar-md avatar-rounded me-3">
-                        <img src="{{ $user->rank->file_url }}" alt="">
-                    </span>
-                    <div>
-                        <h6 class="mb-0 fw-semibold text-muted text-capitalize">{{ $user->rank->name }}</h6>
+    <div class="row mb-3">
+        <div class="col-lg-12">
+            <div class="card card-body">
+                @if (!empty($user->rank))
+                    <div class="d-flex align-items-center">
+                        <span class="avatar avatar-md avatar-rounded me-3">
+                            <img src="{{ $user->rank->file_url }}" alt="">
+                        </span>
+                        <div>
+                            <h6 class="mb-0 fw-semibold text-muted text-capitalize">{{ $user->rank->name }}</h6>
+                        </div>
                     </div>
-                </div>
-            @else
-                <div class="d-flex align-items-center">
-                    <span class="avatar avatar-md avatar-rounded me-3">
-                        <img src="{{ asset('assets/images/no-rank.jpg') }}" alt="">
-                    </span>
-                    <div>
-                        <h6 class="mb-0 fw-semibold text-muted">No Rank</h6>
+                @else
+                    <div class="d-flex align-items-center">
+                        <span class="avatar avatar-md avatar-rounded me-3">
+                            <img src="{{ asset('assets/images/no-rank.jpg') }}" alt="">
+                        </span>
+                        <div>
+                            <h6 class="mb-0 fw-semibold text-muted">No Rank</h6>
+                        </div>
                     </div>
-                </div>
-            @endif
+                @endif
+            </div>
         </div>
     </div>
-</div>
+
+@endif
+
 
 <div class="row mb-3">
     <h6>Subscriptions:</h6>
