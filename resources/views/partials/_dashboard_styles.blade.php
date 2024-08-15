@@ -1,4 +1,3 @@
-
 <link href="{{ asset('assets/libs/node-waves/waves.min.css') }}" rel="stylesheet">
 
 <!-- Simplebar Css -->
@@ -7,3 +6,12 @@
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
 
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+<style>
+    .scrollable-card {
+        height: 300px;
+        /* Fixed height */
+        overflow-y: auto;
+        /* Enable vertical scroll */
+    }
+</style>

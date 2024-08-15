@@ -56,6 +56,11 @@
                 autoHide: true
             });
 
+            var myElement3 = document.getElementById('global-nav');
+            new SimpleBar(myElement21, {
+                autoHide: true
+            });
+
             var myElementEn = document.getElementById('teams-nav-enrol');
             new SimpleBar(myElementEn, {
                 autoHide: true

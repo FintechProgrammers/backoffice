@@ -1,8 +1,8 @@
 <div class="team-groups">
-    <div class="card custom-card card-bg-dark text-white" style="height: 500px">
+    <div class="card custom-card card-bg-dark text-white">
         <div class="card-body p-0 ">
             <h6 class="fw-semibold mb-0 text-light p-3">Top 20 Global</h6>
-            <div class="teams-nav" id="teams-nav">
+            <div class="teams-nav scrollable-card" id="global-nav">
                 <ul class="list-unstyled mb-0 mt-2 text-white">
                     @forelse ($topGlobalSellers as $item)
                         <li>

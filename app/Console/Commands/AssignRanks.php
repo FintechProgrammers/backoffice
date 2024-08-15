@@ -38,10 +38,6 @@ class AssignRanks extends Command
 
         $this->info('Starting to assign ranks...');
 
-        $now = Carbon::now();
-        $startOfMonth = $now->startOfMonth();
-        $endOfMonth = $now->endOfMonth();
-
         // Get all users
         $users = User::where('is_ambassador', true)->get();
 
@@ -50,12 +46,24 @@ class AssignRanks extends Command
         //     $query->where('end_date', '>', Carbon::now());
         // })->get();
 
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
+
         foreach ($users as $user) {
-            $totalSales = $user->sales()->whereBetween('created_at', [$startOfMonth, $endOfMonth])
-                ->select('amount')->sum('amount');
+
+            // Check if the current month is different from the month of the last rank update
+            if ($user->rank_updated_at && $user->rank_updated_at->month != $currentMonth) {
+                // Clear the rank
+                $user->rank_id = null;
+                $user->rank_updated_at = null;
+                $user->save();
+            }
+
+            // Get the user's total sales for the current month
+            $totalSales = $user->sales()->whereMonth('created_at', $currentMonth)->whereYear('created_at', $currentYear)->sum('amount');
 
             // Get the highest rank that the user qualifies for
-            $rank = Rank::where('creteria', '<=', $totalSales)
+            $rank = Rank::where('creteria', '>=', $totalSales)
                 ->orderBy('creteria', 'desc')
                 ->first();
 
@@ -64,6 +72,7 @@ class AssignRanks extends Command
                 if ($user->rank_id != $rank->id) {
                     // Update user's rank
                     $user->rank_id = $rank->id;
+                    $user->rank_updated_at = Carbon::now();
                     $user->save();
 
                     // Log the rank change
