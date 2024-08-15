@@ -24,7 +24,19 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
+
+Route::get('/service', function () {
+    return view('service');
+})->name('service');
+
+Route::get('/owntheFuture', function () {
+    return view('owntheFuture');
+})->name('owntheFuture');
+
+Route::get('/contact', function () {
+    return view('contact');
+})->name('contact');
 
 Route::middleware(['auth'])->group(function () {
     Route::controller(DashboardController::class)->prefix('dashboard')->group(function () {
