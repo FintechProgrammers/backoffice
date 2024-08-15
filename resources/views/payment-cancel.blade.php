@@ -1,10 +1,10 @@
-@extends('layouts.user.app')
+@extends('layouts.auth')
 
 @section('title', 'Stripe Cancel')
 
 @section('content')
     <div class="p-5 checkout-payment-success my-3">
-        <div class="mb-5">
+        <div class="mb-3">
             <h5 class="text-success fw-semibold">Cancelled</h5>
         </div>
         <div class="me-2">
@@ -14,7 +14,7 @@
         </div>
 
         <div class="mb-4 d-flex flex-column align-items-center">
-            <p class="mb-1 fs-14 w-25">
+            <p class="mb-1 fs-14">
                 Your payment process was cancelled by you.
             </p>
         </div>
