@@ -235,7 +235,12 @@ class User extends Authenticatable
             return 0;
         }
 
-        $currentSales = $this->getSalesForCurrentMonth();
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
+
+        // $currentSales = $this->getSalesForCurrentMonth();
+        $currentSales = $this->commissionTransactions()->whereMonth('created_at', $currentMonth)->whereYear('created_at', $currentYear)->sum('amount');
+
         $progress = ($currentSales - $currentRank->creteria) / ($nextRank->creteria - $currentRank->creteria) * 100;
 
         return $progress > 100 ? 100 : ($progress < 0 ? 0 : round($progress, 2));

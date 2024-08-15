@@ -81,32 +81,6 @@ class AssignRanks extends Command
                 $user->rank_updated_at = Carbon::now();
                 $user->save();
             }
-
-
-            // // Get the highest rank that the user qualifies for
-            // $rank = Rank::where('creteria', '<=', $totalSales)
-            //     // ->orderBy('creteria', 'desc')
-            //     ->first();
-
-            // logger("{$rank->name} for {$user->full_name}");
-
-            // if ($rank) {
-            //     // Check if the user's rank has changed
-            //     if ($user->rank_id != $rank->id) {
-            //         // Update user's rank
-            //         $user->rank_id = $rank->id;
-            //         $user->rank_updated_at = Carbon::now();
-            //         $user->save();
-
-            //         // Log the rank change
-            //         RankHistory::create([
-            //             'user_id' => $user->id,
-            //             'rank_id' => $rank->id,
-            //         ]);
-
-            //         $this->info("User {$user->id} has been assigned rank {$rank->name}.");
-            //     }
-            // }
         }
     }
 }

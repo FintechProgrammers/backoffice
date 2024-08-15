@@ -68,12 +68,12 @@
         });
     </script>
     @if (Auth::user()->profile_completion_percentage < 100)
-        {{-- <script>
+        <script>
             var myModal = new bootstrap.Modal(document.getElementById('profileUpdateModal'), {
                 keyboard: false
             });
             myModal.show();
-        </script> --}}
+        </script>
     @endif
     <script>
         Chart.defaults.borderColor = "rgba(142, 156, 173,0.1)", Chart.defaults.color = "#8c9097";
