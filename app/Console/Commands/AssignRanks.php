@@ -37,6 +37,7 @@ class AssignRanks extends Command
     {
 
         $this->info('Starting to assign ranks...');
+        logger('Starting to assign ranks...');
 
         $now = Carbon::now();
         $startOfMonth = $now->startOfMonth();
@@ -71,6 +72,8 @@ class AssignRanks extends Command
                         'user_id' => $user->id,
                         'rank_id' => $rank->id,
                     ]);
+
+                    logger("User {$user->id} has been assigned rank {$rank->name}.");
 
                     $this->info("User {$user->id} has been assigned rank {$rank->name}.");
                 }
