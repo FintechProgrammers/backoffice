@@ -15,7 +15,7 @@
                     <div class="card-body p-3">
                         <div class="mb-3 overflow-hidden position-relative">
                             <a href="javascript:void(0);" class="stretched-link"></a>
-                            <img src="{{ $item->image }}" alt="img" class="nft-img img-fluid">
+                            <img src="{{ $item->banner_url }}" alt="img" class="nft-img img-fluid">
                             <span class="nft-timer-container">
                                 <i class="ti ti-bolt fs-14"></i>
                                 <span

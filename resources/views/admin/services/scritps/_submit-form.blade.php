@@ -38,6 +38,47 @@
                 contentBody.text('No file selected');
             }
         });
+        $('#modalBody').on('change', '#banner', function(event) {
+            event.preventDefault();
+
+            const contentBody = $('#modalBody').find('#bannerContent');
+
+            var file = event.target.files[0];
+
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var content = e.target.result;
+                    contentBody.html(
+                        `<img src="${content}" class="img-fluid rounded" alt="Uploaded Image" width="150px" height="50px">`
+                    );
+                }
+                reader.readAsDataURL(file);
+            } else {
+                contentBody.text('No file selected');
+            }
+        });
+        $('#modalBody').on('change', '#product-image', function(event) {
+            event.preventDefault();
+
+            const contentBody = $('#modalBody').find('#productImageContent');
+
+            var file = event.target.files[0];
+
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var content = e.target.result;
+                    contentBody.html(
+                        `<img src="${content}" class="img-fluid rounded" alt="Uploaded Image" width="150px" height="50px">`
+                    );
+                }
+                reader.readAsDataURL(file);
+            } else {
+                contentBody.text('No file selected');
+            }
+        });
+
         $('#modalBody').on('submit', 'form', function(event) {
             event.preventDefault(); // Prevent default form submission
 

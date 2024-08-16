@@ -71,7 +71,7 @@ class StripeController extends Controller
                     'amount'        => $service->price * 100,
                     'product_data'  => [
                         'name'      => $service->name,
-                        'images'     => [$service->image],
+                        'images'     => [$service->product_image_url],
                         // 'description' => $service->description,
                     ],
                     // 'customer_email' => $user->email,

@@ -72,9 +72,27 @@
         width="150px" height="50px" alt="...">
 </div>
 <div class="mb-3">
-    <label for="form-text" class="form-label fs-14 text-dark">Image</label>
-    <input type="file" name="image" id="photo" class="form-control">
+    <label for="form-text" class="form-label fs-14 text-dark">Icon</label>
+    <input type="file" name="icon" id="photo" class="form-control">
 </div>
+<div class="text-center" id="bannerContent">
+    <img src="{{ isset($service) ? $service->banner_url : asset('assets/images/default.jpg') }}"
+        class="img-fluid rounded" width="150px" height="50px" alt="...">
+</div>
+<div class="mb-3">
+    <label for="form-text" class="form-label fs-14 text-dark">Banner</label>
+    <input type="file" name="banner" id="banner" class="form-control">
+</div>
+
+<div class="text-center" id="productImageContent">
+    <img src="{{ isset($service) ? $service->product_image_url : asset('assets/images/default.jpg') }}"
+        class="img-fluid rounded" width="150px" height="50px" alt="...">
+</div>
+<div class="mb-3">
+    <label for="form-text" class="form-label fs-14 text-dark">Product Image</label>
+    <input type="file" name="product_image" id="product-image" class="form-control">
+</div>
+
 <div class="form-check form-check-lg form-switch mb-3">
     <input class="form-check-input" type="checkbox" role="switch" id="switch-lg" name="auto_renewal"
         @checked(isset($service) && $service->auto_renewal)>

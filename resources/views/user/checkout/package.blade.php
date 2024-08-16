@@ -25,6 +25,9 @@
                 </div>
             </div>
             <div>
+                <img src="{{ $package->banner_url }}" class="rounded" height="300px" width="300px" alt="">
+            </div>
+            <div>
                 <p class="mb-0"><i class="bi bi-info-circle text-danger" data-bs-toggle="tooltip"
                         data-bs-placement="top"
                         title="Package duration is {{ convertDaysToUnit($package->duration, $package->duration_unit) . ' ' . $package->duration_unit }}"></i>

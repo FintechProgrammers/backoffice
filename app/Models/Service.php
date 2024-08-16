@@ -26,6 +26,23 @@ class Service extends Model
         return 'uuid';
     }
 
+    /**
+     * Get the balance attribute.
+     *
+     * @param  int  $value
+     * @return float
+     */
+    public function getPriceAttribute($value)
+    {
+        return round($value, 2);
+    }
+
+    public function getBvAmountAttribute($value)
+    {
+        return round($value, 2);
+    }
+
+
     function serviceProduct()
     {
         return $this->hasMany(ServiceProduct::class);
@@ -33,7 +50,17 @@ class Service extends Model
 
     public function getImageAttribute(): string
     {
-        return !empty($this->image_url) ? $this->image_url : url('/') . '/assets/images/default.jpg';
+        return !empty($this->image_url) ? $this->image_url : asset('assets/images/default.jpg');
+    }
+
+    public function getBannerUrlAttribute(): string
+    {
+        return !empty($this->banner) ? $this->banner : asset('assets/images/default.jpg');
+    }
+
+    public function getProductImageUrlAttribute(): string
+    {
+        return !empty($this->product_image) ? $this->product_image : asset('assets/images/default.jpg');
     }
 
     function sales()

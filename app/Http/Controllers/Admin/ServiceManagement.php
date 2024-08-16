@@ -46,7 +46,9 @@ class ServiceManagement extends Controller
             'package_type' => 'required|in:service,ambassadorship',
             'products' => 'required_if:package_type,service|array',
             'products.*' => 'required_if:package_type,service|exists:products,id',
-            'image' => 'required|image',
+            'icon' => 'required|image',
+            'banner' => 'required|image',
+            'product_image' => 'required|image',
         ]);
 
         // Handle validation errors
@@ -58,9 +60,19 @@ class ServiceManagement extends Controller
 
             DB::beginTransaction();
 
-            if ($request->hasFile('image')) {
-                $imageUrl = uploadFile($request->file('image'), "uploads/packages", "do_spaces");
+            if ($request->hasFile('icon')) {
+                $imageUrl = uploadFile($request->file('icon'), "uploads/packages/icons", "do_spaces");
                 $request->merge(['image_url' => $imageUrl]);
+            }
+
+            if ($request->hasFile('banner')) {
+                $bannerUrl = uploadFile($request->file('banner'), "uploads/packages/banners", "do_spaces");
+                $request->merge(['banner_url' => $bannerUrl]);
+            }
+
+            if ($request->hasFile('product_image')) {
+                $productImageUrl = uploadFile($request->file('product_image'), "uploads/packages/products", "do_spaces");
+                $request->merge(['product_image_url' => $productImageUrl]);
             }
 
             $service = Service::create($this->prepareData($request));
@@ -113,6 +125,8 @@ class ServiceManagement extends Controller
             'products' => 'required_if:package_type,service|array',
             'products.*' => 'required_if:package_type,service|exists:products,id',
             'image' => 'nullable|image',
+            'banner' => 'nullable|image',
+            'product_image' => 'nullable|image',
         ]);
 
         // Handle validation errors
@@ -124,12 +138,28 @@ class ServiceManagement extends Controller
 
             DB::beginTransaction();
 
-            if ($request->hasFile('image')) {
+            if ($request->hasFile('icon')) {
                 deleteFile($service->image_url);
-                $imageUrl = uploadFile($request->file('image'), "uploads/packages", "do_spaces");
+                $imageUrl = uploadFile($request->file('icon'), "uploads/packages/icons", "do_spaces");
                 $request->merge(['image_url' => $imageUrl]);
             } else {
                 $request->merge(['image_url' => $service->image_url]);
+            }
+
+            if ($request->hasFile('banner')) {
+                deleteFile($service->banner);
+                $bannerUrl = uploadFile($request->file('banner'), "uploads/packages/banners", "do_spaces");
+                $request->merge(['banner_url' => $bannerUrl]);
+            } else {
+                $request->merge(['banner_url' => $service->banner]);
+            }
+
+            if ($request->hasFile('product_image')) {
+                deleteFile($service->product_image);
+                $productionImageUrl = uploadFile($request->file('product_image'), "uploads/packages/products", "do_spaces");
+                $request->merge(['product_image_url' => $productionImageUrl]);
+            } else {
+                $request->merge(['product_image_url' => $service->product_image]);
             }
 
             $service->update($this->prepareData($request));
@@ -204,6 +234,8 @@ class ServiceManagement extends Controller
             'ambassadorship' => $request->package_type === "ambassadorship" ? true : false,
             'description' => $request->description,
             'image_url'  => $request->image_url,
+            'banner' => $request->banner_url,
+            'product_image' => $request->product_image_url
         ];
     }
 

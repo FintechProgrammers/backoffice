@@ -113,17 +113,19 @@ if (!function_exists('uploadFile')) { /* send to log" */
 if (!function_exists('deleteFile')) {
     function deleteFile($fileUrl)
     {
-        // Extract file path from URL
-        $filePath = parse_url($fileUrl, PHP_URL_PATH);
+        if (!empty($fileUrl)) {
+            // Extract file path from URL
+            $filePath = parse_url($fileUrl, PHP_URL_PATH);
 
-        if (config('app.env') === 'local') {
-            $path = public_path($filePath);
-            if (file_exists($path)) {
-                unlink($path);
-            }
-        } else {
-            if (Storage::disk('do_spaces')->exists($filePath)) {
-                Storage::disk('do_spaces')->delete($filePath);
+            if (config('app.env') === 'local') {
+                $path = public_path($filePath);
+                if (file_exists($path)) {
+                    unlink($path);
+                }
+            } else {
+                if (Storage::disk('do_spaces')->exists($filePath)) {
+                    Storage::disk('do_spaces')->delete($filePath);
+                }
             }
         }
     }
