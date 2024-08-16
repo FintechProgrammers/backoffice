@@ -80,6 +80,21 @@ class AssignRanks extends Command
                 $user->rank_id = $rank->id;
                 $user->rank_updated_at = Carbon::now();
                 $user->save();
+
+                // Check if a rank history already exists for this month
+                $rankHistoryExists = RankHistory::where('user_id', $user->id)
+                    ->where('rank_id', $rank->id)
+                    ->whereMonth('created_at', $currentMonth)
+                    ->whereYear('created_at', $currentYear)
+                    ->exists();
+
+                if (!$rankHistoryExists) {
+                    // Create a new rank history if none exists for this month
+                    RankHistory::create([
+                        'user_id' => $user->id,
+                        'rank_id' => $rank->id,
+                    ]);
+                }
             }
         }
     }
