@@ -23,9 +23,9 @@
                 <i class="bi bi-three-dots fs-22"></i>
             </a>
             <ul class="dropdown-menu" style="">
-                <li class="mb-0">
+                {{-- <li class="mb-0">
                     <a href="{{ route('admin.package.show', $item->uuid) }}" class="dropdown-item">Details</a>
-                </li>
+                </li> --}}
                 @if ($item->is_published)
                     <li class="mb-0">
                         <a href="javascript:void(0);" class="dropdown-item btn-action"
