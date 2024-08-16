@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title','Users Management')
+@section('title', 'Users Management')
 
 @push('styles')
 @endpush
@@ -22,8 +22,8 @@
             <div class="row align-items-end ">
                 <div class="col-lg-2 mb-lg-0 mb-4">
                     <label for="searchInputSearch">Search</label>
-                        <input type="search" class="form-control" placeholder="Search by email,name and account type"
-                            id="search" aria-describedby="emailHelp">
+                    <input type="search" class="form-control" placeholder="Search by email,name and account type"
+                        id="search" aria-describedby="emailHelp">
                 </div>
                 <div class="col-lg-2 mb-lg-0 mb-4">
                     <label for="searchInputSearch">Account Type</label>
@@ -55,25 +55,27 @@
                 </div>
             </div>
         </div>
-        <hr/>
+        <hr />
         <div class="card-body">
-            <table  class="table table-bordered text-nowrap w-100">
-                {{-- id="scroll-vertical" --}}
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Username</th>
-                        <th class="text-center">Account Type</th>
-                        <th>Sponsor</th>
-                        <th>Date Join</th>
-                        <th>Status</th>
-                        <th>KYC Status</th>
-                        <th width="10">Action</th>
-                    </tr>
-                </thead>
-                <tbody id="table-body">
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-bordered text-nowrap w-100">
+                    {{-- id="scroll-vertical" --}}
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th class="text-center">Account Type</th>
+                            <th>Sponsor</th>
+                            <th>Date Join</th>
+                            <th>Status</th>
+                            <th>KYC Status</th>
+                            <th width="10">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                    </tbody>
+                </table>
+            </div>
         </div>
         <input type="hidden" name="hidden_page" id="hidden_page" value="1" />
     </div>
@@ -84,5 +86,4 @@
     @include('admin.users.scritps._load-table')
     @include('admin.users.scritps._submit-form')
     @include('admin.users.scritps._user_actions')
-
 @endpush

@@ -41,7 +41,7 @@
         const page = $('#hidden_page').val();
 
         $.ajax({
-            url: `/report/commissions/filter?page=${page}`,
+            url: `{{ route('report.commissions.filter') }}?page=${page}`,
             type: 'GET',
             data: {
                 search: search,

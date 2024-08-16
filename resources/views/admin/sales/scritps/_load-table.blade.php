@@ -3,12 +3,22 @@
         loadTable()
     })
 
+    $('body').on('click', '.pagination a', function(event) {
+        event.preventDefault();
+        let page = $(this).attr('href').split('page=')[1];
+        $('#hidden_page').val(page);
+
+        loadTable()
+    });
+
     function loadTable() {
 
         const table = $('#table-body')
 
+        const page = $('#hidden_page').val();
+
         $.ajax({
-            url: '/admin/sales/filter',
+            url: `{{ route('admin.sales.filter') }}?page=${page}`,
             type: 'GET',
             beforeSend: function() {
                 table.html(`<tr>

@@ -15,7 +15,7 @@ class SalesController extends Controller
 
     function filter(Request $request)
     {
-        $data['sales'] = Sale::latest()->paginate(50);
+        $data['sales'] = Sale::latest()->paginate(20);
 
         return view('admin.sales._table', $data);
     }

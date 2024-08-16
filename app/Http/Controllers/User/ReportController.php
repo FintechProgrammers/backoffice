@@ -51,7 +51,7 @@ class ReportController extends Controller
                     $query->where('is_converted', false);
                 }
             })
-            ->when(!empty($dateFrom) && !empty($dateTo), fn ($query) => $query->whereBetween('created_at', [$dateFrom, $dateTo]));
+            ->when(!empty($dateFrom) && !empty($dateTo), fn($query) => $query->whereBetween('created_at', [$dateFrom, $dateTo]));
 
 
         $data['commissions'] = $query->latest()->paginate(20);

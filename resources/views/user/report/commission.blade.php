@@ -58,6 +58,7 @@
                         </table>
                     </div>
                 </div>
+                <input type="hidden" name="hidden_page" id="hidden_page" value="1" />
             </div>
         </div>
     </div>

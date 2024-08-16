@@ -197,14 +197,17 @@ class User extends Authenticatable
         return $this->hasOne(Rank::class, 'id', 'rank_id');
     }
 
+
     public function highestRank()
     {
         return $this->hasOne(RankHistory::class)
             ->join('ranks', 'rank_histories.rank_id', '=', 'ranks.id')
-            ->select('ranks.*')
+            ->where('rank_histories.user_id', $this->id) // Filter by the current user's ID
+            ->select('ranks.*', 'rank_histories.*')
             ->orderBy('ranks.creteria', 'desc')
             ->limit(1);
     }
+
 
     public function nextRank()
     {
