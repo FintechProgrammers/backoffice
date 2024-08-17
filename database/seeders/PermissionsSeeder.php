@@ -72,7 +72,7 @@ class PermissionsSeeder extends Seeder
         ];
 
         foreach ($permissions as $permission) {
-            if (!Permission::whereName($permission)) {
+            if (!Permission::where('name', $permission)->exists()) {
                 Permission::create(['name' => $permission, 'guard_name' => 'admin']);
             }
         }
