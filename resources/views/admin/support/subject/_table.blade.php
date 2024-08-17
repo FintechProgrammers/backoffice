@@ -8,16 +8,20 @@
                 <i class="bi bi-three-dots fs-22"></i>
             </a>
             <ul class="dropdown-menu" style="">
-                <li class="mb-0">
-                    <a href="javascript:void(0);" class="dropdown-item trigerModal"
-                        data-url="{{ route('admin.support.subjects.edit', $item->uuid) }}" data-bs-toggle="modal"
-                        data-bs-target="#primaryModal">Edit</a>
-                </li>
-                <li class="mb-0">
-                    <a href="javascript:void(0);" class="dropdown-item btn-action"
-                        data-url="{{ route('admin.support.subjects.delete', $item->uuid) }}"
-                        data-action="you want to delete {{ $item->name }}">Delete</a>
-                </li>
+                @if ($loggedInUser->can('edit support subject'))
+                    <li class="mb-0">
+                        <a href="javascript:void(0);" class="dropdown-item trigerModal"
+                            data-url="{{ route('admin.support.subjects.edit', $item->uuid) }}" data-bs-toggle="modal"
+                            data-bs-target="#primaryModal">Edit</a>
+                    </li>
+                @endif
+                @if ($loggedInUser->can('delete support subject'))
+                    <li class="mb-0">
+                        <a href="javascript:void(0);" class="dropdown-item btn-action"
+                            data-url="{{ route('admin.support.subjects.delete', $item->uuid) }}"
+                            data-action="you want to delete {{ $item->name }}">Delete</a>
+                    </li>
+                @endif
             </ul>
         </td>
     </tr>

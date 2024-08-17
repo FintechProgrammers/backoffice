@@ -8,7 +8,7 @@
     </div>
     <div class="row">
         @foreach ($stats as $item)
-            <div class="col-lg-4">
+            <div class="col-lg-4" style="display: {{ !$item->show ? 'none' : 'block' }}">
                 @include('admin.dashboard._stats')
             </div>
         @endforeach

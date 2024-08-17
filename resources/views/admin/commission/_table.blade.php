@@ -8,16 +8,20 @@
                 <i class="bi bi-three-dots fs-22"></i>
             </a>
             <ul class="dropdown-menu" style="">
-                <li class="mb-0">
-                    <a href="#" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                        aria-controls="offcanvasRight" data-url="{{ route('admin.commission.edit', $item->uuid) }}"
-                        class="dropdown-item trigerCanvas">Edit</a>
-                </li>
-                <li class="mb-0">
-                    <a href="javascript:void(0);" class="dropdown-item btn-action"
-                        data-url="{{ route('admin.commission.delete', $item->uuid) }}"
-                        data-action="you want to delete {{ $item->name }}">Delete</a>
-                </li>
+                @if ($loggedInUser->can('edit commission plan'))
+                    <li class="mb-0">
+                        <a href="#" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                            aria-controls="offcanvasRight" data-url="{{ route('admin.commission.edit', $item->uuid) }}"
+                            class="dropdown-item trigerCanvas">Edit</a>
+                    </li>
+                @endif
+                @if ($loggedInUser->can('delete commission plan'))
+                    <li class="mb-0">
+                        <a href="javascript:void(0);" class="dropdown-item btn-action"
+                            data-url="{{ route('admin.commission.delete', $item->uuid) }}"
+                            data-action="you want to delete {{ $item->name }}">Delete</a>
+                    </li>
+                @endif
             </ul>
         </td>
     </tr>

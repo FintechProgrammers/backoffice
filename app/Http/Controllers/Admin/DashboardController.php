@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\AmbassedorPayments;
 use App\Models\CommissionTransaction;
 use App\Models\Rank;
@@ -13,6 +14,7 @@ use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Withdrawal;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -41,6 +43,8 @@ class DashboardController extends Controller
     function statistics()
     {
 
+        $user = Admin::find(Auth::guard('admin')->user()->id);
+
         $totalAmbassadors = User::where('is_ambassador', true)->count();
 
         $totalcustomers = User::where('is_ambassador', false)->count();
@@ -50,6 +54,10 @@ class DashboardController extends Controller
         $productsCount = Service::count();
 
         $tickets = Ticket::count();
+
+        $openedTickets = Ticket::where('status', 'open')->count();
+
+        $closedTickets = Ticket::where('status', 'closed')->count();
 
         $ranks = Rank::count();
 
@@ -83,6 +91,7 @@ class DashboardController extends Controller
                 'color' => 'text-bg-success',
                 'icon' => 'bx bx-chart',
                 'link' => null,
+                'show' => $user->can('manage finance report'),
             ],
             (object) [
                 'title' => 'Expenses',
@@ -90,6 +99,7 @@ class DashboardController extends Controller
                 'color' => 'text-bg-danger',
                 'icon' => 'las la-money-bill-wave-alt',
                 'link' => null,
+                'show' => $user->can('manage finance report'),
             ],
             (object) [
                 'title' => 'Profit',
@@ -97,14 +107,16 @@ class DashboardController extends Controller
                 'color' => 'text-bg-info',
                 'icon' => 'las la-money-bill-alt',
                 'link' => null,
+                'show' => $user->can('manage finance report'),
             ],
 
             (object) [
-                'title' => 'Withdrawal Request',
+                'title' => 'Withdrawals',
                 'value' => $withdrawalRequest,
                 'color' => 'text-bg-danger',
                 'icon' => 'las la-hand-holding-usd',
                 'link' => null,
+                'show' => true,
             ],
             (object) [
                 'title' => 'Ambassadors',
@@ -112,6 +124,7 @@ class DashboardController extends Controller
                 'color' => 'text-bg-warning',
                 'icon' => 'bi bi-people-fill',
                 'link' => null,
+                'show' => true,
             ],
             (object) [
                 'title' => 'Customers',
@@ -119,6 +132,7 @@ class DashboardController extends Controller
                 'color' => 'text-bg-info',
                 'icon' => 'las la-users',
                 'link' => null,
+                'show' => true,
             ],
             (object) [
                 'title' => 'Total Users',
@@ -126,6 +140,7 @@ class DashboardController extends Controller
                 'color' => 'text-bg-info',
                 'icon' => 'bi bi-people-fill',
                 'link' => null,
+                'show' => true,
             ],
             (object) [
                 'title' => 'Active Users',
@@ -133,6 +148,7 @@ class DashboardController extends Controller
                 'color' => 'text-bg-success',
                 'icon' => 'bi bi-people-fill',
                 'link' => null,
+                'show' => true,
             ],
             (object) [
                 'title' => 'Inactive Users',
@@ -140,6 +156,7 @@ class DashboardController extends Controller
                 'color' => 'text-bg-warning',
                 'icon' => 'bi bi-people-fill',
                 'link' => null,
+                'show' => true,
             ],
             (object) [
                 'title' => 'Products',
@@ -147,6 +164,7 @@ class DashboardController extends Controller
                 'color' => 'text-bg-success',
                 'icon' => 'las la-sitemap',
                 'link' => null,
+                'show' => true,
             ],
             (object) [
                 'title' => 'Ranks',
@@ -154,6 +172,7 @@ class DashboardController extends Controller
                 'color' => 'text-bg-info',
                 'icon' => 'las la-medal',
                 'link' => null,
+                'show' => true,
             ],
             (object) [
                 'title' => 'Support Tickets',
@@ -161,6 +180,23 @@ class DashboardController extends Controller
                 'color' => 'text-bg-dark',
                 'icon' => 'las la-headset',
                 'link' => null,
+                'show' => $user->can('manage ticket'),
+            ],
+            (object) [
+                'title' => 'Opened Tickets',
+                'value' => $openedTickets,
+                'color' => 'text-bg-warning',
+                'icon' => 'las la-headset',
+                'link' => null,
+                'show' => $user->can('manage ticket'),
+            ],
+            (object) [
+                'title' => 'Closed Tickets',
+                'value' => $closedTickets,
+                'color' => 'text-bg-danger',
+                'icon' => 'las la-headset',
+                'link' => null,
+                'show' => $user->can('manage ticket'),
             ],
         ];
     }

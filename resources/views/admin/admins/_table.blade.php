@@ -29,29 +29,38 @@
                 {{-- <li class="mb-0">
                     <a href="{{ route('admin.admins.show', $item->uuid) }}" class="dropdown-item">Profile</a>
                 </li> --}}
-                <li class="mb-0">
-                    <a href="javascript:void(0);" class="dropdown-item trigerModal"
-                        data-url="{{ route('admin.admins.edit', $item->uuid) }}" data-bs-toggle="modal"
-                        data-bs-target="#primaryModal">Edit</a>
-                </li>
-                @if ($item->status === 'suspended')
+                @if (Auth::guard('admin')->user()->can('edit admin'))
                     <li class="mb-0">
-                        <a href="javascript:void(0);" class="dropdown-item btn-action"
-                            data-url="{{ route('admin.admins.activate', $item->uuid) }}"
-                            data-action="you want to activate {{ Str::upper($item->name) }}">Activate</a>
-                    </li>
-                @else
-                    <li class="mb-0">
-                        <a href="javascript:void(0);" class="dropdown-item btn-action"
-                            data-url="{{ route('admin.admins.suspend', $item->uuid) }}"
-                            data-action="you want to suspend {{ Str::upper($item->name) }}">Suspend</a>
+                        <a href="javascript:void(0);" class="dropdown-item trigerModal"
+                            data-url="{{ route('admin.admins.edit', $item->uuid) }}" data-bs-toggle="modal"
+                            data-bs-target="#primaryModal">Edit</a>
                     </li>
                 @endif
-                <li class="mb-0">
-                    <a href="javascript:void(0);" class="dropdown-item btn-action"
-                        data-url="{{ route('admin.admins.delete', $item->uuid) }}"
-                        data-action="you want to delete {{ Str::upper($item->name) }}">Delete</a>
-                </li>
+
+                @if (Auth::guard('admin')->user()->can('banned admin'))
+                    @if ($item->status === 'suspended')
+                        <li class="mb-0">
+                            <a href="javascript:void(0);" class="dropdown-item btn-action"
+                                data-url="{{ route('admin.admins.activate', $item->uuid) }}"
+                                data-action="you want to activate {{ Str::upper($item->name) }}">Activate</a>
+                        </li>
+                    @else
+                        <li class="mb-0">
+                            <a href="javascript:void(0);" class="dropdown-item btn-action"
+                                data-url="{{ route('admin.admins.suspend', $item->uuid) }}"
+                                data-action="you want to suspend {{ Str::upper($item->name) }}">Suspend</a>
+                        </li>
+                    @endif
+                @endif
+
+                @if (Auth::guard('admin')->user()->can('delete admin'))
+                    <li class="mb-0">
+                        <a href="javascript:void(0);" class="dropdown-item btn-action"
+                            data-url="{{ route('admin.admins.delete', $item->uuid) }}"
+                            data-action="you want to delete {{ Str::upper($item->name) }}">Delete</a>
+                    </li>
+                @endif
+
             </ul>
         </td>
     </tr>

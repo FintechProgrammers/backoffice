@@ -26,29 +26,36 @@
                 {{-- <li class="mb-0">
                     <a href="{{ route('admin.package.show', $item->uuid) }}" class="dropdown-item">Details</a>
                 </li> --}}
-                @if ($item->is_published)
+                @if ($loggedInUser->can('publish package'))
+                    @if ($item->is_published)
+                        <li class="mb-0">
+                            <a href="javascript:void(0);" class="dropdown-item btn-action"
+                                data-url="{{ route('admin.package.draft', $item->uuid) }}"
+                                data-action="you want to set {{ $item->name }} as draft">Draft</a>
+                        </li>
+                    @else
+                        <li class="mb-0">
+                            <a href="javascript:void(0);" class="dropdown-item btn-action"
+                                data-url="{{ route('admin.package.publish', $item->uuid) }}"
+                                data-action="you want to publish {{ $item->name }}">Publish</a>
+                        </li>
+                    @endif
+                @endif
+
+                @if ($loggedInUser->can('edit package'))
                     <li class="mb-0">
-                        <a href="javascript:void(0);" class="dropdown-item btn-action"
-                            data-url="{{ route('admin.package.draft', $item->uuid) }}"
-                            data-action="you want to set {{ $item->name }} as draft">Draft</a>
-                    </li>
-                @else
-                    <li class="mb-0">
-                        <a href="javascript:void(0);" class="dropdown-item btn-action"
-                            data-url="{{ route('admin.package.publish', $item->uuid) }}"
-                            data-action="you want to publish {{ $item->name }}">Publish</a>
+                        <a href="javascript:void(0);" class="dropdown-item trigerModal"
+                            data-url="{{ route('admin.package.edit', $item->uuid) }}" data-bs-toggle="modal"
+                            data-bs-target="#primaryModal">Edit</a>
                     </li>
                 @endif
-                <li class="mb-0">
-                    <a href="javascript:void(0);" class="dropdown-item trigerModal"
-                        data-url="{{ route('admin.package.edit', $item->uuid) }}" data-bs-toggle="modal"
-                        data-bs-target="#primaryModal">Edit</a>
-                </li>
-                <li class="mb-0">
-                    <a href="javascript:void(0);" class="dropdown-item btn-action"
-                        data-url="{{ route('admin.package.delete', $item->uuid) }}"
-                        data-action="you want to delete {{ $item->name }}">Delete</a>
-                </li>
+                @if ($loggedInUser->can('delete package'))
+                    <li class="mb-0">
+                        <a href="javascript:void(0);" class="dropdown-item btn-action"
+                            data-url="{{ route('admin.package.delete', $item->uuid) }}"
+                            data-action="you want to delete {{ $item->name }}">Delete</a>
+                    </li>
+                @endif
             </ul>
         </td>
     </tr>

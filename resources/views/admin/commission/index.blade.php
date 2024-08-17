@@ -6,10 +6,13 @@
             <p class="fw-semibold fs-18 mb-0">Commission Plan</p>
         </div>
         <div class="btn-list mt-md-0 mt-2">
-            <button data-url="{{ route('admin.commission.create') }}" type="button" class="btn btn-primary btn-wave trigerCanvas"
-                data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-                <i class="las la-user-plus me-2 align-middle d-inline-block"></i>Create Plan
-            </button>
+            @if ($loggedInUser->can('create commission plan'))
+                <button data-url="{{ route('admin.commission.create') }}" type="button"
+                    class="btn btn-primary btn-wave trigerCanvas" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                    aria-controls="offcanvasRight">
+                    <i class="las la-user-plus me-2 align-middle d-inline-block"></i>Create Plan
+                </button>
+            @endif
         </div>
     </div>
     <div class="card">

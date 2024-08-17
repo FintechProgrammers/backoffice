@@ -41,10 +41,13 @@
                     </div>
                     <div class="p-4 border-bottom border-block-end-dashed">
                         <div class="d-flex justify-content-center gap-3">
-                            <a href="#" class="btn btn-sm btn-dark trigerModal"
-                                data-url="{{ route('admin.users.change-username', $user->uuid) }}" data-bs-toggle="modal"
-                                data-bs-target="#primaryModal">Change Username</a>
-                            @if (!$user->is_ambassador)
+                            @if (Auth::guard('admin')->user()->can('edit user'))
+                                <a href="#" class="btn btn-sm btn-dark trigerModal"
+                                    data-url="{{ route('admin.users.change-username', $user->uuid) }}"
+                                    data-bs-toggle="modal" data-bs-target="#primaryModal">Change Username</a>
+                            @endif
+
+                            @if (!$user->is_ambassador && Auth::guard('admin')->user()->can('set user as ambassador'))
                                 <a href="#" class="btn btn-sm btn-dark btn-action"
                                     data-url="{{ route('admin.users.mark.ambassador', $user->uuid) }}"
                                     data-action="Set user as Ambassador">Set as Ambassador</a>
