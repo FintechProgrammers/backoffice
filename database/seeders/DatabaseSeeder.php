@@ -6,7 +6,7 @@ use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class DatabaseSeeder extends Seeder
+class DatabaseSeseder extends Seeder
 {
     /**
      * Seed the application's database.
@@ -16,7 +16,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AdminSeeder::class,
             RoleAndPermissionSeeder::class,
-            CountrySeeder::class
+            CountrySeeder::class,
+            PermissionsSeeder::class
         ]);
     }
 }
