@@ -184,6 +184,16 @@ class User extends Authenticatable
             });
     }
 
+    /**
+     * Check if the user has any active subscription.
+     *
+     * @return bool
+     */
+    public function hasActiveSubscription(): bool
+    {
+        return $this->subscriptions()->active()->exists();
+    }
+
     function ambassadorship()
     {
         return $this->hasOne(UserSubscription::class, 'user_id', 'id')

@@ -7,6 +7,7 @@ use App\Models\Bonus;
 use App\Models\Sale;
 use App\Models\UserActivities;
 use App\Models\UserSubscription;
+use App\Notifications\SubscriptionNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 
@@ -101,12 +102,14 @@ class SubscriptionService
 
     function sendMail($user, $message, $service)
     {
-        $mail = [
-            'name'  => $user->name,
-            'content' => $message,
-            'service' => $service
-        ];
+        // $mail = [
+        //     'name'  => $user->name,
+        //     'content' => $message,
+        //     'service' => $service
+        // ];
 
-        Mail::to($user->email)->send(new SubscriptionMail($mail));
+        // Mail::to($user->email)->send(new SubscriptionMail($mail));
+
+        $user->notify(new SubscriptionNotification($message, $service));
     }
 }

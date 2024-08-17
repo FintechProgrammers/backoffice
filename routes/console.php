@@ -11,3 +11,5 @@ Artisan::command('inspire', function () {
 Schedule::command('app:release-commissions')->everyMinute();
 
 Schedule::command('ranks:assign')->everyMinute();
+
+Schedule::command('subscriptions:deactivate')->daily();

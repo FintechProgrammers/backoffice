@@ -24,4 +24,9 @@ class PaymentMethod extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
+    function provider()
+    {
+        return $this->belongsTo(Provider::class, 'provider_id', 'id');
+    }
 }
