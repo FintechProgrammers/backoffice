@@ -38,7 +38,7 @@
     <div class="mb-3">
         <label for="packageType" class="form-label fs-14 text-dark">Package Type</label>
         <select id="packageType" class="form-select" name="package_type">
-            <option value="" disabled>--select--</option>
+            <option value="">--select--</option>
             <option value="service" @selected(isset($service) && !$service->ambassadorship)>Service</option>
             <option value="ambassadorship" @selected(isset($service) && $service->ambassadorship)>Ambassadorship</option>
         </select>
