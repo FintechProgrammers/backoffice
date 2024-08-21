@@ -39,6 +39,8 @@ class ServiceAdsCheckoutController extends Controller
             // check package
             $package = Service::whereUuid($validated['package_id'])->first();
 
+            $providerId = null;
+
             if ($request->payment_provider === 'commission_wallet') {
                 $shortName = "commission_wallet";
             } else {
@@ -48,6 +50,8 @@ class ServiceAdsCheckoutController extends Controller
                 $shortName = $provider->short_name;
 
                 $validated['provider'] = $provider;
+
+                $providerId = $provider->id;
             }
 
             if (!empty($validated['referral_id'])) {
@@ -96,6 +100,7 @@ class ServiceAdsCheckoutController extends Controller
             $invoice = Invoice::create([
                 'user_id' => $user->id,
                 'service_id' => !empty($package->id) ? $package->id : null,
+                'provider_id' => $providerId,
                 'order_id'   => generateReference(),
                 'is_paid' => false
             ]);

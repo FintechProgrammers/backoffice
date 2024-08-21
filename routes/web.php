@@ -182,22 +182,6 @@ Route::get('cron', function () {
     return Illuminate\Support\Facades\Artisan::call('schedule:run');
 })->name('cron');
 
-Route::get('text-con', function () {
-    $service = new \App\Services\CommissionService();
-
-    $sale = \App\Models\Sale::where('id', 3)->first();
-
-    $service->distributeCommissions($sale);
-});
-
-Route::get('test-masspay', function () {
-
-    $massPay = new \App\Services\NexioService();
-
-    $walletBalanceResponse = $massPay->getPayout("2440568");
-
-    dd($walletBalanceResponse);
-});
 
 
 require __DIR__ . '/auth.php';
