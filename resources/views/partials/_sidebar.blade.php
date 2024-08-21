@@ -2,7 +2,7 @@
 
     <!-- Start::main-sidebar-header -->
     <div class="main-sidebar-header">
-        <a href="index.html" class="header-logo">
+        <a href="#" class="header-logo">
             <img src="{{ asset('assets/images/logo.png') }}" alt="logo" class="desktop-logo">
             <img src="{{ asset('assets/images/favicon.png') }}" alt="logo" class="toggle-logo">
             <img src="{{ asset('assets/images/logo.png') }}" alt="logo" class="desktop-dark">
@@ -56,9 +56,10 @@
                                         </a>
                                         <ul class="slide-menu child1">
                                             @forelse ($navigation->subMenu as $sub)
-                                                <li class="slide" style="display: {{ $sub->hasPermission ? 'block' : 'none' }}">
-                                                    <a
-                                                        href="{{ !empty($sub->route) ? route($sub->route) : '' }}" class="side-menu__item">{{ $sub->name }}</a>
+                                                <li class="slide"
+                                                    style="display: {{ $sub->hasPermission ? 'block' : 'none' }}">
+                                                    <a href="{{ !empty($sub->route) ? route($sub->route) : '' }}"
+                                                        class="side-menu__item">{{ $sub->name }}</a>
                                                 </li>
                                             @empty
                                             @endforelse
