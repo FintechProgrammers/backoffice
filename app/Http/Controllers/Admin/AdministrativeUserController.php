@@ -74,8 +74,9 @@ class AdministrativeUserController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Admin created successfully']);
         } catch (\Exception $e) {
+            dd($e);
             DB::rollBack();
-            logger($e);
+            sendToLog($e);
             return response()->json(['success' => false, 'message' => serviceDownMessage()], 500);
         }
     }
