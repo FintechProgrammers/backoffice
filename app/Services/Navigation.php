@@ -155,6 +155,9 @@ class Navigation
 
     public static function clientNavigation()
     {
+
+        $user = User::find(Auth::user()->id);
+
         return [
             (object) [
                 'name'  => 'Dashboard',
