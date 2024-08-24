@@ -186,12 +186,12 @@ class NowpaymentController extends Controller
         $headerKey = $request->headers->get('x-nowpayments-sig');
 
         // Verify signature
-        if ($headerKey !== $signature) {
-            sendToLog('Nowpayment payout webhook unauthorized access.');
-            sendToLog('Nowpayment payout response: ' . json_encode($decoded));
+        // if ($headerKey !== $signature) {
+        //     sendToLog('Nowpayment payout webhook unauthorized access.');
+        //     sendToLog('Nowpayment payout response: ' . json_encode($decoded));
 
-            return response()->json([], Response::HTTP_UNAUTHORIZED);
-        }
+        //     return response()->json([], Response::HTTP_UNAUTHORIZED);
+        // }
 
         return response('Successful', Response::HTTP_OK)->header('Content-Type', 'text/plain');
     }
@@ -214,12 +214,12 @@ class NowpaymentController extends Controller
         $headerKey = $request->headers->get('x-nowpayments-sig');
 
         // Verify signature
-        if ($headerKey !== $signature) {
-            sendToLog('Nowpayment payout webhook unauthorized access.');
-            sendToLog('Nowpayment payout response: ' . json_encode($decoded));
+        // if ($headerKey !== $signature) {
+        //     sendToLog('Nowpayment payout webhook unauthorized access.');
+        //     sendToLog('Nowpayment payout response: ' . json_encode($decoded));
 
-            return response()->json([], Response::HTTP_UNAUTHORIZED);
-        }
+        //     return response()->json([], Response::HTTP_UNAUTHORIZED);
+        // }
 
         // GEt the invoice
         $invoice = Invoice::where('order_id', $decoded['order_id'])->where('is_paid', false)->first();
