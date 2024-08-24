@@ -25,7 +25,8 @@
                 </div>
             </div>
             <div>
-                <img src="{{ $package->banner_url }}" class="rounded" height="300px" width="300px" alt="">
+                <img src="{{ $package->product_image_url }}" class="rounded" height="400px" width="400px"
+                    alt="">
             </div>
             <div>
                 <p class="mb-0"><i class="bi bi-info-circle text-danger" data-bs-toggle="tooltip"
