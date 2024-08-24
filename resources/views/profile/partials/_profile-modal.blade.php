@@ -8,9 +8,10 @@
             <div class="modal-body">
                 <div class="card custom-card shadow-none projects-tracking-card overflow-hidden text-center">
                     <div class="card-body">
-                        <img src="{{ asset('assets/images/media/media-86.svg') }}" alt="" class="mb-1">
+                        <img src="{{ asset('assets/images/media-80.svg') }}" alt="" class="mb-1">
                         <div>
-                            <span class="fs-15 fw-semibold d-block mt-4 mb-3">{{ __('Kindly Complete your Profile') }}</span>
+                            <span
+                                class="fs-15 fw-semibold d-block mt-4 mb-3">{{ __('Kindly Complete your Profile') }}</span>
                             <a href="{{ route('profile.edit') }}"
                                 class="btn btn-primary btn-sm btn-wave waves-effect waves-light">Complete Profile</a>
                         </div>

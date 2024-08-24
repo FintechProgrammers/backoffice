@@ -1,3 +1,3 @@
-<div id="loader" >
-    <img src="{{ asset('assets/images/media/loader.svg') }}" alt="">
+<div id="loader">
+    <img src="{{ asset('assets/images/loader.svg') }}" alt="">
 </div>
