@@ -59,15 +59,15 @@ class NexioService
         try {
             $client = new Client();
 
-
             $username = config('constants.nexio.username');
             $password = config('constants.nexio.password');
 
             $token = base64_encode("{$username}:{$password}");
 
             $headers = [
-                'accept' => 'application/json',
-                'authorization' => 'Basic ' . $token,
+                'Accept' => 'application/json',
+                'Authorization' => 'Basic ' . $token,
+                'Content-Type' => 'application/json',
             ];
 
             // Create the request with or without params based on their presence

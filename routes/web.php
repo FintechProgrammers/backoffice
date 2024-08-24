@@ -20,6 +20,7 @@ use App\Http\Controllers\User\SubscriptionController;
 use App\Http\Controllers\User\SupportController;
 use App\Http\Controllers\User\TeamController;
 use App\Http\Controllers\WithdrawalController;
+use App\Services\NexioService;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -181,6 +182,16 @@ Route::get('queue-work', function () {
 Route::get('cron', function () {
     return Illuminate\Support\Facades\Artisan::call('schedule:run');
 })->name('cron');
+
+Route::get('webhook-reg', function () {
+    $service = new NexioService();
+
+    $res = $service->createWebhook([
+        'https://deltadigital.pro/webhook/nexio',
+    ]);
+
+    dd($res);
+});
 
 
 
