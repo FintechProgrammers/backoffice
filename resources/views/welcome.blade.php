@@ -39,16 +39,31 @@
                     </li>
                 </ul>
 
-                <a href="{{ route('login') }}" data-w-id="9b2d96e0-f058-3fc4-eedf-e29d6f3c8eb9" target="_blank"
-                    class="button black w-inline-block">
-                    <div class="button-arrow-wrap">
-                        <div class="button-arrow-circle">
-                            <img src="{{ asset('frontend/6145e7f1b0d13ee4320a5163/6145e7f1b0d13e7e4e0a523e_arrow_forward_black_24dp.svg') }}"
-                                loading="lazy" alt="" class="button-arrow" />
+                @if (Auth::check())
+                    <a href="{{ route('dashboard') }}" data-w-id="9b2d96e0-f058-3fc4-eedf-e29d6f3c8eb9" target="_blank"
+                        class="button black w-inline-block">
+                        <div class="button-arrow-wrap">
+                            <div class="button-arrow-circle">
+                                <img src="{{ asset('frontend/6145e7f1b0d13ee4320a5163/6145e7f1b0d13e7e4e0a523e_arrow_forward_black_24dp.svg') }}"
+                                    loading="lazy" alt="" class="button-arrow" />
+                            </div>
                         </div>
-                    </div>
-                    <div class="button-text">Get started</div>
-                </a>
+                        <div class="button-text">Dashboard</div>
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" data-w-id="9b2d96e0-f058-3fc4-eedf-e29d6f3c8eb9" target="_blank"
+                        class="button black w-inline-block">
+                        <div class="button-arrow-wrap">
+                            <div class="button-arrow-circle">
+                                <img src="{{ asset('frontend/6145e7f1b0d13ee4320a5163/6145e7f1b0d13e7e4e0a523e_arrow_forward_black_24dp.svg') }}"
+                                    loading="lazy" alt="" class="button-arrow" />
+                            </div>
+                        </div>
+                        <div class="button-text">Get started</div>
+                    </a>
+                @endif
+
+
             </div>
         </div>
     </nav>
@@ -73,7 +88,8 @@
                         </div>
                     </div>
                     <div class="button-text">Get started</div>
-                </a><a href="contact.html" data-w-id="9b2d96e0-f058-3fc4-eedf-e29d6f3c8ebf"
+                </a>
+                <a href="{{ route('contact') }}" data-w-id="9b2d96e0-f058-3fc4-eedf-e29d6f3c8ebf"
                     class="button w-inline-block">
                     <div class="button-arrow-wrap">
                         <div class="button-arrow-circle">
