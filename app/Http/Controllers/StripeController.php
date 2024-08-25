@@ -193,8 +193,6 @@ class StripeController extends Controller
         $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
         $event = null;
 
-        sendToLog($payload);
-
         try {
             $data = [
                 'payload' => $payload,
