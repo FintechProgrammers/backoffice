@@ -355,9 +355,11 @@ if (!function_exists('directReferrals')) {
 if (!function_exists('currentCycle')) {
     function currentCycle()
     {
-        $cycle = \App\Models\Cycle::where('is_active', true)->first();
+        // $cycle = \App\Models\Cycle::where('is_active', true)->first();
 
-        return $cycle->id;
+        // return $cycle->id;
+
+        return null;
     }
 }
 
