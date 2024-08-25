@@ -202,6 +202,8 @@ class NowpaymentController extends Controller
         // Decode the contents from the webhook response
         $decoded = json_decode(mb_convert_encoding($data, 'UTF-8', 'UTF-8'), true, 512, JSON_THROW_ON_ERROR);
 
+        loggeR($decoded);
+
         if (empty($decoded)) {
             sendToLog('Nowpayment sent an empty transaction webhook response payload.');
 
