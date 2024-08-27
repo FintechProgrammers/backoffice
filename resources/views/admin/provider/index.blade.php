@@ -19,22 +19,24 @@
         <div class="col-xl-12">
             <div class="card custom-card">
                 <div class="card-body">
-                    <table class="table table-bordered text-nowrap w-100">
-                        {{-- id="scroll-vertical" --}}
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th class="text-center">Default</th>
-                                <th class="text-center">Handles Payin</th>
-                                <th class="text-center">Handles Payout</th>
-                                <th class="text-center">Handles Crypto</th>
-                                <th class="text-center">Status</th>
-                                <th width="10">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-body">
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-nowrap w-100">
+                            {{-- id="scroll-vertical" --}}
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th class="text-center">Default</th>
+                                    <th class="text-center">Handles Payin</th>
+                                    <th class="text-center">Handles Payout</th>
+                                    <th class="text-center">Handles Crypto</th>
+                                    <th class="text-center">Status</th>
+                                    <th width="10">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body">
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

@@ -17,18 +17,20 @@
     </div>
     <div class="card">
         <div class="card-body">
-            <table class="table table-bordered text-nowrap w-100">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th class="text-center">Level</th>
-                        <th class="text-center">Percentage</th>
-                        <th width="10">Action</th>
-                    </tr>
-                </thead>
-                <tbody id="table-body">
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-bordered text-nowrap w-100">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th class="text-center">Level</th>
+                            <th class="text-center">Percentage</th>
+                            <th width="10">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     @include('partials._off-canvas')

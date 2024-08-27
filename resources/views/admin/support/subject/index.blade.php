@@ -22,17 +22,20 @@
         <div class="col-xl-12">
             <div class="card custom-card">
                 <div class="card-body">
-                    <table class="table table-bordered text-nowrap w-100">
-                        {{-- id="scroll-vertical" --}}
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th width="10">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-body">
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-nowrap w-100">
+                            {{-- id="scroll-vertical" --}}
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th width="10">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body">
+                            </tbody>
+                        </table>
+                    </div>
+
                 </div>
             </div>
         </div>

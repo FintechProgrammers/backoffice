@@ -13,20 +13,22 @@
         <div class="col-xl-12">
             <div class="card custom-card">
                 <div class="card-body">
-                    <table class="table table-bordered text-nowrap w-100">
-                        <thead>
-                            <tr>
-                                <th>User</th>
-                                <th>Sponsor</th>
-                                <th>Service</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th class="text-center">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-body">
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-nowrap w-100">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Sponsor</th>
+                                    <th>Service</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th class="text-center">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body">
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
