@@ -37,11 +37,14 @@ class AuthenticationController extends Controller
                 $token = $user->createToken('auth-token');
 
                 $responseData['user'] = new UserResource($user);
-                $responseData['auth_token'] = $token->plainTextToken;
+                $responseData['auth_token'] = $token->accessToken;
+
+                DB::commit();
 
                 return $this->sendResponse($responseData, "Successful login.", Response::HTTP_OK);
-            } else {
             }
+
+            return $this->sendError("Invalid login credentials", [], Response::HTTP_UNAUTHORIZED);
         } catch (\Throwable $e) {
             DB::rollBack();
             logger(["auth error" => $e->getMessage()]);

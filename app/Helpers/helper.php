@@ -451,3 +451,42 @@ if (!function_exists('topGlobalSellers')) {
         return $topSellers;
     }
 }
+
+if (!function_exists('formatDate')) {
+    function formatDate($date)
+    {
+        $user = auth()->user();
+
+        $userTimezone = optional($user)->timezone ?: config('app.timezone');
+
+        // Convert the created_at timestamp to the user's timezone
+        $createdAtInUserTimezone = $date->setTimezone($userTimezone);
+
+        // Format the date for display
+        $formattedCreatedAt = $createdAtInUserTimezone->format('M j, Y, g:i A');
+
+        return $formattedCreatedAt;
+    }
+}
+
+if (!function_exists('formatFirstToLast')) {
+    function formatFirstToLast($array)
+    {
+        // if (empty($array)) {
+        //     return '';
+        // }
+
+        // $firstItem = reset($array); // Get the first element of the array
+        // $lastItem = end($array);    // Get the last element of the array
+
+        // return $firstItem === $lastItem ? $firstItem : $firstItem . ' - ' . $lastItem;
+
+        if (empty($array)) {
+            return '';
+        }
+
+        $result = implode(', ', $array);
+
+        return $result;
+    }
+}
