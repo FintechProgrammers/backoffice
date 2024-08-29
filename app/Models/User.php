@@ -241,11 +241,18 @@ class User extends Authenticatable
 
     public function getRankProgress()
     {
+
+        $currentCriteria = 0;
+
         $currentRank = $this->rank;
+
+        if ($currentRank) {
+            $currentCriteria = $currentRank->creteria;
+        }
 
         $nextRank = $this->nextRank();
 
-        if (!$currentRank || !$nextRank) {
+        if (!$nextRank) {
             return 0;
         }
 
@@ -254,8 +261,9 @@ class User extends Authenticatable
 
         // $currentSales = $this->getSalesForCurrentMonth();
         $currentSales = $this->commissionTransactions()->whereMonth('created_at', $currentMonth)->whereYear('created_at', $currentYear)->sum('amount');
+        // $currentSales = $this->total_bv_this_month;
 
-        $progress = ($currentSales - $currentRank->creteria) / ($nextRank->creteria - $currentRank->creteria) * 100;
+        $progress = ($currentSales - $currentCriteria) / ($nextRank->creteria - $currentCriteria) * 100;
 
         return $progress > 100 ? 100 : ($progress < 0 ? 0 : round($progress, 2));
     }
@@ -338,6 +346,8 @@ class User extends Authenticatable
             $this->getAllDescendants($child, $descendants);
         }
     }
+
+    function directAmbassadors() {}
 
     public function getAmbassadorDescendants()
     {

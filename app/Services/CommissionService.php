@@ -42,12 +42,14 @@ class CommissionService
 
             // If commission plan has requirements and parent meets them, or if there are no requirements
             if (!$commissionPlan->has_requirement || $this->meetsRequirements($parent, $commissionPlan)) {
-                $commissions[] = [
-                    'parent_id' => $parent->id,
-                    'level' => $commissionPlan->level,
-                    'amount' => ($sale->amount * $commissionPlan->commission_percentage) / 100,
-                    'child_id' => $childId
-                ];
+                if ($commissionPlan->bv_amount > 0) {
+                    $commissions[] = [
+                        'parent_id' => $parent->id,
+                        'level' => $commissionPlan->level,
+                        'amount' => ($sale->bv_amount * $commissionPlan->commission_percentage) / 100,
+                        'child_id' => $childId
+                    ];
+                }
             }
 
             $childId = $parent->id;
