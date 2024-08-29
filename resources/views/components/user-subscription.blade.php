@@ -67,7 +67,7 @@
                     </tr>
                 </thead>
                 <tbody id="content">
-                    @forelse (auth()->user()->subscriptions as $item)
+                    @forelse ($subscriptions as $item)
                         <tr>
                             <td>
                                 <x-package-title title="{{ $item->service->name }}" image="{{ $item->service->image }}"
@@ -77,7 +77,7 @@
                                 {{ $item->end_date->format('jS,M Y H:i A') }}
                             </td>
                             <td>
-                                @if ($item->active())
+                                @if (!$item->end_date->isPast())
                                     <span class="badge bg-success-transparent">Running</span>
                                 @else
                                     <span class="badge bg-warning-transparent">Expired</span>
@@ -94,7 +94,7 @@
                                 </div>
                             </td>
                             <td>
-                                @if (!$item->active())
+                                @if ($item->end_date->isPast())
                                     <a href="{{ route('package.details', $item->service->uuid) }}"
                                         class="btn btn-sm btn-primary">Renew</a>
                                 @endif

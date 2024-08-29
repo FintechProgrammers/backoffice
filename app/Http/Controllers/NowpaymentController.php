@@ -202,8 +202,6 @@ class NowpaymentController extends Controller
         // Decode the contents from the webhook response
         $decoded = json_decode(mb_convert_encoding($data, 'UTF-8', 'UTF-8'), true, 512, JSON_THROW_ON_ERROR);
 
-        sendToLog($decoded);
-
         if (empty($decoded)) {
             sendToLog('Nowpayment sent an empty transaction webhook response payload.');
 
@@ -216,12 +214,12 @@ class NowpaymentController extends Controller
         $headerKey = $request->headers->get('x-nowpayments-sig');
 
         // Verify signature
-        // if ($headerKey !== $signature) {
-        //     sendToLog('Nowpayment payout webhook unauthorized access.');
-        //     sendToLog('Nowpayment payout response: ' . json_encode($decoded));
+        if ($headerKey !== $signature) {
+            sendToLog('Nowpayment payout webhook unauthorized access.');
+            sendToLog('Nowpayment payout response: ' . json_encode($decoded));
 
-        //     return response()->json([], Response::HTTP_UNAUTHORIZED);
-        // }
+            return response()->json([], Response::HTTP_UNAUTHORIZED);
+        }
 
         // GEt the invoice
         $invoice = Invoice::where('order_id', $decoded['order_id'])->where('is_paid', false)->first();
@@ -235,22 +233,24 @@ class NowpaymentController extends Controller
 
         $user = $invoice->user;
 
-        $package = Service::find($invoice->service_id);
+        if ($decoded['payment_status'] == "finished") {
+            $package = Service::find($invoice->service_id);
 
-        if (empty($package)) {
-            sendToLog('Package not found.');
-            sendToLog('Nowpayment payout response: ' . json_encode($decoded));
+            if (empty($package)) {
+                sendToLog('Package not found.');
+                sendToLog('Nowpayment payout response: ' . json_encode($decoded));
 
-            return response()->json([], Response::HTTP_UNAUTHORIZED);
+                return response()->json([], Response::HTTP_UNAUTHORIZED);
+            }
+
+            $subscriptionService = new SubscriptionService();
+
+            $subscriptionService->startService($package, $user);
+
+            $invoice->update([
+                'is_paid' => true
+            ]);
         }
-
-        $subscriptionService = new SubscriptionService();
-
-        $subscriptionService->startService($package, $user);
-
-        $invoice->update([
-            'is_paid' => true
-        ]);
 
         return response('Successful', Response::HTTP_OK)->header('Content-Type', 'text/plain');
     }
