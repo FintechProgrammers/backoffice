@@ -203,23 +203,24 @@
             });
         });
     </script>
-    document.querySelectorAll('.bxi-package').forEach(container => {
-    container.addEventListener('click', function() {
-    const radio = this.querySelector('input[name="package"]');
+    <script>
+        document.querySelectorAll('.bxi-package').forEach(container => {
+            container.addEventListener('click', function() {
+                const radio = this.querySelector('input[name="package"]');
 
-    if (radio) {
-    radio.checked = true;
+                if (radio) {
+                    radio.checked = true;
 
-    // Remove highlight from all containers
-    document.querySelectorAll('.bxi-package').forEach(function(container) {
-    container.classList.remove('highlighted');
-    });
+                    // Remove highlight from all containers
+                    document.querySelectorAll('.bxi-package').forEach(function(container) {
+                        container.classList.remove('highlighted');
+                    });
 
-    // Add highlight to the selected container
-    this.classList.add('highlighted');
-    }
-    });
-    });
+                    // Add highlight to the selected container
+                    this.classList.add('highlighted');
+                }
+            });
+        });
     </script>
 
     @if (Session::has('success'))
