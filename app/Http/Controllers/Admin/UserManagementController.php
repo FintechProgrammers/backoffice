@@ -33,7 +33,8 @@ class UserManagementController extends Controller
         $status = $request->filled('status')  ? $request->status : null;
         $accountType = $request->filled('account_type') ? $request->account_type : null;
 
-        $query = User::withTrashed();
+        // $query = User::withTrashed();
+        $query = User::query();
 
         $query = $query
             ->when(!empty($search), fn($query) => $query->where('first_name', 'LIKE', "%{$search}%")->orWhere('last_name', 'LIKE', "%{$search}%")->orWhere('email', 'LIKE', "%{$search}%")->orWhere('username', 'LIKE', "%{$search}%"))
