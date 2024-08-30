@@ -26,7 +26,7 @@
         </div>
         <div class="mb-3">
             <label for="signin-email" class="form-label text-default">Referral Code(Optional)</label>
-            <input type="text" class="form-control form-control-lg" name="referral_code"
+            <input type="text" class="form-control form-control-lg" name="referral_code" readonly
                 value="{{ $request->query('code') }}" id="signin-username" placeholder="Referral Code">
         </div>
         <div class="mb-3">
