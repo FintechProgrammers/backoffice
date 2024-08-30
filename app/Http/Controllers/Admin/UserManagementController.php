@@ -3,10 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ImportUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Bonus;
+use App\Models\Country;
+use App\Models\Service;
 use App\Models\User;
 use App\Models\UserInfo;
+use App\Models\UserSubscription;
+use App\Notifications\MigratedUserNotification;
 use App\Notifications\NewAccountCreated;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -188,6 +193,87 @@ class UserManagementController extends Controller
         ]);
 
         return $this->sendResponse([], "Username updated successfully");
+    }
+
+    function importView()
+    {
+        $data['packages'] = Service::where('is_published', true)->where('ambassadorship', false)->get();
+        $data['countries'] = Country::get();
+        $data['users'] = User::get();
+
+        return view('admin.users.import-user', $data);
+    }
+
+    function importStore(ImportUserRequest $request)
+    {
+        $validated = $request->validated();
+
+        try {
+            DB::beginTransaction();
+
+            $startDate = ($request->filled('start_date')) ? Carbon::parse($validated['start_date'])->startOfDay() : null;
+
+            $endDate = ($request->filled('end_date')) ? Carbon::parse($validated['end_date'])->endOfDay() : null;
+
+            $package = null;
+
+            if ($request->filled('package')) {
+                // check package
+                $package = Service::whereUuid($validated['package'])->first();
+            }
+
+            // get referral
+            $referral = User::whereUuid($validated['sponsor'])->first();
+
+            if (!$referral) {
+                sendToLog("parent uuid not found {$validated['referral_id']} on payment");
+                return $this->sendError(serviceDownMessage(), [], 404);
+            }
+
+            $password = \Illuminate\Support\Str::random(5);
+
+            // create user account
+            $user = User::create([
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'email' => $request->email,
+                'username' => $request->username,
+                'password' => Hash::make($password),
+                'parent_id'  => !empty($referral) ? $referral->id : null
+            ]);
+
+            UserInfo::where('user_id', $user->id)->update([
+                'country_code' => $request->country,
+            ]);
+
+            if (!empty($package)) {
+                UserSubscription::create([
+                    'user_id' => $user->id,
+                    'service_id' => $package->id,
+                    'reference'  => generateReference(),
+                    'start_date' => $startDate,
+                    'end_date' => $endDate,
+                    'is_active' => true
+                ]);
+            }
+
+            $mailData = [
+                'username' => $request->username,
+                'name' => $request->first_name,
+                'password' => $password
+            ];
+
+            $user->notify(new MigratedUserNotification($mailData));
+
+            DB::commit();
+
+            return back()->with('success', 'Account created successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            sendToLog($e);
+
+            return back()->with('error', serviceDownMessage());
+        }
     }
 
     function destroy(User $user)

@@ -17,6 +17,12 @@
                     <i class="las la-user-plus me-2 align-middle d-inline-block"></i>Add User
                 </button>
             @endif
+            @if (Auth::guard('admin')->user()->can('import user'))
+                <a href="{{ route('admin.users.importView') }}" class="btn btn-primary btn-wave"
+                    data-url="{{ route('admin.users.create') }}">
+                    <i class="las la-user-plus me-2 align-middle d-inline-block"></i>Migrate User
+                </a>
+            @endif
         </div>
     </div>
     <div class="card custom-card">

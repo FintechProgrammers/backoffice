@@ -6,7 +6,6 @@
 <!-- Bootstrap JS -->
 <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
-
 <script src="{{ asset('assets/libs/vue.min.js') }}"></script>
 
 <script src="{{ asset('assets/libs/axios.min.js') }}"></script>

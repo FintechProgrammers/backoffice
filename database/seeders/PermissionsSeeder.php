@@ -23,6 +23,7 @@ class PermissionsSeeder extends Seeder
             'edit user',
             'delete user',
             'set user as ambassador',
+            'import user',
 
             'manage admin',
             'create admin',

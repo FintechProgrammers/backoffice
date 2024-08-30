@@ -2,7 +2,7 @@
      Enrollment Packages
  </h4>
  <p class="text-center">Choose a package to create your account.</p>
- <div class="row mb-3">
+ <div class="row mb-3 scrollable-container" style="max-height: 300px; overflow-y: auto;">
      @forelse($packages as $item)
          <div class="col-lg-12 mb-2">
              <div class="form-check shipping-method-container mb-0 bxi-package" style="cursor: pointer;">
