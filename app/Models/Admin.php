@@ -14,7 +14,9 @@ use Spatie\Permission\Traits\HasRoles;
 
 class Admin extends Authenticatable
 {
-    use HasFactory, GeneratesUuid, HasRoles, SoftDeletes, Notifiable;
+    use HasFactory, GeneratesUuid, HasRoles, Notifiable;
+
+    // SoftDeletes
 
     protected $guarded = [];
 
