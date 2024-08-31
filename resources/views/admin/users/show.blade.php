@@ -53,6 +53,10 @@
                                     data-url="{{ route('admin.users.ambassador.form', $user->uuid) }}"
                                     data-action="Set user as Ambassador">Set as Ambassador</a>
                             @endif
+
+                            <a href="#" class="btn btn-sm btn-dark trigerModal" data-bs-toggle="modal"
+                                data-bs-target="#primaryModal" data-url="{{ route('admin.users.plan.form', $user->uuid) }}"
+                                data-action="Set user as Ambassador">Activate Plan</a>
                         </div>
                     </div>
                     <div class="p-4 border-bottom border-block-end-dashed">
@@ -85,7 +89,7 @@
                         @if (!empty($user->subscriptions))
                             <ul class="list-group">
                                 @forelse ($user->subscriptions as $item)
-                                    <li class="list-group-item">
+                                    <li class="list-group-item  mb-3">
                                         <div class="d-sm-flex">
                                             <span class="avatar avatar-sm">
                                                 <img src="{{ $item->service->image }}" alt="img">
@@ -189,6 +193,7 @@
 @push('scripts')
     @include('admin.users.scritps._update-form')
     @include('profile.scripts._update-profile')
+    @include('admin.users.scritps._select-plan')
     <script>
         $('.btn-action').click(function(e) {
             e.preventDefault();

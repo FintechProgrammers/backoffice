@@ -183,16 +183,4 @@ Route::get('cron', function () {
     return Illuminate\Support\Facades\Artisan::call('schedule:run');
 })->name('cron');
 
-Route::get('webhook-reg', function () {
-    $service = new NexioService();
-
-    $res = $service->createWebhook([
-        'https://deltadigital.pro/webhook/nexio',
-    ]);
-
-    dd($res);
-});
-
-
-
 require __DIR__ . '/auth.php';

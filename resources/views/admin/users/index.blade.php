@@ -94,4 +94,5 @@
     @include('admin.users.scritps._load-table')
     @include('admin.users.scritps._submit-form')
     @include('admin.users.scritps._user_actions')
+    @include('admin.users.scritps._select-plan')
 @endpush

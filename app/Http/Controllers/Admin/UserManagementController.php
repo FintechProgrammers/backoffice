@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ActivatePlanRequest;
 use App\Http\Requests\ImportUserRequest;
 use App\Http\Requests\SetupAmbassadorRequest;
 use App\Http\Requests\UpdateUserRequest;
@@ -199,6 +200,8 @@ class UserManagementController extends Controller
                 'amount' => 0
             ]);
 
+            DB::commit();
+
             return response()->json(['success' => true, 'message' => 'Ambassador Activated successfully.']);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -319,5 +322,54 @@ class UserManagementController extends Controller
         $user->delete();
 
         return response()->json(['success' => true, 'message' => 'Deleted successfully.']);
+    }
+
+    function activatePlanForm(User $user)
+    {
+        $data['user'] = $user;
+
+        // Get the IDs of services that the user is already subscribed to
+        $subscribedServiceIds = $user->subscriptions()->pluck('service_id');
+
+        // Retrieve services that are published, not ambassadorship, and not in the user's subscriptions
+        $data['packages'] = Service::where('is_published', true)
+            ->where('ambassadorship', false)
+            ->whereNotIn('id', $subscribedServiceIds)
+            ->get();
+
+        return view('admin.users._activate-plan', $data);
+    }
+
+    function activatePlan(ActivatePlanRequest $request, User $user)
+    {
+        $validated = (object) $request->validated();
+
+        try {
+
+            $service = Service::whereUuid($validated->package)->first();
+
+            if ($request->duration_unit === "infinite") {
+                $duration = 0;
+            } else {
+                $duration =  $validated->duration === 0 ? 0 : getDurationInDays($validated->duration, $request->duration_unit);
+            }
+
+            UserSubscription::create([
+                'user_id' => $user->id,
+                'service_id' => $service->id,
+                'reference'  => generateReference(),
+                'start_date' => Carbon::now(),
+                'end_date' => Carbon::now()->addDays($duration),
+                'is_active' => true
+            ]);
+
+            DB::commit();
+
+            return response()->json(['success' => true, 'message' => 'Subscription Activated successfully.']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            logger($e);
+            return response()->json(['success' => false, 'message' => serviceDownMessage()], 500);
+        }
     }
 }

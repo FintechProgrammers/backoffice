@@ -52,6 +52,8 @@ Route::middleware('admin.auth')->group(function () {
         Route::get('/create', 'create')->name('create');
         Route::get('/import', 'importView')->name('importView');
         Route::post('/import/store', 'importStore')->name('import.store');
+        Route::get('/plan-form/{user}', 'activatePlanForm')->name('plan.form');
+        Route::post('/plan-create/{user}', 'activatePlan')->name('plan.create');
         Route::get('/show/{user}', 'show')->name('show');
         Route::post('/update/{user}', 'update')->name('update');
         Route::post('/suspend/{user}', 'suspend')->name('suspend');

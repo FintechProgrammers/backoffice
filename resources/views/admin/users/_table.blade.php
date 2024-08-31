@@ -53,6 +53,12 @@
                     @endif
                 @endif
 
+                <li class="mb-0">
+                    <a href="javascript:void(0);" class="dropdown-item trigerModal" data-bs-toggle="modal"
+                        data-bs-target="#primaryModal" data-url="{{ route('admin.users.plan.form', $item->uuid) }}"
+                        data-action="Set user as Ambassador">Activate Plan</a>
+                </li>
+
                 @if (Auth::guard('admin')->user()->can('banned user'))
                     @if ($item->status === 'suspended')
                         <li class="mb-0">
