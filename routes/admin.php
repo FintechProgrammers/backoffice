@@ -57,6 +57,7 @@ Route::middleware('admin.auth')->group(function () {
         Route::post('/suspend/{user}', 'suspend')->name('suspend');
         Route::post('/activate/{user}', 'activate')->name('activate');
         Route::post('/delete/{user}', 'destroy')->name('delete');
+        Route::get('/ambassador-form/{user}', 'ambassadorForm')->name('ambassador.form');
         Route::post('/make-ambassador/{user}', 'makeAmbassador')->name('mark.ambassador');
         Route::get('/change-username/{user}', 'usernameForm')->name('change-username');
         Route::post('/change-username/{user}', 'changeUsername')->name('change-username.post');

@@ -48,8 +48,9 @@
                             @endif
 
                             @if (!$user->is_ambassador && Auth::guard('admin')->user()->can('set user as ambassador'))
-                                <a href="#" class="btn btn-sm btn-dark btn-action"
-                                    data-url="{{ route('admin.users.mark.ambassador', $user->uuid) }}"
+                                <a href="#" class="btn btn-sm btn-dark trigerModal" data-bs-toggle="modal"
+                                    data-bs-target="#primaryModal"
+                                    data-url="{{ route('admin.users.ambassador.form', $user->uuid) }}"
                                     data-action="Set user as Ambassador">Set as Ambassador</a>
                             @endif
                         </div>

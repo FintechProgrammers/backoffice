@@ -45,8 +45,9 @@
                 @if (Auth::guard('admin')->user()->can('set user as ambassador'))
                     @if (!$item->is_ambassador)
                         <li class="mb-0">
-                            <a href="javascript:void(0);" class="dropdown-item btn-action"
-                                data-url="{{ route('admin.users.mark.ambassador', $item->uuid) }}"
+                            <a href="javascript:void(0);" class="dropdown-item trigerModal" data-bs-toggle="modal"
+                                data-bs-target="#primaryModal"
+                                data-url="{{ route('admin.users.ambassador.form', $item->uuid) }}"
                                 data-action="Set user as Ambassador">Set as Ambassador</a>
                         </li>
                     @endif

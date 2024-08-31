@@ -28,7 +28,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="2" class="text-center text-warning">no record available</td>
+                    <td colspan="3" class="text-center text-warning">no record available</td>
                 </tr>
             @endforelse
         </tbody>

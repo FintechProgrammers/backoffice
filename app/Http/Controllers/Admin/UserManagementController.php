@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ImportUserRequest;
+use App\Http\Requests\SetupAmbassadorRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Bonus;
 use App\Models\Country;
@@ -156,18 +157,54 @@ class UserManagementController extends Controller
         return response()->json(['success' => true, 'message' => 'Activated successfully.']);
     }
 
-    function makeAmbassador(User $user)
+    function ambassadorForm(User $user)
     {
-        $user->update([
-            'is_ambassador' => true,
-        ]);
+        $data['user'] = $user;
+        $data['plan'] = Service::where('is_published', true)->where('ambassadorship', true)->first();
 
-        Bonus::create([
-            'user_id' => $user->id,
-            'amount' => 0
-        ]);
+        return view('admin.users._ambassador-form', $data);
+    }
 
-        return response()->json(['success' => true, 'message' => 'Ambassador Activated successfully.']);
+    function makeAmbassador(SetupAmbassadorRequest $request, User $user)
+    {
+        $validated = (object) $request->validated();
+
+        try {
+
+            $service = Service::whereUuid($validated->package)->first();
+
+            if ($request->duration_unit === "infinite") {
+                $duration = 0;
+            } else {
+                $duration =  $validated->duration === 0 ? 0 : getDurationInDays($validated->duration, $request->duration_unit);
+            }
+
+            UserSubscription::create(
+                [
+                    'user_id' => $user->id,
+                    'service_id' => $service->id,
+                    'reference'  => generateReference(),
+                    'start_date' => Carbon::now(),
+                    'end_date' => Carbon::now()->addDays($duration),
+                    'is_active' => true
+                ]
+            );
+
+            $user->update([
+                'is_ambassador' => true,
+            ]);
+
+            Bonus::create([
+                'user_id' => $user->id,
+                'amount' => 0
+            ]);
+
+            return response()->json(['success' => true, 'message' => 'Ambassador Activated successfully.']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            logger($e);
+            return response()->json(['success' => false, 'message' => serviceDownMessage()], 500);
+        }
     }
 
     function usernameForm(User $user)

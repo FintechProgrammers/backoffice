@@ -227,7 +227,7 @@ class ServiceManagement extends Controller
             'name' => $request->name,
             'price' => $request->price,
             'bv_amount' => $request->bv,
-            'duration' => $duration === 0 ? 0 : $this->getDurationInDays($duration, $request->duration_unit),
+            'duration' => $duration === 0 ? 0 : getDurationInDays($duration, $request->duration_unit),
             'duration_unit' => $request->duration_unit,
             'auto_renewal' => $request->auto_renewal === "on" ? true : false,
             'is_published' => $request->is_published === "on" ? true : false,
@@ -237,27 +237,5 @@ class ServiceManagement extends Controller
             'banner' => $request->banner_url,
             'product_image' => $request->product_image_url
         ];
-    }
-
-    function getDurationInDays(int $durationValue, $durationUnit)
-    {
-        // Convert duration to days
-        switch ($durationUnit) {
-            case 'weeks':
-                $durationInDays = $durationValue * 7;
-                break;
-            case 'months':
-                $futureDate = Carbon::now()->addMonthsNoOverflow($durationValue);
-                $durationInDays = round(Carbon::now()->diffInDays($futureDate));
-                break;
-            case 'years':
-                $futureDate = Carbon::now()->addYears($durationValue);
-                $durationInDays = round(Carbon::now()->diffInDays($futureDate));
-                break;
-            default:
-                $durationInDays = $durationValue;
-        }
-
-        return $durationInDays;
     }
 }

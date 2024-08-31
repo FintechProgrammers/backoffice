@@ -41,7 +41,7 @@ if (!function_exists('durationUnit')) {
             'weeks',
             'months',
             'years',
-            'lifetime'
+            // 'lifetime'
         ];
     }
 }
@@ -488,5 +488,29 @@ if (!function_exists('formatFirstToLast')) {
         $result = implode(', ', $array);
 
         return $result;
+    }
+}
+
+if (!function_exists('getDurationInDays')) {
+    function getDurationInDays(int $durationValue, $durationUnit)
+    {
+        // Convert duration to days
+        switch ($durationUnit) {
+            case 'weeks':
+                $durationInDays = $durationValue * 7;
+                break;
+            case 'months':
+                $futureDate = Carbon::now()->addMonthsNoOverflow($durationValue);
+                $durationInDays = round(Carbon::now()->diffInDays($futureDate));
+                break;
+            case 'years':
+                $futureDate = Carbon::now()->addYears($durationValue);
+                $durationInDays = round(Carbon::now()->diffInDays($futureDate));
+                break;
+            default:
+                $durationInDays = $durationValue;
+        }
+
+        return $durationInDays;
     }
 }
