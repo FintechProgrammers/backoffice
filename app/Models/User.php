@@ -187,6 +187,20 @@ class User extends Authenticatable
             });
     }
 
+    public function getActiveSubscriptionsAttribute()
+    {
+        // Get the current date
+        $currentDate = Carbon::now();
+
+        // Fetch subscription IDs where end_date is greater than or equal to the current date
+        $subscriptionIds = UserSubscription::where('end_date', '>=', $currentDate)
+            ->where('user_id', $this->id)
+            ->pluck('service_id')
+            ->toArray();
+
+        return $subscriptionIds;
+    }
+
     /**
      * Check if the user has any active subscription.
      *

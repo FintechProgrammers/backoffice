@@ -17,7 +17,7 @@
                                      </div>
                                      <div class="flex-fill text-white">
                                          <span>{{ $item->full_name }}</span>
-                                         <p class="mb-0">{{ $item->email }}</p>
+                                         <p class="mb-0">{{ $item->username }}</p>
                                      </div>
                                      <div>
                                          <h4 class="fs-10 fw-semibold text-white mb-0">

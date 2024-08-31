@@ -9,6 +9,10 @@
         </div>
     </div>
     <div class="row">
+        @php
+            $user = Auth::user();
+            $subscription = $user->subscription;
+        @endphp
         @forelse ($services as $item)
             <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12">
                 <div class="card custom-card">
@@ -58,8 +62,13 @@
                                     ${{ number_format($item->price, 2, '.', ',') }}
                                 </div>
                             </div>
-                            <a href="{{ route('package.details', $item->uuid) }}"
-                                class="btn btn-primary-light btn-wave">{{ __('Purchase') }}</a>
+                            @if (!in_array($item->id, Auth::user()->active_subscriptions))
+                                <a href="{{ route('package.details', $item->uuid) }}"
+                                    class="btn btn-primary-light btn-wave">{{ __('Purchase') }}</a>
+                            @else
+                                <h2 class="alert alert-success mb-0">Active</h4>
+                            @endif
+
                         </div>
                     </div>
                 </div>
