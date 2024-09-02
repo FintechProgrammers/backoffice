@@ -30,7 +30,7 @@ class UpdateUserId extends Command
         // get all users usernames
         $usersnames = User::all()->pluck('username')->toArray();
 
-        $authentication = new Authentication();
+        $authentication = new \App\Services\Authentication();
 
         $response = $authentication->getUser("");
 

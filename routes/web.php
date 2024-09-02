@@ -183,4 +183,20 @@ Route::get('cron', function () {
     return Illuminate\Support\Facades\Artisan::call('schedule:run');
 })->name('cron');
 
+Route::get('test', function () {
+
+    $user = \App\Models\User::query();
+
+    // $authentication = new \App\Services\Authentication();
+
+    // $response = $authentication->getUser("carlosardilaco");
+
+    // dd($response);
+
+    // query to update parent id
+    $user->where('parent_id', 7)->update([
+        'parent_id' => 17409
+    ]);
+});
+
 require __DIR__ . '/auth.php';
