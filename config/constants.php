@@ -24,5 +24,9 @@ return  [
         'password' => env('NEXIO_PASSWORD'),
         'merchant_id' => env('NEXIO_MERCHANT_ID'),
         'payout_account_id' => env('NEXIO_PAYOUT_ACCOUNT_ID')
-    ]
+    ],
+    'authentication' => [
+        'api_key' => env('AUTH_API_KEY'),
+        'url' => env('AUTH_URL')
+    ],
 ];
