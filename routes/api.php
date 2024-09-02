@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthenticationController::class, 'login']);
 
-Route::middleware('auth:api')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/subscriptions', [SubscriptionController::class, 'index']);
 
