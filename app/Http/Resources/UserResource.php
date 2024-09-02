@@ -26,6 +26,7 @@ class UserResource extends JsonResource
             'username' => $this->username,
             'profile_picture' => $this->profile_picture,
             'role' => $this->is_ambassador ? 'Ambassador' : 'Customer',
+            'subscribed' => $this->id === 6 ? true : false,
             'parents' => ['level1' => new SponsorResource($firstParent), 'level2' => new  SponsorResource($secondParent), 'level3' => new SponsorResource($thirdParent)],
             'push_token' => $this->push_token,
             'created_at' => $this->created_at,
