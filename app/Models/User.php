@@ -27,7 +27,7 @@ class User extends Authenticatable
     protected $guarded = [];
 
     protected $primaryKey = 'id';
-    // public $incrementing = false;
+    public $incrementing = false;
 
     // Define the required fields for the user model and the related userInfo model
     protected $userRequiredFields = [
@@ -46,6 +46,33 @@ class User extends Authenticatable
         'zip_code',
         'date_of_birth',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            $user->id = self::generateUniqueId();
+            $user->referral_code = static::generateReferralCode();
+        });
+
+        static::created(function ($user) {
+            UserInfo::create(['user_id' => $user->id]);
+            Wallet::create(['user_id' => $user->id]);
+        });
+    }
+
+    private static function generateUniqueId()
+    {
+        $uniqueId = rand(100000, 999999); // generate a random numeric ID between 100000 and 999999
+
+        // check if the generated ID already exists
+        while (self::whereId($uniqueId)->exists()) {
+            $uniqueId = rand(100000, 999999); // generate a new ID if it already exists
+        }
+
+        return $uniqueId;
+    }
 
     /**
      * Define the route model binding key for a given model.
@@ -76,20 +103,6 @@ class User extends Authenticatable
     public function getFullNameAttribute(): string
     {
         return !empty($this->first_name) ? \Illuminate\Support\Str::title($this->first_name . ' ' . $this->last_name) : 'Unavailable';
-    }
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($user) {
-            $user->referral_code = static::generateReferralCode();
-        });
-
-        static::created(function ($user) {
-            UserInfo::create(['user_id' => $user->id]);
-            Wallet::create(['user_id' => $user->id]);
-        });
     }
 
     public static function generateReferralCode()

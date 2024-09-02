@@ -47,7 +47,7 @@ class AuthenticationController extends Controller
             return $this->sendError("Invalid login credentials", [], Response::HTTP_UNAUTHORIZED);
         } catch (\Throwable $e) {
             DB::rollBack();
-            logger(["auth error" => $e->getMessage()]);
+            logger(["auth error" => $e]);
             return $this->sendError("Service Unavailable", [], Response::HTTP_SERVICE_UNAVAILABLE);
         }
     }
