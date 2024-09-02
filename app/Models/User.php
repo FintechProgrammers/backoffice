@@ -403,7 +403,8 @@ class User extends Authenticatable
 
         // Calculate total sales for each descendant and exclude those with zero sales
         $topSellers = $descendants->map(function ($user) {
-            $totalSales = $user->getTotalSales();
+            $totalSales = $user->getMonthlyTotalSales();
+
             if ($totalSales > 0) {
                 $user->total_sales = $totalSales;
                 return $user;
@@ -426,7 +427,35 @@ class User extends Authenticatable
         $descendantIds = $descendants->pluck('id')->toArray();
 
         // Fetch both direct and team sales without repetition
-        $sales = Sale::where('parent_id', $this->id)->orWhereIn('parent_id', $descendantIds)->latest();
+        $sales = Sale::where(function ($query) use ($descendantIds) {
+            $query->where('parent_id', $this->id)
+                ->orWhereIn('parent_id', $descendantIds);
+        })->latest();
+
+        // Sale::where('parent_id', $this->id)->orWhereIn('parent_id', $descendantIds)->latest();
+
+        return $sales;
+    }
+
+    // get list of all sales
+    public function monthlySales()
+    {
+        $currentMonth = now()->month;
+        $currentYear = now()->year;
+
+        // Fetch all descendants
+        $descendants = $this->getDescendants();
+
+        // Get IDs of all descendants
+        $descendantIds = $descendants->pluck('id')->toArray();
+
+        // Fetch both direct and team sales without repetition
+        $sales = Sale::where(function ($query) use ($descendantIds) {
+            $query->where('parent_id', $this->id)
+                ->orWhereIn('parent_id', $descendantIds);
+        })->whereYear('created_at', $currentYear)
+            ->whereMonth('created_at', $currentMonth)
+            ->latest();
 
         return $sales;
     }
@@ -452,6 +481,22 @@ class User extends Authenticatable
     function getTotalSalesAttribute()
     {
         $total = $this->sales()->sum('amount');
+
+        return $total;
+    }
+
+    function getMonthlyTotalSales()
+    {
+        $total = $this->monthlySales()
+            ->sum('amount');
+
+        return $total;
+    }
+
+    function getMonthlyTotalSalesAttribute()
+    {
+        $total = $this->monthlySales()
+            ->sum('amount');
 
         return $total;
     }
@@ -496,8 +541,14 @@ class User extends Authenticatable
 
     public function getTeamCommissions()
     {
+        $currentMonth = now()->month;
+        $currentYear = now()->year;
+
         // Indirect commission transactions
-        $indirectCommissions = $this->indirectCommissionTransactions()->sum('amount');
+        $indirectCommissions = $this->indirectCommissionTransactions()
+            ->whereYear('created_at', $currentYear)
+            ->whereMonth('created_at', $currentMonth)
+            ->sum('amount');
 
         return $indirectCommissions;
     }

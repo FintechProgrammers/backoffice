@@ -438,7 +438,7 @@ if (!function_exists('topGlobalSellers')) {
 
         // Calculate total sales for each user and exclude those with zero sales
         $topSellers = $users->map(function ($user) {
-            $totalSales = $user->getTotalSales();
+            $totalSales = $user->getMonthlyTotalSales();
             if ($totalSales > 0) {
                 $user->total_sales = $totalSales;
                 return $user;
