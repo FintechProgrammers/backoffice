@@ -20,7 +20,7 @@
                         @endif
                     </td>
                     <td>
-                        ${{ $item->amount }}
+                        ${{ number_format($item->amount, 2, '.', ',') }}
                     </td>
                     <td>
                         {{ $item->created_at->format('jS,M Y') }}

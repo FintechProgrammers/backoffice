@@ -6,23 +6,28 @@ use App\Models\CommissionLevels;
 use App\Models\CommissionTransaction;
 use App\Models\Sale;
 use App\Models\User;
+use Carbon\Carbon;
 
 class CommissionService
 {
 
     public function distributeCommissions(Sale $sale)
     {
-        $commissions = $this->calculateCommission($sale);
+        try {
+            $commissions = $this->calculateCommission($sale);
 
-        foreach ($commissions as $commission) {
-            CommissionTransaction::create([
-                'user_id' => $commission['parent_id'],
-                'sale_id' => $sale->id,
-                'level' => $commission['level'],
-                'amount' => $commission['amount'],
-                'child_id' => $commission['child_id'],
-                'cycle_id' => currentCycle()
-            ]);
+            foreach ($commissions as $commission) {
+                CommissionTransaction::create([
+                    'user_id' => $commission['parent_id'],
+                    'sale_id' => $sale->id,
+                    'level' => $commission['level'],
+                    'amount' => $commission['amount'],
+                    'child_id' => $commission['child_id'],
+                    'cycle_id' => currentCycle()
+                ]);
+            }
+        } catch (\Exception $e) {
+            sendToLog($e);
         }
     }
 
@@ -84,19 +89,27 @@ class CommissionService
 
     private function calculateDirectBV(User $user)
     {
-        // Calculate the user's direct BV (example logic)
-        return 1000; // Placeholder
+        // Define the start and end of the month
+        $startOfMonth = Carbon::now()->startOfMonth();
+        $endOfMonth = Carbon::now()->endOfMonth();
+
+        $directSale = $user->directSales();
+
+        $bv = $directSale->whereBetween('created_at', [$startOfMonth, $endOfMonth])->select('bv_amount')->sum('bv_amount');
+
+        // get user direct bv
+        return $bv;
     }
 
     private function calculateSponsoredBV(User $user)
     {
-        // Calculate the user's sponsored BV (example logic)
-        return 1000; // Placeholder
+        return $user->team_volume;
     }
 
     private function calculateSponsoredCount(User $user)
     {
-        // Calculate the user's sponsored count (example logic)
-        return 2; // Placeholder
+        $count = count($user->getDescendants());
+
+        return $count;
     }
 }

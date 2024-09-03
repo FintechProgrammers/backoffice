@@ -184,19 +184,19 @@ Route::get('cron', function () {
     return Illuminate\Support\Facades\Artisan::call('schedule:run');
 })->name('cron');
 
-Route::get('test', function () {
+// Route::get('test', function () {
 
-    // ini_set('max_execution_time', '0');
+//     // ini_set('max_execution_time', '0');
 
-    $chunkSize = 100; // Adjust the chunk size as needed
+//     $chunkSize = 100; // Adjust the chunk size as needed
 
-    \App\Models\User::chunk($chunkSize, function ($users) {
-        logger($users->count());
-        // Dispatch each chunk to the job queue
-        \App\Jobs\MigrateUserJob::dispatch($users);
-    });
+//     \App\Models\User::chunk($chunkSize, function ($users) {
+//         logger($users->count());
+//         // Dispatch each chunk to the job queue
+//         \App\Jobs\MigrateUserJob::dispatch($users);
+//     });
 
-    return response()->json(["success"]);
-});
+//     return response()->json(["success"]);
+// });
 
 require __DIR__ . '/auth.php';
