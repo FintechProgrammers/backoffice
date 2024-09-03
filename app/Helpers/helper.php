@@ -514,3 +514,17 @@ if (!function_exists('getDurationInDays')) {
         return $durationInDays;
     }
 }
+
+if (!function_exists('generateUniqueId')) {
+    function generateUniqueId()
+    {
+        $uniqueId = rand(100000, 999999); // generate a random numeric ID between 100000 and 999999
+
+        // check if the generated ID already exists
+        while (User::whereId($uniqueId)->exists()) {
+            $uniqueId = rand(100000, 999999); // generate a new ID if it already exists
+        }
+
+        return $uniqueId;
+    }
+}

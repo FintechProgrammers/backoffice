@@ -52,7 +52,9 @@ class User extends Authenticatable
         parent::boot();
 
         static::creating(function ($user) {
-            $user->id = self::generateUniqueId();
+            if (empty($user->id)) {
+                $user->id = self::generateUniqueId();
+            }
             $user->referral_code = static::generateReferralCode();
         });
 

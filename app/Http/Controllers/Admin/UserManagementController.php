@@ -15,6 +15,7 @@ use App\Models\UserInfo;
 use App\Models\UserSubscription;
 use App\Notifications\MigratedUserNotification;
 use App\Notifications\NewAccountCreated;
+use App\Services\Authentication;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -251,6 +252,17 @@ class UserManagementController extends Controller
         try {
             DB::beginTransaction();
 
+            $authentication = new Authentication();
+
+            $response = $authentication->getUser($request->username);
+            $data = $response['data'];
+
+            if (empty($data) || isset($data['user exist'])) {
+                return back()->with('error', "User does not exist on the previous database kindly check the username");
+            }
+
+            $newUserId = $data['uid'];
+
             $startDate = ($request->filled('start_date')) ? Carbon::parse($validated['start_date'])->startOfDay() : null;
 
             $endDate = ($request->filled('end_date')) ? Carbon::parse($validated['end_date'])->endOfDay() : null;
@@ -274,6 +286,7 @@ class UserManagementController extends Controller
 
             // create user account
             $user = User::create([
+                'id' => $newUserId,
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,

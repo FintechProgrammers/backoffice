@@ -21,6 +21,7 @@ use App\Http\Controllers\User\SupportController;
 use App\Http\Controllers\User\TeamController;
 use App\Http\Controllers\WithdrawalController;
 use App\Services\NexioService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -185,18 +186,17 @@ Route::get('cron', function () {
 
 Route::get('test', function () {
 
-    $user = \App\Models\User::query();
+    // ini_set('max_execution_time', '0');
 
-    // $authentication = new \App\Services\Authentication();
+    $chunkSize = 100; // Adjust the chunk size as needed
 
-    // $response = $authentication->getUser("carlosardilaco");
+    \App\Models\User::chunk($chunkSize, function ($users) {
+        logger($users->count());
+        // Dispatch each chunk to the job queue
+        \App\Jobs\MigrateUserJob::dispatch($users);
+    });
 
-    // dd($response);
-
-    // query to update parent id
-    $user->where('parent_id', 7)->update([
-        'parent_id' => 17409
-    ]);
+    return response()->json(["success"]);
 });
 
 require __DIR__ . '/auth.php';
