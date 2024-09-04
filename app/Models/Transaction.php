@@ -21,4 +21,9 @@ class Transaction extends Model
     {
         return $this->belongsTo(User::class, 'associated_user_id', 'id')->withTrashed();
     }
+
+    public function commissionTransactions()
+    {
+        return $this->hasMany(CommissionTransaction::class, 'transaction_id');
+    }
 }

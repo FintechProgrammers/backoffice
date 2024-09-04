@@ -12,6 +12,11 @@ class CommissionTransaction extends Model
 
     protected $guarded = [];
 
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class);
+    }
+
     function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id')->withTrashed();

@@ -185,14 +185,6 @@ Route::get('cron', function () {
     return Illuminate\Support\Facades\Artisan::call('schedule:run');
 })->name('cron');
 
-Route::get('test-commission', function () {
-    $sale = Sale::first();
-
-    $commissionService = new \App\Services\CommissionService();
-
-    $commissionService->distributeCommissions($sale);
-});
-
 // Route::get('test', function () {
 
 //     // ini_set('max_execution_time', '0');
