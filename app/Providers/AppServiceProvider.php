@@ -18,9 +18,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(CommissionService::class, function ($app) {
-            return new CommissionService();
-        });
+        // $this->app->singleton(CommissionService::class, function ($app) {
+        //     return new CommissionService();
+        // });
     }
 
     /**
@@ -33,7 +33,7 @@ class AppServiceProvider extends ServiceProvider
             return $user->hasRole('super admin') ? true : null;
         });
 
-        Sale::observe(SaleObserver::class);
+        // Sale::observe(SaleObserver::class);
 
         ResetPassword::createUrlUsing(function ($user, string $token) {
             $baseAdminUrl = route('admin.reset.password.index', ['token' => $token]);

@@ -14,6 +14,10 @@ class CommissionService
     public function distributeCommissions(Sale $sale)
     {
         try {
+            if ($sale->ambassadorship) {
+                return;
+            }
+
             $commissions = $this->calculateCommission($sale);
 
             foreach ($commissions as $commission) {
@@ -33,33 +37,37 @@ class CommissionService
 
     public function calculateCommission(Sale $sale)
     {
-        $parent = User::find($sale->parent_id);
-        $level = 0;
         $commissions = [];
         $childId = $sale->user_id;
 
-        while ($parent && $level <= 4) {
-            $commissionPlan = CommissionLevels::where('level', $level)->first();
+        $commissionLevels = CommissionLevels::all()->keyBy('level');
+        $maxLevel = $commissionLevels->keys()->max();
 
-            if (!$commissionPlan) {
-                break;
+        // Get the parent of the user who made the sale
+        $parent = User::find($sale->parent_id);
+        $level = 0;
+
+        while ($parent && $level <= $maxLevel) {
+            if (!isset($commissionLevels[$level])) {
+                break; // No commission level defined for this level, stop the loop
             }
 
-            // If commission plan has requirements and parent meets them, or if there are no requirements
-            if (!$commissionPlan->has_requirement || $this->meetsRequirements($parent, $commissionPlan)) {
-                if ($commissionPlan->bv_amount > 0) {
-                    $commissions[] = [
-                        'parent_id' => $parent->id,
-                        'level' => $commissionPlan->level,
-                        'amount' => ($sale->bv_amount * $commissionPlan->commission_percentage) / 100,
-                        'child_id' => $childId
-                    ];
-                }
+            $commissionLevel = $commissionLevels[$level];
+
+            // Check if the parent meets the requirements for the current commission level
+            if ($this->meetsRequirements($parent, $commissionLevel)) {
+                $commissionAmount = ($sale->bv_amount * $commissionLevel->commission_percentage) / 100;
+                $commissions[] = [
+                    'parent_id' => $parent->id,
+                    'level' => $level,
+                    'amount' => $commissionAmount,
+                    'child_id' => $childId
+                ];
             }
 
+            // Prepare for the next iteration
             $childId = $parent->id;
             $parent = User::find($parent->parent_id);
-
             $level++;
         }
 

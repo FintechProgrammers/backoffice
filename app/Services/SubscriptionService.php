@@ -16,12 +16,16 @@ class SubscriptionService
 
     function startService($service, $user)
     {
-        $userSubscription = UserSubscription::where('user_id', $user->id)->where('service_id', $service->id)->first();
+        try {
+            $userSubscription = UserSubscription::where('user_id', $user->id)->where('service_id', $service->id)->first();
 
-        if ($userSubscription) {
-            $this->updateSubscription($service, $userSubscription);
-        } else {
-            $this->createSubscription($service, $user);
+            if ($userSubscription) {
+                $this->updateSubscription($service, $userSubscription);
+            } else {
+                $this->createSubscription($service, $user);
+            }
+        } catch (\Exception $e) {
+            sendToLog(["scription_service_error" => $e]);
         }
     }
 
@@ -76,7 +80,7 @@ class SubscriptionService
 
     function createSaleRecord($subscription, $amount)
     {
-        Sale::create([
+        $sale = Sale::create([
             'user_id' => $subscription->user->id,
             'service_id' => $subscription->service->id,
             'cycle_id' => currentCycle(),
@@ -84,6 +88,10 @@ class SubscriptionService
             'amount' => $amount,
             'bv_amount' => $subscription->service->bv_amount
         ]);
+
+        $commissionService = new CommissionService();
+
+        $commissionService->distributeCommissions($sale);
     }
 
     function ambassadorAccount($user, $service)

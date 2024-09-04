@@ -20,6 +20,7 @@ use App\Http\Controllers\User\SubscriptionController;
 use App\Http\Controllers\User\SupportController;
 use App\Http\Controllers\User\TeamController;
 use App\Http\Controllers\WithdrawalController;
+use App\Models\Sale;
 use App\Services\NexioService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -183,6 +184,14 @@ Route::get('queue-work', function () {
 Route::get('cron', function () {
     return Illuminate\Support\Facades\Artisan::call('schedule:run');
 })->name('cron');
+
+Route::get('test-commission', function () {
+    $sale = Sale::first();
+
+    $commissionService = new \App\Services\CommissionService();
+
+    $commissionService->distributeCommissions($sale);
+});
 
 // Route::get('test', function () {
 
