@@ -12,6 +12,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 
 // use Laravel\Passport\HasApiTokens;
 
@@ -358,31 +360,61 @@ class User extends Authenticatable
         return $this->hasMany(User::class, 'parent_id')->withTrashed();
     }
 
+    public function getDescendants()
+    {
+        $commissionLevels = CommissionLevels::all()->keyBy('level');
+        $maxLevel = $commissionLevels->keys()->max();
+
+        $currentLevel = 1;
+
+        // Initialize collection to store downline users
+        $downline = collect();
+
+        // Base case: if the current level exceeds the max level, stop recursion
+        if ($currentLevel > $maxLevel) {
+            return $downline;
+        }
+
+        // Get direct children
+        $children = $this->children;
+
+        // Add direct children to the downline collection
+        $downline = $downline->concat($children);
+
+        // Recursively fetch downline for each child
+        foreach ($children as $child) {
+            $downline = $downline->concat($child->getDescendants($maxLevel, $currentLevel + 1));
+        }
+
+        return $downline;
+    }
+
     public function allChildren()
     {
         return $this->children()->with('allChildren');
     }
 
-    public function getDescendants()
-    {
-        $descendants = collect();
-        $this->getAllDescendants($this, $descendants);
-        return $descendants;
-    }
+    // public function getDescendants()
+    // {
+    //     $descendants = collect();
+    //     $this->getAllDescendants($this, $descendants);
+    //     return $descendants;
+    // }
 
-    private function getAllDescendants($user, &$descendants)
-    {
-        foreach ($user->children as $child) {
-            $descendants->push($child);
-            $this->getAllDescendants($child, $descendants);
-        }
-    }
+    // private function getAllDescendants($user, &$descendants)
+    // {
+    //     foreach ($user->children as $child) {
+    //         $descendants->push($child);
+    //         $this->getAllDescendants($child, $descendants);
+    //     }
+    // }
 
     function directAmbassadors() {}
 
     public function getAmbassadorDescendants()
     {
-        $descendants = $this->getDescendants();
+        $descendants = $this->getDescendants(2);
+
         $ambassadors = $descendants->filter(function ($user) {
             return $user->is_ambassador;
         });
@@ -393,11 +425,11 @@ class User extends Authenticatable
     public function getCustomerDescendants()
     {
         $descendants = $this->getDescendants();
-        $ambassadors = $descendants->filter(function ($user) {
+        $customers = $descendants->filter(function ($user) {
             return !$user->is_ambassador;
         });
 
-        return $ambassadors;
+        return $customers;
     }
 
     // Get descendants with any active subscription

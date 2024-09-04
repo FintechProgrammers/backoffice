@@ -54,47 +54,47 @@
     <div class="row mb-3">
         <div class="col-lg-12">
             <div class="card card-body">
-                @if (!empty($user->rank))
-                    <div class="d-flex align-items-center">
-                        <span class="avatar avatar-md avatar-rounded me-3">
-                            <img src="{{ $user->rank->file_url }}" alt="">
-                        </span>
-                        <div>
-                            <h6 class="mb-0 fw-semibold text-muted text-capitalize">{{ $user->rank->name }}</h6>
-                        </div>
-                    </div>
-                @else
-                    <div class="d-flex align-items-center">
-                        <span class="avatar avatar-md avatar-rounded me-3">
-                            <img src="{{ asset('assets/images/no-rank.jpg') }}" alt="">
-                        </span>
-                        <div>
-                            <h6 class="mb-0 fw-semibold text-muted">No Rank</h6>
-                        </div>
-                    </div>
-                @endif
+                @include('partials._rank', ['user' => $user])
             </div>
         </div>
     </div>
-
 @endif
 
 
 <div class="row mb-3">
     <h6>Subscriptions:</h6>
     <div class="col-lg-12">
-        @if (!empty($subscription))
-            <div class="d-flex align-items-center mb-3">
-                <span class="avatar avatar-md avatar-rounded me-3">
-                    <img src="{{ $subscription->service->image_url }}" alt="">
-                </span>
-                <div>
-                    <p class="mb-0 fw-semibold text-muted">{{ $subscription->service->name }}</p>
-                </div>
-            </div>
+        @if (!empty($user->subscriptions))
+            <ul class="list-group">
+                @forelse ($user->subscriptions as $item)
+                    <li class="list-group-item  mb-3">
+                        <div class="d-sm-flex">
+                            <span class="avatar avatar-sm">
+                                <img src="{{ $item->service->image }}" alt="img">
+                            </span>
+                            <div class="ms-sm-2 ms-0 mt-sm-0 mt-1 fw-semibold flex-fill">
+                                <p class="mb-0 lh-1">{{ $item->service->name }}</p>
+                                <span class="fs-11 text-muted op-7">
+                                    @if ($item->service->serviceProduct->isNotEmpty())
+                                        {{ $item->service->serviceProduct->pluck('product.name')->implode(', ') }}
+                                    @else
+                                        No products available.
+                                    @endif
+                                </span>
+                            </div>
+                            @if ($item->end_date->isPast())
+                                <span class="bg-warning">{{ __('Expired') }}</span>
+                            @else
+                                <span class="text-success">{{ __('Running') }}</span>
+                            @endif
+                        </div>
+                    </li>
+                @empty
+                @endforelse
+            </ul>
         @else
-            <div class="d-flex flex-column align-items-center mb-3 align-content-center">
-                <h4 class="mb-0 fs-10 fw-semibold text-warning text-center">No Subscription</h4>
+            <div class="d-flex justify-content-center">
+                <h6 class="text-warning">no subscriptions</h6>
             </div>
         @endif
     </div>

@@ -194,27 +194,7 @@
                     <div class="card-body p-4">
                         <p class="op-7">Current Rank</p>
                         <div class="d-flex align-items-center w-100">
-                            <div class="me-2">
-                                @if (!empty(Auth::user()->rank))
-                                    <span class="avatar avatar-rounded">
-                                        <img src="{{ Auth::user()->rank->file_url }}" alt="img">
-                                    </span>
-                                @else
-                                    <span class="avatar avatar-md avatar-rounded bg-white text-dark shadow-sm">
-                                        <img src="{{ asset('assets/images/pin-sin-rango.png') }}" alt="img">
-                                    </span>
-                                @endif
-                            </div>
-
-                            <div class="flex-fill">
-                                <h3 class="fw-semibold mb-1 text-fixed-white">
-                                    @if (!empty(Auth::user()->rank))
-                                        <span>{{ Auth::user()->rank->name }}</span>
-                                    @else
-                                        <small>no rank</small>
-                                    @endif
-                                </h3>
-                            </div>
+                            @include('partials._rank', ['user' => Auth::user()])
                         </div>
                     </div>
                 </div>

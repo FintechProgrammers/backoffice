@@ -68,7 +68,7 @@ class WithdrawalController extends Controller
     function sendOTP(Request $request)
     {
         try {
-            $user = User::where('id', auth()->user()->id)->first();
+            $user = User::where('id', $request->user()->id)->first();
 
             $mail = [
                 'name' => ucfirst($user->full_name),
