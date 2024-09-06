@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Resources\UserResource;
+use App\Jobs\UpdateUser;
 use App\Models\User;
 use App\Services\Authentication;
 use Illuminate\Http\Request;
@@ -42,6 +43,8 @@ class AuthenticationController extends Controller
                 $responseData['auth_token'] = $token->plainTextToken;
 
                 DB::commit();
+
+                dispatch(new UpdateUser($user));
 
                 return $this->sendResponse($responseData, "Successful login.", Response::HTTP_OK);
             }

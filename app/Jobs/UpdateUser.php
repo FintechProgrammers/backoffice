@@ -34,7 +34,7 @@ class UpdateUser implements ShouldQueue
 
         $authentication = new Authentication();
 
-        $response = $authentication->getUser($this->user->username);
+        $response = $authentication->getUser($user->username);
         $data = $response['data'];
 
         if (empty($data) || isset($data['user exist'])) {
