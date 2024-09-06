@@ -164,6 +164,7 @@ jobs:
                     # Force HTTPS redirection
                     RewriteEngine On
                     RewriteCond %{HTTPS} !=on
+                    RewriteCond %{HTTP_HOST} ^www\.deltadigital\.pro [NC]
                     RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R=301,L]
                 </VirtualHost>" > /etc/apache2/sites-available/000-default.conf
             sudo a2enmod rewrite
