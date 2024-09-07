@@ -362,31 +362,33 @@ class User extends Authenticatable
 
     public function getDescendants()
     {
-        $commissionLevels = CommissionLevels::all()->keyBy('level');
-        $maxLevel = $commissionLevels->keys()->max();
+        // $commissionLevels = CommissionLevels::all()->keyBy('level');
+        // $maxLevel = $commissionLevels->keys()->max();
 
-        $currentLevel = 1;
+        // $currentLevel = 1;
 
         // Initialize collection to store downline users
-        $downline = collect();
+        // $downline = collect();
 
         // Base case: if the current level exceeds the max level, stop recursion
-        if ($currentLevel > $maxLevel) {
-            return $downline;
-        }
+        // if ($currentLevel > $maxLevel) {
+        //     return $downline;
+        // }
 
         // Get direct children
-        $children = $this->children;
+        // $children = $this->children;
 
         // Add direct children to the downline collection
-        $downline = $downline->concat($children);
+        // $downline = $downline->concat($children);
 
         // Recursively fetch downline for each child
-        foreach ($children as $child) {
-            $downline = $downline->concat($child->getDescendants($maxLevel, $currentLevel + 1));
-        }
+        // foreach ($children as $child) {
+        //     $downline = $downline->concat($child->getDescendants($maxLevel, $currentLevel + 1));
+        // }
 
-        return $downline;
+        // return $downline;
+
+        return User::where('parent_id', $this->id)->latest();
     }
 
     public function allChildren()
@@ -464,6 +466,16 @@ class User extends Authenticatable
         return $topSellers;
     }
 
+    function purchase()
+    {
+        return $this->hasMany(Sale::class, 'user_id', 'id')->latest();
+    }
+
+    function totalPurchaseAttribute()
+    {
+        return Sale::where('user_id', $this->id)->count();
+    }
+
     // get list of all sales
     public function sales()
     {
@@ -475,8 +487,8 @@ class User extends Authenticatable
 
         // Fetch both direct and team sales without repetition
         $sales = Sale::where(function ($query) use ($descendantIds) {
-            $query->where('parent_id', $this->id)
-                ->orWhereIn('parent_id', $descendantIds);
+            $query->where('parent_id', $this->id);
+            // ->orWhereIn('parent_id', $descendantIds);
         })->latest();
 
         // Sale::where('parent_id', $this->id)->orWhereIn('parent_id', $descendantIds)->latest();
@@ -498,8 +510,8 @@ class User extends Authenticatable
 
         // Fetch both direct and team sales without repetition
         $sales = Sale::where(function ($query) use ($descendantIds) {
-            $query->where('parent_id', $this->id)
-                ->orWhereIn('parent_id', $descendantIds);
+            $query->where('parent_id', $this->id);
+            // ->orWhereIn('parent_id', $descendantIds);
         })->whereYear('created_at', $currentYear)
             ->whereMonth('created_at', $currentMonth)
             ->latest();

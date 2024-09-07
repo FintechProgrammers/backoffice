@@ -9,6 +9,7 @@ use App\Http\Requests\SetupAmbassadorRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Bonus;
 use App\Models\Country;
+use App\Models\Sale;
 use App\Models\Service;
 use App\Models\User;
 use App\Models\UserInfo;
@@ -111,9 +112,25 @@ class UserManagementController extends Controller
 
     function show(User $user)
     {
+        $currentMonth = now()->month;
+        $currentYear = now()->year;
+
         $data['user'] = $user;
 
+
+        // $sales = Sale::where('parent_id', $user->id)->whereYear('created_at', $currentYear)
+        //     ->whereMonth('created_at', $currentMonth)->sum('amount');
+
+        // dd($sales);
+
         return view('admin.users.show', $data);
+    }
+
+    function filterReferrals(Request $request, User $user)
+    {
+        $data['referrals'] = User::where('parent_id', $user->id)->latest()->paginate(10);
+
+        return view('admin.users._referrals-table', $data);
     }
 
     function update(UpdateUserRequest $request, User $user)
@@ -234,6 +251,31 @@ class UserManagementController extends Controller
         ]);
 
         return $this->sendResponse([], "Username updated successfully");
+    }
+
+    function emailForm(User $user)
+    {
+        $data['user'] = $user;
+
+        return view('admin.users._email-form', $data);
+    }
+
+    function changeEmail(Request $request, User $user)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|unique:users,email'
+        ]);
+
+        // Handle validation errors
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
+        }
+
+        $user->update([
+            'email' => $request->email
+        ]);
+
+        return $this->sendResponse([], "Email updated successfully");
     }
 
     function importView()

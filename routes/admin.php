@@ -48,6 +48,7 @@ Route::middleware('admin.auth')->group(function () {
     Route::controller(UserManagementController::class)->prefix('users')->name('users.')->group(function () {
         Route::get('', 'index')->name('index');
         Route::get('/filter', 'filter')->name('filter');
+        Route::get('/filter-referrals/{user}', 'filterReferrals')->name('filter.referrals');
         Route::post('', 'store')->name('store');
         Route::get('/create', 'create')->name('create');
         Route::get('/import', 'importView')->name('importView');
@@ -63,6 +64,8 @@ Route::middleware('admin.auth')->group(function () {
         Route::post('/make-ambassador/{user}', 'makeAmbassador')->name('mark.ambassador');
         Route::get('/change-username/{user}', 'usernameForm')->name('change-username');
         Route::post('/change-username/{user}', 'changeUsername')->name('change-username.post');
+        Route::get('/change-email/{user}', 'emailForm')->name('change-email');
+        Route::post('/change-email/{user}', 'changeEmail')->name('change-email.post');
     });
 
     Route::controller(AdministrativeUserController::class)->prefix('admins')->name('admins.')->group(function () {

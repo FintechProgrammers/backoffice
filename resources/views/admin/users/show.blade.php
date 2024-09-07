@@ -47,6 +47,12 @@
                                     data-bs-toggle="modal" data-bs-target="#primaryModal">Change Username</a>
                             @endif
 
+                            @if (Auth::guard('admin')->user()->can('edit user'))
+                                <a href="#" class="btn btn-sm btn-dark trigerModal"
+                                    data-url="{{ route('admin.users.change-email', $user->uuid) }}" data-bs-toggle="modal"
+                                    data-bs-target="#primaryModal">Change Email</a>
+                            @endif
+
                             @if (!$user->is_ambassador && Auth::guard('admin')->user()->can('set user as ambassador'))
                                 <a href="#" class="btn btn-sm btn-dark trigerModal" data-bs-toggle="modal"
                                     data-bs-target="#primaryModal"
@@ -59,6 +65,24 @@
                                 data-action="Set user as Ambassador">Activate Plan</a>
                         </div>
                     </div>
+                    @if (!empty($user->wallet))
+                        <div class="p-4 border-bottom border-block-end-dashed">
+                            <div class="text-center">
+                                <h6>Wallet Balance</h6>
+                                <h5 class="mb-0 text-bold"><b>${{ number_format($user->wallet->balance, 2, '.', ',') }}</b>
+                                </h5>
+                            </div>
+                        </div>
+                    @endif
+                    @if ($user->is_ambassador)
+                        <div class="p-4 border-bottom border-block-end-dashed">
+                            <h6 class="mb-0">Sales this Month:
+                                ${{ number_format($user->monthly_total_sales, 2, '.', ',') }}
+                            </h6>
+                            {{-- <h6 class="mb-0">Sales this Week: ${{ number_format($user->team_volume, 0, '.', ',') }}
+                            </h6> --}}
+                        </div>
+                    @endif
                     <div class="p-4 border-bottom border-block-end-dashed">
                         <p class="fs-15 mb-2 me-4 fw-semibold">Contact Information :</p>
                         <div class="text-muted">
@@ -154,6 +178,12 @@
                                         aria-controls="bonuses-pan" aria-selected="false"><i
                                             class="ri-exchange-box-line me-1 align-middle d-inline-block"></i>Commisions</button>
                                 </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="referrals" data-bs-toggle="tab"
+                                        data-bs-target="#referrals-pan" type="button" role="tab"
+                                        aria-controls="referrals-pan" aria-selected="false"><i
+                                            class="ri-exchange-box-line me-1 align-middle d-inline-block"></i>Referrals</button>
+                                </li>
                             </ul>
                         </div>
                         <div>
@@ -183,6 +213,10 @@
                                 aria-labelledby="gallery-tab" tabindex="0">
                                 @include('admin.users._bonus_history')
                             </div>
+                            <div class="tab-pane fade p-0 border-0" id="referrals-pan" role="tabpanel"
+                                aria-labelledby="gallery-tab" tabindex="0">
+                                @include('admin.users._referrals')
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -191,6 +225,7 @@
     </div>
 @endsection
 @push('scripts')
+    @include('admin.users.scritps._load-referrals')
     @include('admin.users.scritps._update-form')
     @include('profile.scripts._update-profile')
     @include('admin.users.scritps._select-plan')
