@@ -367,21 +367,21 @@ class User extends Authenticatable
 
         // $currentLevel = 1;
 
-        // Initialize collection to store downline users
+        // // Initialize collection to store downline users
         // $downline = collect();
 
-        // Base case: if the current level exceeds the max level, stop recursion
+        // //   Base case: if the current level exceeds the max level, stop recursion
         // if ($currentLevel > $maxLevel) {
         //     return $downline;
         // }
 
-        // Get direct children
+        // // Get direct children
         // $children = $this->children;
 
-        // Add direct children to the downline collection
+        // // Add direct children to the downline collection
         // $downline = $downline->concat($children);
 
-        // Recursively fetch downline for each child
+        // // Recursively fetch downline for each child
         // foreach ($children as $child) {
         //     $downline = $downline->concat($child->getDescendants($maxLevel, $currentLevel + 1));
         // }
@@ -415,40 +415,69 @@ class User extends Authenticatable
 
     public function getAmbassadorDescendants()
     {
-        $descendants = $this->getDescendants(2);
+        // $descendants = $this->getDescendants(2);
 
-        $ambassadors = $descendants->filter(function ($user) {
-            return $user->is_ambassador;
-        });
+        // $ambassadors = $descendants->filter(function ($user) {
+        //     return $user->is_ambassador;
+        // });
 
-        return $ambassadors;
+        // return $ambassadors;
+
+        return User::where('parent_id', $this->id)->where('is_ambassador', true)->latest();
     }
 
     public function getCustomerDescendants()
     {
-        $descendants = $this->getDescendants();
-        $customers = $descendants->filter(function ($user) {
-            return !$user->is_ambassador;
-        });
+        // $descendants = $this->getDescendants();
+        // $customers = $descendants->filter(function ($user) {
+        //     return !$user->is_ambassador;
+        // });
 
-        return $customers;
+        // return $customers;
+
+        return User::where('parent_id', $this->id)->where('is_ambassador', false)->latest();
     }
 
     // Get descendants with any active subscription
     public function getActiveSubscriptionDescendants()
     {
-        $descendants = $this->getDescendants();
-        $activeSubscriptions = $descendants->filter(function ($user) {
-            return $user->subscriptions()->active()->exists();
-        });
+        // $descendants = $this->getDescendants();
+        // $activeSubscriptions = $descendants->filter(function ($user) {
+        //     return $user->subscriptions()->active()->exists();
+        // });
 
-        return $activeSubscriptions;
+        // return $activeSubscriptions;
+
+        return User::where('parent_id', $this->id)
+            ->whereHas('subscriptions', function ($query) {
+                $query->where('status', 'active'); // Adjust 'status' and 'active' as per your subscription model
+            })
+            ->latest()
+            ->get();
     }
 
     // Get top sellers in the user's team
     public function getTopSellers($limit = 10)
     {
-        $descendants = $this->getDescendants();
+        // $descendants = $this->getDescendants();
+
+        // // Calculate total sales for each descendant and exclude those with zero sales
+        // $topSellers = $descendants->map(function ($user) {
+        //     $totalSales = $user->getMonthlyTotalSales();
+
+        //     if ($totalSales > 0) {
+        //         $user->total_sales = $totalSales;
+        //         return $user;
+        //     }
+        //     return null;
+        // })->filter() // Remove null values (users with zero sales)
+        //     ->sortByDesc('total_sales')
+        //     ->take($limit);
+
+        // return $topSellers;
+
+        // Retrieve the descendants (direct children in this case)
+        $descendants = User::where('parent_id', $this->id)->get();
 
         // Calculate total sales for each descendant and exclude those with zero sales
         $topSellers = $descendants->map(function ($user) {
@@ -461,7 +490,7 @@ class User extends Authenticatable
             return null;
         })->filter() // Remove null values (users with zero sales)
             ->sortByDesc('total_sales')
-            ->take($limit);
+            ->take($limit); // Limit the result if needed
 
         return $topSellers;
     }
@@ -546,16 +575,24 @@ class User extends Authenticatable
 
     function getMonthlyTotalSales()
     {
-        $total = $this->monthlySales()
-            ->sum('amount');
+        $total = 0;
+
+        if ($this->monthlySales()->count() > 0) {
+            $total = $this->monthlySales()
+                ->sum('amount');
+        }
 
         return $total;
     }
 
     function getMonthlyTotalSalesAttribute()
     {
-        $total = $this->monthlySales()
-            ->sum('amount');
+        $total = 0;
+
+        if ($this->monthlySales()->count() > 0) {
+            $total = $this->monthlySales()
+                ->sum('amount');
+        }
 
         return $total;
     }
