@@ -31,6 +31,7 @@ Route::get('update-user', function (Request $request) {
     $oldUserId = $request->old_user_id;
     $newUserId = $request->new_user_id;
 
+    // dd(generateUniqueId());
     $user = \App\Models\User::find($oldUserId);
 
     if (!$user) {
@@ -47,4 +48,6 @@ Route::get('update-user', function (Request $request) {
     \App\Models\User::where('parent_id', $oldUserId)->update(['parent_id' => $newUserId]);
 
     updateReferences($oldUserId, $newUserId);
+
+    return response()->json(['message' => 'Could not find user']);
 });
