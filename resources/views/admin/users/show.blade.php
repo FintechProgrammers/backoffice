@@ -40,7 +40,7 @@
                         </div>
                     </div>
                     <div class="p-4 border-bottom border-block-end-dashed">
-                        <div class="d-flex justify-content-center gap-3">
+                        <div class="d-flex justify-content-center gap-3 mb-3">
                             @if (Auth::guard('admin')->user()->can('edit user'))
                                 <a href="#" class="btn btn-sm btn-dark trigerModal"
                                     data-url="{{ route('admin.users.change-username', $user->uuid) }}"
@@ -64,7 +64,12 @@
                                 data-bs-target="#primaryModal" data-url="{{ route('admin.users.plan.form', $user->uuid) }}"
                                 data-action="Set user as Ambassador">Activate Plan</a>
                         </div>
+                        <div class="d-flex justify-content-center gap-3">
+
+                        </div>
+
                     </div>
+
                     @if (!empty($user->wallet))
                         <div class="p-4 border-bottom border-block-end-dashed">
                             <div class="text-center">

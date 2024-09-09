@@ -8,6 +8,14 @@
         <div>
             <p class="fw-semibold fs-18 mb-0">Sales</p>
         </div>
+        <div class="btn-list mt-md-0 mt-2">
+            @if (Auth::guard('admin')->user()->can('give commission'))
+                <a href="{{ route('admin.commission.pay.create') }}" class="btn btn-primary btn-wave">
+                    Pay Commission
+                </a>
+            @endif
+        </div>
+
     </div>
     <div class="row">
         <div class="col-xl-12">

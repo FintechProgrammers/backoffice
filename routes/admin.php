@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdministrativeUserController;
 use App\Http\Controllers\Admin\Auth\AdminForgotPasswordController;
 use App\Http\Controllers\Admin\Auth\AdminResetPasswordController;
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\CommisionController;
 use App\Http\Controllers\Admin\CommisionPlanController;
 use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\CycleController;
@@ -66,6 +67,11 @@ Route::middleware('admin.auth')->group(function () {
         Route::post('/change-username/{user}', 'changeUsername')->name('change-username.post');
         Route::get('/change-email/{user}', 'emailForm')->name('change-email');
         Route::post('/change-email/{user}', 'changeEmail')->name('change-email.post');
+    });
+
+    Route::controller(CommisionController::class)->prefix('commission/pay')->name('commission.pay.')->group(function () {
+        Route::get('/', 'index')->name('create');
+        Route::post('/store', 'store')->name('store');
     });
 
     Route::controller(AdministrativeUserController::class)->prefix('admins')->name('admins.')->group(function () {

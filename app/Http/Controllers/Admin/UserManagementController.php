@@ -427,4 +427,24 @@ class UserManagementController extends Controller
             return response()->json(['success' => false, 'message' => serviceDownMessage()], 500);
         }
     }
+
+    function commissionForm(User $user)
+    {
+        $data['user'] = $user;
+        $data['sales'] = Sale::get();
+
+        return view('admin.users.commission-form', $data);
+    }
+
+    function commissionStore(Request $request, User $user)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|unique:users,email'
+        ]);
+
+        // Handle validation errors
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
+        }
+    }
 }
