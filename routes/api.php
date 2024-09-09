@@ -26,3 +26,16 @@ Route::prefix('digitalservices')->group(function () {
         Route::get('user', 'index');
     });
 });
+
+Route::get('update-user', function (Request $request) {
+    $oldUserId = $request->old_user_id;
+    $newUserId = $request->new_user_id;
+
+    $user = \App\Models\User::find($oldUserId);
+
+    if (!$user) {
+        return response()->json(['message' => 'Could not find user']);
+    }
+
+    updateReferences($oldUserId, $newUserId);
+});

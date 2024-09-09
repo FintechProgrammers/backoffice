@@ -14,7 +14,7 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $firstParent = $this->sponsor; // Direct parent of the current user
+        $firstParent = $this->sponsor ? $this->sponsor : null; // Direct parent of the current user
         $secondParent = $firstParent ? $firstParent->sponsor : null; // Parent of the first parent
         $thirdParent = $secondParent ? $secondParent->sponsor : null; // Parent of the second parent
 

@@ -15,6 +15,6 @@ class UserController extends Controller
 
         $user = new UserResource($user);
 
-        return $this->sendResponse($user, "User Date");
+        return $this->sendResponse($user, "User Data");
     }
 }

@@ -55,25 +55,7 @@ class UpdateUser implements ShouldQueue
             ]);
 
             // Batch update user_id references across multiple models
-            $this->updateReferences($userId, $newUserId);
+            updateReferences($userId, $newUserId);
         });
-    }
-
-    protected function updateReferences($oldUserId, $newUserId)
-    {
-        $updates = ['user_id' => $newUserId];
-        $parentUpdates = ['parent_id' => $newUserId];
-
-        \App\Models\UserInfo::where('user_id', $oldUserId)->update($updates);
-        \App\Models\Wallet::where('user_id', $oldUserId)->update($updates);
-        \App\Models\Sale::where('user_id', $oldUserId)->update($updates);
-        \App\Models\Sale::where('parent_id', $oldUserId)->update($parentUpdates);
-        \App\Models\CommissionTransaction::where('user_id', $oldUserId)->update($updates);
-        \App\Models\CommissionTransaction::where('child_id', $oldUserId)->update(['child_id' => $newUserId]);
-        \App\Models\UserActivities::where('user_id', $oldUserId)->update($updates);
-        \App\Models\UserKyc::where('user_id', $oldUserId)->update($updates);
-        \App\Models\Invoice::where('user_id', $oldUserId)->update($updates);
-        \App\Models\StripeUser::where('user_id', $oldUserId)->update($updates);
-        \App\Models\PaymentMethod::where('user_id', $oldUserId)->update($updates);
     }
 }
