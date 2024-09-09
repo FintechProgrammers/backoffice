@@ -37,5 +37,14 @@ Route::get('update-user', function (Request $request) {
         return response()->json(['message' => 'Could not find user']);
     }
 
+    // Update the current user record
+    $user->update([
+        'id' => $newUserId,
+        'migrated' => true
+    ]);
+
+    // Update parent references
+    \App\Models\User::where('parent_id', $oldUserId)->update(['parent_id' => $newUserId]);
+
     updateReferences($oldUserId, $newUserId);
 });
