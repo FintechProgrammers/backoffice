@@ -22,7 +22,7 @@ class TeamController extends Controller
     {
         $user = User::whereId(auth()->user()->id)->first();
 
-        $data['customers'] = $user->getAmbassadorDescendants();
+        $data['customers'] = User::where('parent_id', $user->id)->where('is_ambassador', true)->latest()->paginate(10);
 
         return view('user.team._table', $data);
     }
@@ -36,7 +36,7 @@ class TeamController extends Controller
     {
         $user = User::whereId(auth()->user()->id)->first();
 
-        $data['customers'] = $user->getCustomerDescendants();
+        $data['customers'] = User::where('parent_id', $user->id)->where('is_ambassador', false)->latest()->paginate(10);;
 
         return view('user.customers._table', $data);
     }

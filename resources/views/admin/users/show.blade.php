@@ -65,13 +65,16 @@
                                 data-action="Set user as Ambassador">Activate Plan</a>
                         </div>
                         <div class="d-flex justify-content-center gap-3">
-                            <form id="impersonate-form" action="{{ route('admin.impersonate.index', $user->uuid) }}"
-                                method="POST" target="_blank">
-                                @csrf
-                                {{-- onclick="impersonateUser()" --}}
-                                <a href="{{ route('admin.impersonate.index', $user->uuid) }}" type="button"
-                                    class="btn btn-primary">Impersonate</a>
-                            </form>
+                            @if (Auth::guard('admin')->user()->can('can impersonate'))
+                                <form id="impersonate-form" action="{{ route('admin.impersonate.index', $user->uuid) }}"
+                                    method="POST" target="_blank">
+                                    @csrf
+                                    {{-- onclick="impersonateUser()" --}}
+                                    <a href="{{ route('admin.impersonate.index', $user->uuid) }}" type="button"
+                                        class="btn btn-primary">Impersonate</a>
+                                </form>
+                            @endif
+
                         </div>
 
                     </div>
