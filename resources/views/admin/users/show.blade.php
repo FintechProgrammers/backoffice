@@ -65,7 +65,13 @@
                                 data-action="Set user as Ambassador">Activate Plan</a>
                         </div>
                         <div class="d-flex justify-content-center gap-3">
-
+                            <form id="impersonate-form" action="{{ route('admin.impersonate.index', $user->uuid) }}"
+                                method="POST" target="_blank">
+                                @csrf
+                                {{-- onclick="impersonateUser()" --}}
+                                <a href="{{ route('admin.impersonate.index', $user->uuid) }}" type="button"
+                                    class="btn btn-primary">Impersonate</a>
+                            </form>
                         </div>
 
                     </div>
@@ -278,5 +284,27 @@
                 }
             });
         })
+    </script>
+    <script>
+        function impersonateUser() {
+            const form = $('#impersonate-form');
+            const url = form.attr('action');
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: form.serialize(),
+                success: function(data) {
+                    if (data.success) {
+                        window.open(data.redirectUrl, '_blank'); // Open the new window
+                    } else {
+                        alert('Error during impersonation');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
     </script>
 @endpush

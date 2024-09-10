@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\CommisionPlanController;
 use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\CycleController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ImpersonateController;
 use App\Http\Controllers\Admin\KycController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\ProductController;
@@ -236,5 +237,9 @@ Route::middleware('admin.auth')->group(function () {
         Route::get('/{user}', 'show')->name('show');
         Route::post('/approve/{kyc}', 'approve')->name('approve');
         Route::post('/decline/{kyc}', 'decline')->name('decline');
+    });
+
+    Route::controller(ImpersonateController::class)->prefix('impersonate')->name('impersonate.')->group(function () {
+        Route::get('/{user}', 'index')->name('index');
     });
 });
