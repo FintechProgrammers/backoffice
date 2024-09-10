@@ -31,8 +31,8 @@
         <td colspan="4" class="text-center"><span class="text-warning">no data available</span></td>
     </tr>
 @endforelse
-{{-- <tr style="border: none;">
-    <td colspan="5" style="border: none;">
+<tr style="border: none;">
+    <td colspan="4" style="border: none;">
         {{ $customers->links('vendor.pagination.custom') }}
     </td>
-</tr> --}}
+</tr>
