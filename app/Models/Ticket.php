@@ -28,12 +28,12 @@ class Ticket extends Model
 
     function subject()
     {
-        return $this->belongsTo(SupportSubject::class,'support_subject_id','id');
+        return $this->belongsTo(SupportSubject::class, 'support_subject_id', 'id');
     }
 
     function user()
     {
-        return $this->belongsTo(User::class)->withTrashed();
+        return $this->belongsTo(User::class);
     }
 
     function replys()

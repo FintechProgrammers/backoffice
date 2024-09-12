@@ -18,7 +18,7 @@ class TicketReply extends Model
 
     function admin()
     {
-        return $this->belongsTo(Admin::class)->withTrashed();
+        return $this->belongsTo(Admin::class);
     }
 
     function attachments()
