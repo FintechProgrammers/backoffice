@@ -20,7 +20,10 @@ use App\Http\Controllers\User\SubscriptionController;
 use App\Http\Controllers\User\SupportController;
 use App\Http\Controllers\User\TeamController;
 use App\Http\Controllers\WithdrawalController;
+use App\Models\CommissionTransaction;
 use App\Models\Sale;
+use App\Models\Transaction;
+use App\Models\Wallet;
 use App\Services\NexioService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -106,6 +109,7 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(ReportController::class)->prefix('report')->name('report.')->group(function () {
         Route::get('/commissions', 'commission')->name('commissions');
         Route::get('/commissions/filter', 'commissionFilter')->name('commissions.filter');
+        Route::get('/commissions/total', 'calculateTotalCommission')->name('commissions.total');
         Route::get('bonuses', 'bonuses')->name('bonuses');
         Route::get('ranks', 'ranks')->name('ranks');
         Route::get('packages', 'packages')->name('packages');
@@ -185,19 +189,46 @@ Route::get('cron', function () {
     return Illuminate\Support\Facades\Artisan::call('schedule:run');
 })->name('cron');
 
-// Route::get('test', function () {
+Route::get('test', function () {
 
-//     // ini_set('max_execution_time', '0');
+    // ini_set('max_execution_time', '0');
 
-//     $chunkSize = 100; // Adjust the chunk size as needed
+    // $chunkSize = 100; // Adjust the chunk size as needed
 
-//     \App\Models\User::chunk($chunkSize, function ($users) {
-//         logger($users->count());
-//         // Dispatch each chunk to the job queue
-//         \App\Jobs\MigrateUserJob::dispatch($users);
-//     });
+    // \App\Models\User::chunk($chunkSize, function ($users) {
+    //     logger($users->count());
+    //     // Dispatch each chunk to the job queue
+    //     \App\Jobs\MigrateUserJob::dispatch($users);
+    // });
 
-//     return response()->json(["success"]);
-// });
+    // return response()->json(["success"]);
+
+    // $date = "2024-09-14";
+
+    // CommissionTransaction::whereDate('updated_at', $date)->update([
+    //     'is_converted' => false,
+    //     'transaction_id' => null,
+    // ]);
+
+    // $transaction = Transaction::whereDate('created_at', $date)->get();
+
+    // foreach ($transaction as $transaction) {
+    //     // get user wallet
+    //     $wallet = Wallet::where('user_id', $transaction->user_id)->first();
+
+    //     $newBalance = $wallet->balance - $transaction->amount;
+
+    //     $wallet->update([
+    //         'balance' => $newBalance
+    //     ]);
+
+    //     $transaction->delete();
+    // }
+
+    // dd("done");
+
+
+    // dd($commission);
+});
 
 require __DIR__ . '/auth.php';

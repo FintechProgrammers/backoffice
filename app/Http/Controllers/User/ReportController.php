@@ -55,6 +55,8 @@ class ReportController extends Controller
         $search = $request->filled('search') ? $request->search : null;
         $status = $request->filled('status')  ? $request->status : null;
 
+        $level = $request->filled('level') ? $request->level : null;
+
         $query = CommissionTransaction::where('user_id', auth()->user()->id);
 
         $query =
@@ -72,7 +74,23 @@ class ReportController extends Controller
                     $query->where('is_converted', false);
                 }
             })
-            ->when(!empty($dateFrom) && !empty($dateTo), fn($query) => $query->whereBetween('created_at', [$dateFrom, $dateTo]));
+            ->when(!empty($dateFrom) && !empty($dateTo), fn($query) => $query->whereBetween('created_at', [$dateFrom, $dateTo]))
+            ->when(!empty($level), function ($query) use ($level) {
+                if ($level == 'direct') {
+                    $query->where('level', 0);
+                } else {
+                    $query->where('level', '!=', '0');
+                }
+            })
+            ->when(!empty($level) && !empty($dateFrom) && !empty($dateTo), function ($query) use ($level, $dateFrom, $dateTo) {
+                if ($level == 'direct') {
+                    $query = $query->where('level', 0);
+                } else {
+                    $query = $query->where('level', '!=', '0');
+                }
+
+                $query->whereBetween('created_at', [$dateFrom, $dateTo]);
+            });
 
         return $query;
     }

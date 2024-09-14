@@ -23,6 +23,7 @@
         $('#search').val('')
         $('#status').val('')
         $("#search-date").val('');
+        $('#level').val('')
 
         $('#hidden_page').val(1)
 
@@ -37,6 +38,7 @@
         const search = $('#search').val()
         const status = $('#status').val()
         const date = $("#search-date").val();
+        const level = $('#level').val()
         const [startDate, endDate] = date.split(" - ");
         const page = $('#hidden_page').val();
 
@@ -47,6 +49,7 @@
                 search: search,
                 status: status,
                 startDate: startDate,
+                level: level,
                 endDate: endDate,
             },
             beforeSend: function() {
@@ -78,6 +81,7 @@
                 search: search,
                 status: status,
                 startDate: startDate,
+                level: level,
                 endDate: endDate,
             },
             beforeSend: function() {

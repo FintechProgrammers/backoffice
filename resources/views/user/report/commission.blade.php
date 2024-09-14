@@ -44,15 +44,23 @@
                                 <option value="0">Pending</option>
                             </select>
                         </div>
+                        <div class="col-lg-2 mb-lg-0 mb-4">
+                            <label for="searchInputSearch">Level</label>
+                            <select class="form-control" id="level">
+                                <option value="">--select--</option>
+                                <option value="direct">Direct</option>
+                                <option value="indirect">Indirect</option>
+                            </select>
+                        </div>
                         <div class="col-lg-3 mb-lg-0 mb-4">
                             <label for="searchInputSearch">Date</label>
                             <input type="text" name="datepicker" id="search-date" class="form-control" value="" />
                         </div>
-                        <div class="col-lg-2 mb-lg-0">
+                        <div class="col-lg-1 mb-lg-0">
                             <button id="filter"
                                 class="btn btn-size btn-primary btn-hover-effect-1 rounded-pill make-text-bold w-100">Filter</button>
                         </div>
-                        <div class="col-lg-2 mb-lg-0">
+                        <div class="col-lg-1 mb-lg-0">
                             <button id="reset"
                                 class="btn btn-size btn-outline-dark btn-hover-effect-1 rounded-pill make-text-bold w-100">Reset</button>
                         </div>

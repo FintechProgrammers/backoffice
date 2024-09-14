@@ -48,7 +48,7 @@ class ReleaseCommissions extends Command
                 // Get commissions for 1st to 7th of the month
                 $commissionStartDate = $startOfMonth->copy();
                 $commissionEndDate = $startOfMonth->copy()->addDays(7);
-                $settlementWeek = 'Week 2';
+                $settlementWeek = 'Week 1';
 
                 // Fetch commissions from 1st to 7th
                 $commissions = $commissions->where('level', 0)->whereHas('sale', function ($query) use ($commissionStartDate, $commissionEndDate) {
@@ -62,7 +62,7 @@ class ReleaseCommissions extends Command
                 $commissionEndDate = $startOfMonth->copy()->addDays(14);
                 $closingDate = $startOfMonth->copy()->addDays(14);
                 $paymentDate = $startOfMonth->copy()->addDays(21);
-                $settlementWeek = 'Week 3';
+                $settlementWeek = 'Week 2';
 
                 // Fetch commissions from 8th to 14th
                 $commissions = $commissions->where('level', 0)->whereHas('sale', function ($query) use ($commissionStartDate, $commissionEndDate) {
@@ -73,7 +73,7 @@ class ReleaseCommissions extends Command
                 // Get commissions for 15th to 21st of the month
                 $commissionStartDate = $startOfMonth->copy()->addDays(14);
                 $commissionEndDate = $startOfMonth->copy()->addDays(21);
-                $settlementWeek = 'Week 4';
+                $settlementWeek = 'Week 3';
 
                 // Fetch commissions from 15th to 21st
                 $commissions = $commissions->where('level', 0)->whereHas('sale', function ($query) use ($commissionStartDate, $commissionEndDate) {
