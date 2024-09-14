@@ -30,8 +30,21 @@ class DashboardController extends Controller
             $directSale = $user->directSales();
             $commissions = $user->commissionTransactions();
             $directCommission = $user->directCommissionTransactions;
+            $indirectCommission = $user->indirectCommissionTransactions;
 
             $wallet = Wallet::where('user_id', $user->id)->select('balance')->first();
+
+            $weeklyDirectCommission = $directCommission->whereBetween('created_at', [$startOfWeek, $endOfWeek])->select('amount')->sum('amount');
+
+            $now = Carbon::now();
+
+            if ($now->day == 8) {
+                $weeklyIndirectCommission = $indirectCommission->whereBetween('created_at', [$startOfWeek, $endOfWeek])->select('amount')->sum('amount');
+            } else {
+                $weeklyIndirectCommission = 0;
+            }
+
+            $currentWeekCommissions = $weeklyDirectCommission + $weeklyIndirectCommission;
 
             $data['currentRank'] = $user->rank;
             $data['nextRank'] = $user->nextRank();
@@ -41,13 +54,13 @@ class DashboardController extends Controller
 
             $data['currentWeekDirectVolume'] =  $directSale->whereBetween('created_at', [$startOfWeek, $endOfWeek])->select('bv_amount')->sum('bv_amount');
 
-            $data['currentWeekDirectCommissions'] = $directCommission->whereBetween('created_at', [$startOfWeek, $endOfWeek])->select('amount')->sum('amount');
+            $data['currentWeekDirectCommissions'] = $weeklyDirectCommission;
 
             $data['currentMonthVolume'] = $user->total_bv_this_month;
 
             $data['currentMonthCommissions'] = $commissions->whereMonth('created_at', $currentMonth)->whereYear('created_at', $currentYear)->select('amount')->sum('amount');
 
-            $data['currentWeekCommissions'] = $commissions->whereBetween('created_at', [$startOfWeek, $endOfWeek])->select('amount')->sum('amount');
+            $data['currentWeekCommissions'] = $currentWeekCommissions;
 
             $data['teamVolume'] = $user->team_volume;
 
