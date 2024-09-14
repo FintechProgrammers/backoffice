@@ -38,8 +38,13 @@ class DashboardController extends Controller
 
             $now = Carbon::now();
 
-            if ($now->day == 8) {
-                $weeklyIndirectCommission = $indirectCommission->whereBetween('created_at', [$startOfWeek, $endOfWeek])->select('amount')->sum('amount');
+            $lastDayOfMonth = $now->copy()->endOfMonth();
+            $isLastWeekOfMonth = $endOfWeek->isSameDay($lastDayOfMonth);
+
+            if ($now->day == 8 || $isLastWeekOfMonth) {
+                $weeklyIndirectCommission = $indirectCommission->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+                ->select('amount')
+                ->sum('amount');
             } else {
                 $weeklyIndirectCommission = 0;
             }
