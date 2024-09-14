@@ -5,6 +5,11 @@
                 <x-profile-component name="{{ $item->associate->full_name }}" email="{{ $item->associate->email }}"
                     image="{{ $item->associate->profile_picture }}" />
             @endif
+            @if ($item->level == 0)
+                <span class="badge bg-info">Direct</span>
+            @else
+                <span class="badge bg-info">Indirect</span>
+            @endif
         </td>
         <td>
             ${{ number_format($item->amount, 2) }}
