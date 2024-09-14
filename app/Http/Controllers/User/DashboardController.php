@@ -41,10 +41,10 @@ class DashboardController extends Controller
             $lastDayOfMonth = $now->copy()->endOfMonth();
             $isLastWeekOfMonth = $endOfWeek->isSameDay($lastDayOfMonth);
 
-            if ($now->day == 8 || $isLastWeekOfMonth) {
+            if ($isLastWeekOfMonth) {
                 $weeklyIndirectCommission = $indirectCommission->whereBetween('created_at', [$startOfWeek, $endOfWeek])
-                ->select('amount')
-                ->sum('amount');
+                    ->select('amount')
+                    ->sum('amount');
             } else {
                 $weeklyIndirectCommission = 0;
             }
