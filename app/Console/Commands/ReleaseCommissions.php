@@ -38,9 +38,7 @@ class ReleaseCommissions extends Command
             $startOfMonth = $now->copy()->startOfMonth();
             $endOfMonth = $now->copy()->endOfMonth();
             $endOfPreviousMonth = $now->copy()->subMonth()->endOfMonth();  // Last day of the previous month
-            // $currentDay = $now->day;
-
-            $currentDay = 7;
+            $currentDay = $now->day;
 
             $commissions = CommissionTransaction::where('is_converted', false);
 
