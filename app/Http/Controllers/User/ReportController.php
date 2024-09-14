@@ -27,9 +27,30 @@ class ReportController extends Controller
 
     function commissionFilter(Request $request)
     {
-        $dateFrom = ($request->filled('date_from')) ? Carbon::parse($request->date_from)->startOfDay() : null;
 
-        $dateTo = ($request->filled('date_to')) ? Carbon::parse($request->date_to)->endOfDay() : null;
+        $query = $this->queryCommissions($request);
+
+        $data['commissions'] = $query->latest()->paginate(20);
+
+        return view('user.report._commission-table', $data);
+    }
+
+    function calculateTotalCommission(Request $request)
+    {
+        $query = $this->queryCommissions($request);
+
+        $total = $query->sum('amount');
+
+        $data['total'] = number_format($total, 2, '.', ',');
+
+        return response()->json($data);
+    }
+
+    function queryCommissions(Request $request)
+    {
+        $dateFrom = ($request->filled('startDate')) ? Carbon::parse($request->startDate)->startOfDay() : null;
+
+        $dateTo = ($request->filled('endDate')) ? Carbon::parse($request->endDate)->endOfDay() : null;
 
         $search = $request->filled('search') ? $request->search : null;
         $status = $request->filled('status')  ? $request->status : null;
@@ -53,10 +74,7 @@ class ReportController extends Controller
             })
             ->when(!empty($dateFrom) && !empty($dateTo), fn($query) => $query->whereBetween('created_at', [$dateFrom, $dateTo]));
 
-
-        $data['commissions'] = $query->latest()->paginate(20);
-
-        return view('user.report._commission-table', $data);
+        return $query;
     }
 
     function packages()

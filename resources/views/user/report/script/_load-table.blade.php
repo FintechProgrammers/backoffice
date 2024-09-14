@@ -68,5 +68,34 @@
                 console.log(xhr.responseJSON)
             }
         });
+
+        $content = $('#totalCommission')
+
+        $.ajax({
+            url: `{{ route('report.commissions.total') }}`,
+            type: 'GET',
+            data: {
+                search: search,
+                status: status,
+                startDate: startDate,
+                endDate: endDate,
+            },
+            beforeSend: function() {
+                $content.html(`
+                    <div class="d-flex justify-content-center">
+                        <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                `)
+            },
+            success: function(response) {
+                $content.empty().html(response.total);
+            },
+            error: function(xhr, status, error) {
+                // Handle error response
+                console.log(xhr.responseJSON)
+            }
+        });
     }
 </script>

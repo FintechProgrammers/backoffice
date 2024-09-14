@@ -9,6 +9,24 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-lg-6">
+            <div class="card custom-card card-bg-primary">
+                <div class="card-body">
+                    <div class="d-flex flex-wrap align-items-top justify-content-between">
+                        <div class="flex-fill">
+                            <p class="mb-0 text-light">Total Commission</p>
+                            <div class="d-flex align-items-center">
+                                <span class="fs-5 fw-semibold" id="totalCommission">
+                                    0.00
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-xl-12">
             <div class="card custom-card">
                 <div class="p-3">
