@@ -26,7 +26,7 @@
                                     <select class="form-control users" name="user">
                                         <option value="" data-profile="" data-user="">
                                             Select</option>
-                                        <option value="all">All</option>
+                                        {{-- <option value="all">All</option> --}}
                                         @foreach ($users as $item)
                                             <option value="{{ $item->id }}" data-profile="{{ $item->profile_picture }}"
                                                 data-user="{{ $item->full_name }}">
