@@ -88,7 +88,7 @@ class ReleaseCommissions extends Command
                 $commissionEndDate = $endOfPreviousMonth;
                 $settlementWeek = 'End of Month';
 
-                $commissions = $commissions->where('level', 0)->whereHas('sale', function ($query) use ($commissionStartDate, $commissionEndDate) {
+                $commissions = $commissions->whereHas('sale', function ($query) use ($commissionStartDate, $commissionEndDate) {
                     $query->where('is_refunded', false)
                         ->whereBetween('created_at', [$commissionStartDate, $commissionEndDate]);
                 })->get()->groupBy('user_id');
