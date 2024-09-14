@@ -85,6 +85,12 @@ class Navigation
                 'hasPermission' => $user->can('manage sales') ? true : false
             ],
             (object) [
+                'name'  => 'Commissions',
+                'route' => 'admin.commissions.index',
+                'icon'  => 'las la-wallet',
+                'hasPermission' => $user->can('manage commission') ? true : false
+            ],
+            (object) [
                 'name'  => 'Transactions',
                 'route' => 'admin.transactions.index',
                 'icon'  => 'las la-wallet',

@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\Auth\AdminResetPasswordController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\CommisionController;
 use App\Http\Controllers\Admin\CommisionPlanController;
+use App\Http\Controllers\Admin\CommissionsController;
 use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\CycleController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -241,5 +242,13 @@ Route::middleware('admin.auth')->group(function () {
 
     Route::controller(ImpersonateController::class)->prefix('impersonate')->name('impersonate.')->group(function () {
         Route::get('/{user}', 'index')->name('index');
+    });
+
+    Route::controller(CommissionsController::class)->prefix('commissions')->name('commissions.')->group(function () {
+        Route::get('', 'index')->name('index');
+        Route::get('/filter', 'commissionFilter')->name('filter');
+        Route::get('/filter/total', 'calculateTotalCommission')->name('filter.total');
+        Route::get('/settle', 'payview')->name('settle');
+        Route::post('/settle', 'store')->name('settle.store');
     });
 });
