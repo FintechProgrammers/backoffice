@@ -29,9 +29,9 @@ class UserResource extends JsonResource
             'role' => $this->is_ambassador ? 'Ambassador' : 'Customer',
             'subscribed' => $this->id === 6,
             'parents' => [
-                'level1' => $firstParent ? new SponsorResource($firstParent) : null,
-                'level2' => $secondParent ? new SponsorResource($secondParent) : null,
-                'level3' => $thirdParent ? new SponsorResource($thirdParent) : null,
+                'level1' => !empty($firstParent) ? new SponsorResource($firstParent) : null,
+                'level2' => !empty($secondParent) ? new SponsorResource($secondParent) : null,
+                'level3' => !empty($thirdParent) ? new SponsorResource($thirdParent) : null,
             ],
             'push_token' => $this->push_token,
             'created_at' => $this->created_at,
