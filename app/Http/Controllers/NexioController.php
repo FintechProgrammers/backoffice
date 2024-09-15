@@ -95,7 +95,7 @@ class NexioController extends Controller
                 $transaction = Transaction::create($transaction);
 
                 $wallet->update([
-                    'balance' => $wallet->balance - $transaction->amount
+                    'balance' => $transaction['closing_balance']
                 ]);
 
                 // Update success if all DB transactions were executed successfully

@@ -368,8 +368,10 @@ if (!function_exists('debitWallet')) {
     {
         $wallet = \App\Models\Wallet::where('user_id', auth()->user()->id)->first();
 
+        $newBalance = $wallet->balance - $amount;
+
         $wallet->update([
-            'amount' => $wallet->amount - $amount,
+            'balance' => $newBalance,
         ]);
     }
 }
@@ -379,8 +381,10 @@ if (!function_exists('refundWallet')) {
     {
         $wallet = \App\Models\Wallet::where('user_id', auth()->user()->id)->first();
 
+        $newBalance = $wallet->balance + $amount;
+
         $wallet->update([
-            'balance' => $wallet->balance + $amount,
+            'balance' => $newBalance,
         ]);
     }
 }

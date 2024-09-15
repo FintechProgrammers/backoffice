@@ -153,11 +153,13 @@ class WithdrawalController extends Controller
             $validated->currency = 'usdttrc20';
 
             return ($nowpyamnet->payout($validated, $Withdrawal)) ? $this->sendResponse([], self::TRANSACTION_PENDING) : $this->sendError(serviceDownMessage(), [], 500);
-        } elseif ($provider->short_name === 'masspay') {
-            $masspay = new \App\Http\Controllers\MassPaymentController();
+        }
+        // elseif ($provider->short_name === 'masspay') {
+        //     $masspay = new \App\Http\Controllers\MassPaymentController();
 
-            return $masspay->makeWithdrawal($validated);
-        } elseif ($provider->short_name === 'masspaynexio') {
+        //     return $masspay->makeWithdrawal($validated);
+        // }
+        elseif ($provider->short_name === 'masspaynexio') {
             $nexio = new \App\Http\Controllers\NexioController();
 
             return $nexio->payout($validated);
