@@ -3,12 +3,12 @@
         <td>
             <span class="text-success fw-semibold">{{ $item->internal_reference }}</span>
         </td>
-        <td>
+        {{-- <td>
             @if (!empty($item->associatedUser))
                 <x-profile-component name="{{ $item->associatedUser->full_name }}"
                     email="{{ $item->associatedUser->email }}" image="{{ $item->associatedUser->profile_picture }}" />
             @endif
-        </td>
+        </td> --}}
         <td> ${{ number_format($item->amount, 2, '.', ',') }}</td>
         <td>
             ${{ number_format($item->closing_balance, 2, '.', ',') }}

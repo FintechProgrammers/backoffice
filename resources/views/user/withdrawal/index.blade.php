@@ -113,7 +113,7 @@
                         <thead>
                             <tr>
                                 <th scope="col">Reference</th>
-                                <th scope="col">Associated User</th>
+                                {{-- <th scope="col">Associated User</th> --}}
                                 <th scope="col">Amount</th>
                                 <th scope="col">Balance</th>
                                 <th scope="col">Action</th>
