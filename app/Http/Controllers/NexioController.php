@@ -88,11 +88,11 @@ class NexioController extends Controller
 
             $transaction = $validated->transaction_payload;
 
+            $transaction = Transaction::create($transaction);
+
             (bool) $success = false;
 
             \Illuminate\Support\Facades\DB::transaction(function () use ($transaction, $wallet, &$success) {
-
-                $transaction = Transaction::create($transaction);
 
                 $wallet->update([
                     'balance' => $transaction['closing_balance']
