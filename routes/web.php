@@ -205,25 +205,25 @@ Route::get('test', function () {
 
     $date = "2024-09-14";
 
-    CommissionTransaction::whereDate('updated_at', $date)->update([
-        'is_converted' => false,
-        'transaction_id' => null,
-    ]);
+    // CommissionTransaction::whereDate('updated_at', $date)->update([
+    //     'is_converted' => false,
+    //     'transaction_id' => null,
+    // ]);
 
-    $transaction = Transaction::whereDate('created_at', $date)->get();
+    // $transaction = Transaction::whereDate('created_at', $date)->get();
 
-    foreach ($transaction as $transaction) {
-        // get user wallet
-        $wallet = Wallet::where('user_id', $transaction->user_id)->first();
+    // foreach ($transaction as $transaction) {
+    //     // get user wallet
+    //     $wallet = Wallet::where('user_id', $transaction->user_id)->first();
 
-        $newBalance = $wallet->balance - $transaction->amount;
+    //     $newBalance = $wallet->balance - $transaction->amount;
 
-        $wallet->update([
-            'balance' => $newBalance
-        ]);
+    //     $wallet->update([
+    //         'balance' => $newBalance
+    //     ]);
 
-        $transaction->delete();
-    }
+    //     $transaction->delete();
+    // }
 
     dd("done");
 
