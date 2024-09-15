@@ -43,83 +43,83 @@ class StripeController extends Controller
             $provider = $validated['provider'];
 
             // check if user exist on stripe
-            $stripUser = StripeUser::where('user_id', $user->id)->first();
+            // $stripUser = StripeUser::where('user_id', $user->id)->first();
 
-            if (!$stripUser) {
-                // $userData = [
-                //     'email'  => $user->email,
-                //     'name'  => $user->full_name,
-                // ];
+            // if (!$stripUser) {
+            // $userData = [
+            //     'email'  => $user->email,
+            //     'name'  => $user->full_name,
+            // ];
 
-                // $createUser = $this->stripeService->createCustomer($userData);
+            // $createUser = $this->stripeService->createCustomer($userData);
 
-                // if (empty($createUser)) {
-                //     sendToLog($createUser);
+            // if (empty($createUser)) {
+            //     sendToLog($createUser);
 
-                //     return throw new HttpResponseException(response()->json([
-                //         'success' => false,
-                //         'message' => serviceDownMessage(),
-                //     ], Response::HTTP_UNPROCESSABLE_ENTITY));
-                // }
+            //     return throw new HttpResponseException(response()->json([
+            //         'success' => false,
+            //         'message' => serviceDownMessage(),
+            //     ], Response::HTTP_UNPROCESSABLE_ENTITY));
+            // }
 
-                // $stripUser = StripeUser::create([
-                //     'user_id'       => $user->id,
-                //     'customer_id'   => $createUser->id
-                // ]);
+            // $stripUser = StripeUser::create([
+            //     'user_id'       => $user->id,
+            //     'customer_id'   => $createUser->id
+            // ]);
 
-                $data = [
-                    'amount'        => $service->price * 100,
-                    'product_data'  => [
-                        'name'      => $service->name,
-                        'images'     => [$service->product_image_url],
-                        // 'description' => $service->description,
-                    ],
-                    // 'customer_email' => $user->email,
-                    'customer_name' => $user->name,
-                    // 'customer_id'    => $stripUser->customer_id,
-                    'metadata'       => ['user_id' => $user->uuid, 'service_id' => $service->uuid, 'invoice' => $invoice->uuid],
-                    'success_url'    => route('payment.success') . '?session_id={CHECKOUT_SESSION_ID}',
-                    'cancel_url'     => route('payment.cancel')
-                ];
+            $data = [
+                'amount'        => $service->price * 100,
+                'product_data'  => [
+                    'name'      => $service->name,
+                    'images'     => [$service->product_image_url],
+                    // 'description' => $service->description,
+                ],
+                // 'customer_email' => $user->email,
+                'customer_name' => $user->name,
+                // 'customer_id'    => $stripUser->customer_id,
+                'metadata'       => ['user_id' => $user->uuid, 'service_id' => $service->uuid, 'invoice' => $invoice->uuid],
+                'success_url'    => route('payment.success') . '?session_id={CHECKOUT_SESSION_ID}',
+                'cancel_url'     => route('payment.cancel')
+            ];
 
-                $response = $this->stripeService->processCheckout($data);
+            $response = $this->stripeService->processCheckout($data);
 
-                if (empty($response)) {
-                    sendToLog($response);
+            if (empty($response)) {
+                sendToLog($response);
 
-                    return throw new HttpResponseException(response()->json([
-                        'success' => false,
-                        'message' => serviceDownMessage(),
-                    ], Response::HTTP_UNPROCESSABLE_ENTITY));
-                }
-
-                return $response->url;
-            } else {
-
-                // Get active payment method for provider
-                $paymentMethod = PaymentMethod::where('user_id', $user->id)->where('provider_id', $provider->id)->where('is_default', true)->first();
-
-                if (!$paymentMethod) {
-                    sendToLog("Payment method not found for provider {$provider->name}");
-
-                    return throw new HttpResponseException(response()->json([
-                        'success' => false,
-                        'message' => "Kindly Select a Default Payment Method",
-                    ], Response::HTTP_UNPROCESSABLE_ENTITY));
-                }
-
-                $data = [
-                    'amount' => $service->price * 100,
-                    'customer'    => $stripUser->customer_id,
-                    'payment_method' => $paymentMethod->pm_id,
-                    'metadata'       => ['user_id' => $user->uuid, 'service_id' => $service->uuid, 'invoice' => $invoice->uuid],
-                    'success_url'    => route('payment.success') . '?session_id={CHECKOUT_SESSION_ID}',
-                ];
-
-                $response  = $this->stripeService->paymentIntent($data);
-
-                return route('payment.success');
+                return throw new HttpResponseException(response()->json([
+                    'success' => false,
+                    'message' => serviceDownMessage(),
+                ], Response::HTTP_UNPROCESSABLE_ENTITY));
             }
+
+            return $response->url;
+            // } else {
+
+            //     // Get active payment method for provider
+            //     $paymentMethod = PaymentMethod::where('user_id', $user->id)->where('provider_id', $provider->id)->where('is_default', true)->first();
+
+            //     if (!$paymentMethod) {
+            //         sendToLog("Payment method not found for provider {$provider->name}");
+
+            //         return throw new HttpResponseException(response()->json([
+            //             'success' => false,
+            //             'message' => "Kindly Select a Default Payment Method",
+            //         ], Response::HTTP_UNPROCESSABLE_ENTITY));
+            //     }
+
+            //     $data = [
+            //         'amount' => $service->price * 100,
+            //         'customer'    => $stripUser->customer_id,
+            //         'payment_method' => $paymentMethod->pm_id,
+            //         'metadata'       => ['user_id' => $user->uuid, 'service_id' => $service->uuid, 'invoice' => $invoice->uuid],
+            //         'success_url'    => route('payment.success') . '?session_id={CHECKOUT_SESSION_ID}',
+            //     ];
+
+            //     $response  = $this->stripeService->paymentIntent($data);
+
+            //     return route('payment.success');
+            // }
 
             return throw new HttpResponseException(response()->json([
                 'success' => false,
