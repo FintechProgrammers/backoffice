@@ -63,20 +63,53 @@ class NexioController extends Controller
     {
         try {
 
-            $nexioUser = NexioUser::where('user_id', $validated->user->id)->first();
-
-            if (!$nexioUser) {
-                $nexioUser = $this->createUser($validated);
-            }
-
-            $payload = [
+            $payoutPayload = [
                 'amount' => (float) $validated->amount,
-                'recipient_ref' => $nexioUser->recipient_ref,
                 'narration' => 'External withdrawal',
                 'reference' => $validated->transaction_payload['internal_reference']
             ];
 
-            $response = $this->nexio->payouts($payload);
+            $nexioUser = NexioUser::where('user_id', $validated->user->id)->first();
+
+            if (!$nexioUser) {
+
+                $userPayload = [
+                    'recipient_id'  => generateReference(),
+                    'email' => $validated->user->email,
+                    'first_name' => $validated->user->first_name,
+                    'last_name' => $validated->user->last_name,
+                    'country_code' => $validated->user->userProfile->country->iso2,
+                ];
+
+                $response = $this->nexio->createUser($userPayload);
+
+                if (empty($response) || !$response['success']) {
+                    if ($response['error'] === 427 && $response['message'] === "Duplicate email for nexio") {
+                        $payoutPayload['email'] = $validated->user->email;
+                    } else {
+                        return $this->failedResponse();
+                    }
+                } else {
+                    $response = $response['data'];
+
+                    $nexioUser = NexioUser::create([
+                        'user_id' => $validated->user->id,
+                        'recipient_id' => $response['recipientId'],
+                        'provider_id' => $response['providerId'],
+                        'provider_recipient_ref' => $response['providerRecipientRef'],
+                        'payout_account_id' => $response['payoutAccountId'],
+                        'recipient_ref' => $response['recipientRef'],
+                        'response' => json_encode($response)
+                    ]);
+                    // $nexioUser = $this->createUser($validated);
+
+                    $payoutPayload['recipient_ref'] = $nexioUser->recipient_ref;
+                }
+            } else {
+                $payoutPayload['recipient_ref'] = $nexioUser->recipient_ref;
+            }
+
+            $response = $this->nexio->payouts($payoutPayload);
 
             if (!$response['success']) {
                 return $this->failedResponse();

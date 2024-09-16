@@ -27,7 +27,25 @@ class NexioService
                 "amount" => $data['amount'],
                 "currency" => "USD",
                 "recipient" => [
-                    "recipientRef" => $data['recipient_ref'],
+                    isset($data['recipient_ref']) ? "recipientRef" : "email" => isset($data['recipient_ref']) ? $data['recipient_ref'] : $data['email'],
+                ],
+                "description" => $data['narration'],
+                "payoutRef" => $data['reference']
+            ]]
+        ];
+
+
+        return self::handle("/payout/v3/pay", "POST", $payload);
+    }
+
+    function payoutsWithEmail($data)
+    {
+        $payload = [
+            'payouts' => [[
+                "amount" => $data['amount'],
+                "currency" => "USD",
+                "recipient" => [
+                    "email" => $data['email'],
                 ],
                 "description" => $data['narration'],
                 "payoutRef" => $data['reference']
@@ -95,6 +113,7 @@ class NexioService
 
                 // Check if the JSON decoding was successful
                 if (json_last_error() === JSON_ERROR_NONE) {
+                    $responseArray['success'] = false;
                     return $responseArray;
                 }
             }

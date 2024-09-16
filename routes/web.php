@@ -191,6 +191,27 @@ Route::get('cron', function () {
 
 Route::get('test', function () {
 
+    $nexio = new \App\Services\NexioService();
+
+    $payload = [
+        'recipient_id'  => generateReference(),
+        'email' => "carlosardila@deltadigital.pro",
+        'first_name' => "Test User",
+        'last_name' => "DD",
+        'country_code' => "NG",
+    ];
+
+    $response = $nexio->createUser($payload);
+
+
+    if ($response['error'] === 427 && $response['message'] === "Duplicate email for nexio") {
+        dD("hello");
+    }
+
+
+
+    dd($response);
+
     // ini_set('max_execution_time', '0');
 
     // $chunkSize = 100; // Adjust the chunk size as needed
