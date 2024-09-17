@@ -71,10 +71,12 @@
                                     @csrf
                                     {{-- onclick="impersonateUser()" --}}
                                     <a href="{{ route('admin.impersonate.index', $user->uuid) }}" type="button"
-                                        class="btn btn-primary">Impersonate</a>
+                                        class="btn btn-dark">Impersonate</a>
                                 </form>
                             @endif
-
+                            <a href="#" class="btn btn-sm btn-dark trigerModal" type="button" data-bs-toggle="modal"
+                                data-bs-target="#primaryModal"
+                                data-url="{{ route('admin.users.setupNexio', $user->uuid) }}">Setup NEXIO ID</a>
                         </div>
 
                     </div>

@@ -20,6 +20,11 @@ class NexioService
         return self::handle("/payout/v3/recipient", "POST", $payload);
     }
 
+    function getReceipientById($id)
+    {
+        return self::handle("/payout/v3/recipient/{$id}", "GET");
+    }
+
     function payouts($data)
     {
         $payload = [
@@ -27,13 +32,13 @@ class NexioService
                 "amount" => $data['amount'],
                 "currency" => "USD",
                 "recipient" => [
-                    isset($data['recipient_ref']) ? "recipientRef" : "email" => isset($data['recipient_ref']) ? $data['recipient_ref'] : $data['email'],
+                    // isset($data['recipient_ref']) ? "recipientRef" : "email" => isset($data['recipient_ref']) ? $data['recipient_ref'] : $data['email'],
+                    "recipientId" => $data['recipientId'],
                 ],
                 "description" => $data['narration'],
                 "payoutRef" => $data['reference']
             ]]
         ];
-
 
         return self::handle("/payout/v3/pay", "POST", $payload);
     }

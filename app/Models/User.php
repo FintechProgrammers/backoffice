@@ -648,6 +648,11 @@ class User extends Authenticatable
 
         return $indirectCommissions;
     }
+
+    function nexio()
+    {
+        return $this->hasOne(NexioUser::class, 'user_id');
+    }
     /**
      * The attributes that should be hidden for serialization.
      *

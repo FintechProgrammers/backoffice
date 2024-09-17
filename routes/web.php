@@ -191,26 +191,27 @@ Route::get('cron', function () {
 
 Route::get('test', function () {
 
-    $nexio = new \App\Services\NexioService();
+    // $nexio = new \App\Services\NexioService();
 
-    $payload = [
-        'recipient_id'  => generateReference(),
-        'email' => "carlosardila@deltadigital.pro",
-        'first_name' => "Test User",
-        'last_name' => "DD",
-        'country_code' => "NG",
-    ];
+    // $payoutPayload = [
+    //     'amount' => 0.05,
+    //     'narration' => 'External withdrawal',
+    //     'reference' => generateReference(),
+    //     'recipientId' => 137724
+    // ];
 
-    $response = $nexio->createUser($payload);
+    // $response = $nexio->payouts($payoutPayload);
 
-
-    if ($response['error'] === 427 && $response['message'] === "Duplicate email for nexio") {
-        dD("hello");
-    }
+    // dD($response);
 
 
+    // if ($response['error'] === 427 && $response['message'] === "Duplicate email for nexio") {
+    //     dD("hello");
+    // }
 
-    dd($response);
+
+
+    // dd($response);
 
     // ini_set('max_execution_time', '0');
 

@@ -9,6 +9,7 @@ use App\Http\Requests\SetupAmbassadorRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Bonus;
 use App\Models\Country;
+use App\Models\NexioUser;
 use App\Models\Sale;
 use App\Models\Service;
 use App\Models\User;
@@ -446,5 +447,47 @@ class UserManagementController extends Controller
         if ($validator->fails()) {
             return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
         }
+    }
+
+    function setupNexio(User $user)
+    {
+        $data['user'] = $user;
+
+        return view('admin.users.nexio-setup-form', $data);
+    }
+
+    function nexioSetUp(Request $request, User $user)
+    {
+        $validator = Validator::make($request->all(), [
+            'nexio_id' => 'required',
+        ]);
+
+        // Handle validation errors
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
+        }
+
+        $nexioService = new \App\Services\NexioService();
+
+        $response = $nexioService->getReceipientById($request->nexio_id);
+
+        if (!$response['success']) {
+            return $this->sendError("Recipient not found on nexio", []);
+        }
+
+        $response = $response['data'];
+
+        NexioUser::updateOrCreate([
+            'user_id' => $user->id,
+        ], [
+            'recipient_id' => $response['recipientId'],
+            'provider_id' => $response['providerId'],
+            'provider_recipient_ref' => $response['providerRecipientRef'],
+            'payout_account_id' => $response['payoutAccountId'],
+            'recipient_ref' => $response['recipientRef'],
+            'response' => json_encode($response)
+        ]);
+
+        return $this->sendResponse([], "NEXIO ID updated successfully");
     }
 }
