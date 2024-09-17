@@ -45,8 +45,8 @@
         </div>
         <div class="_2vw-margin"
             style="align-content: center; justify-content: center; display: flex; flex-direction: row;">
-            <img style="max-height: 600px" src="{{ asset('frontend/assets/mockups/frame(academy).webp') }}"
-                loading="eager" alt="" class="" />
+            <img style="max-height: 600px" src="{{ asset('assets/images/4a.png') }}" loading="eager" alt=""
+                class="" />
         </div>
         <div class="_3-columns-grid">
             <div class="feature-card">

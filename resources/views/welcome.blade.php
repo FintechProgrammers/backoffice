@@ -149,7 +149,7 @@
             flex-direction: row;
             overflow: hidden;
           ">
-                <img src="{{ asset('frontend/assets/mockups/phone4.webp') }}" loading="eager" alt=""
+                <img src="{{ asset('assets/images/1.png') }}" loading="eager" alt=""
                     style="max-width: 300px; margin-bottom: -60px" class="cover static-on-phone" />
             </div>
         </div>
@@ -164,8 +164,8 @@
             flex-direction: row;
             overflow: hidden;
           ">
-                <img src="{{ asset('frontend/assets/mockups/frame(academy).webp') }}" loading="eager"
-                    style="object-fit: cover" alt="" />
+                <img src="{{ asset('assets/images/4.png') }}" loading="eager"
+                    style="object-fit: cover; max-height: 700px" alt="" />
             </div>
 
             <div id="w-node-_7e24cf19-641b-4039-311b-9f4bb8280a16-300a5180" class="align-left-and-vertical">

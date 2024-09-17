@@ -69,9 +69,9 @@
         <div class="timeline-grid">
             <div id="w-node-_96b16f5e-2344-2bb6-0072-c88631c4ad68-e50a51e2" class="relative grey bottom-margin"
                 style="align-content: center; justify-content: center; display: flex; flex-direction: row; overflow: hidden">
-                <img src="{{ asset('frontend/assets/mockups/stream.webp') }}" style=" object-fit: contain"
-                    loading="eager" alt="" sizes="(max-width: 479px) 87vw, (max-width: 767px) 56vw, 38vw"
-                    srcset="{{ asset('frontend/assets/mockups/stream.webp') }} 500w, {{ asset('frontend/assets/mockups/stream.webp') }} 800w,{{ asset('frontend/assets/mockups/stream.webp') }} 1080w"
+                <img src="{{ asset('assets/images/2.png') }}" style=" object-fit: contain" loading="eager"
+                    alt="" sizes="(max-width: 479px) 87vw, (max-width: 767px) 56vw, 38vw"
+                    srcset="{{ asset('assets/images/2.png') }} 500w, {{ asset('assets/images/2.png') }} 800w,{{ asset('assets/images/2.png') }} 1080w"
                     class="_100-width _100-height cover static-on-phone" />
             </div>
             <div id="w-node-_96b16f5e-2344-2bb6-0072-c88631c4ad6a-e50a51e2" class="timeline-effect">
@@ -156,8 +156,8 @@
 
             <div class="relative grey bottom-margin"
                 style="align-content: center; justify-content: center; display: flex; flex-direction: row; overflow: hidden">
-                <img src="{{ asset('frontend/assets/mockups/acada.webp') }}" loading="eager" alt=""
-                    style=" margin-bottom: -20px" class=" cover static-on-phone" />
+                <img src="{{ asset('assets/images/4.png') }}" loading="eager" alt=""
+                    style=" margin-bottom: -20px; max-height: 600px;" class=" cover static-on-phone" />
             </div>
 
 
@@ -167,7 +167,7 @@
 
             <div id="w-node-_96b16f5e-2344-2bb6-0072-c88631c4ada8-e50a51e2" class="relative grey"
                 style="align-content: center; justify-content: center; display: flex; flex-direction: row; overflow: hidden">
-                <img src="{{ asset('frontend/assets/mockups/signal-mockup.webp') }}" loading="eager" alt=""
+                <img src="{{ asset('assets/images/3.png') }}" loading="eager" alt=""
                     style=" margin-bottom: -40px; max-width: 300px;" class=" cover static-on-phone" />
             </div>
 
@@ -215,10 +215,7 @@
         <div class="_4-columns-grid _7-5vw-columns-gap">
             <div id="w-node-_3e794eca-88fc-85b5-5bec-d1573c50b03f-7a0a521e" class="relative"
                 style="align-content: center; justify-content: center; display: flex; flex-direction: row; overflow: hidden">
-                <img src="{{ asset('frontend/assets/mockups/iPhone12Pro.webp') }}"
-                    style=" margin-bottom: -40px; object-fit: contain" loading="eager"
-                    sizes="(max-width: 479px) 69vw, (max-width: 767px) 16vw, (max-width: 991px) 17vw, 15vw"
-                    srcset="{{ asset('frontend/assets/mockups/iPhone12Pro.webp') }} 500w, {{ asset('frontend/assets/mockups/iPhone12Pro.webp') }} 822w"
+                <img src="{{ asset('assets/images/1.png') }}" style=" margin-bottom: -40px; object-fit: contain;"
                     alt="" class="_100-width _100-height cover static-on-phone" />
             </div>
             <div id="w-node-_3e794eca-88fc-85b5-5bec-d1573c50b041-7a0a521e" class="align-left-and-vertical">
