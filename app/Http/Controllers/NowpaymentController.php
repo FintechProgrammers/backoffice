@@ -6,12 +6,16 @@ use App\Models\AmbassedorPayments;
 use App\Models\Bonus;
 use App\Models\Invoice;
 use App\Models\Service;
+use App\Models\User;
 use App\Models\UserActivities;
+use App\Models\UserInfo;
 use App\Models\UserSubscription;
+use App\Notifications\NewAccountCreated;
 use App\Services\SubscriptionService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Hash;
 
 class NowpaymentController extends Controller
 {
@@ -231,9 +235,36 @@ class NowpaymentController extends Controller
             return response()->json([], Response::HTTP_UNAUTHORIZED);
         }
 
-        $user = $invoice->user;
-
         if ($decoded['payment_status'] == "finished") {
+            $user = $invoice->user;
+
+            if (empty($user)) {
+                $userPayload = json_decode($invoice->user_payload);
+
+                $password = \Illuminate\Support\Str::random(5);
+
+                $user = User::create([
+                    'first_name' => $userPayload->first_name,
+                    'last_name' => $userPayload->last_name,
+                    'email' => $userPayload->email,
+                    'username' => $userPayload->username,
+                    'parent_id'  => $userPayload->parent_id,
+                    'password' => Hash::make($password)
+                ]);
+
+                UserInfo::where('user_id', $user->id)->update([
+                    'country_code' => $userPayload->country,
+                ]);
+
+                $mailData = [
+                    'username' => $user->username,
+                    'name' => $user->first_name,
+                    'password' => $password
+                ];
+
+                $user->notify(new NewAccountCreated($mailData));
+            }
+
             $package = Service::find($invoice->service_id);
 
             if (empty($package)) {
@@ -248,6 +279,7 @@ class NowpaymentController extends Controller
             $subscriptionService->startService($package, $user);
 
             $invoice->update([
+                'user_id' => $user->id,
                 'is_paid' => true
             ]);
         }
