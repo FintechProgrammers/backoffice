@@ -236,9 +236,8 @@ class NowpaymentController extends Controller
         }
 
         if ($decoded['payment_status'] == "finished") {
-            $user = $invoice->user;
 
-            if (empty($user)) {
+            if (empty($invoice->user)) {
                 $userPayload = json_decode($invoice->user_payload);
 
                 $password = \Illuminate\Support\Str::random(5);
@@ -263,6 +262,8 @@ class NowpaymentController extends Controller
                 ];
 
                 $user->notify(new NewAccountCreated($mailData));
+            } else {
+                $user = $invoice->user;
             }
 
             $package = Service::find($invoice->service_id);
