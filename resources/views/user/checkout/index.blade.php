@@ -94,6 +94,10 @@
                     success: function(response) {
                         // Handle success response
 
+                        buttonTest.show()
+                        spinner.hide()
+                        button.attr('disabled', false)
+
                         setTimeout(function() {
                             location.href = response.data.route
                         }, 2000); // 2000 milliseconds = 2 seconds

@@ -11,13 +11,24 @@
                         <img src="{{ $item->image_url }}" alt="">
                     </span>
                 </div> --}}
-                         <div class="shipping-partner-details me-sm-5 me-0">
-                             <p class="mb-0 fw-semibold">{{ $item->name }}</p>
-                             @if ($item->is_crypto)
-                                 <p class="text-muted fs-11 mb-0">Crypto Payments</p>
-                             @else
-                                 <p class="text-muted fs-11 mb-0">Card Payment</p>
-                             @endif
+                         <div class="shipping-partner-details me-sm-5 me-0 row align-items-center">
+                             {{-- <p class="text-muted fs-11 mb-0">{{ $item->name }}</p> --}}
+                             <div class="col-6 d-flex justify-content-center">
+                                 @if ($item->is_crypto)
+                                     <img src="{{ asset('assets/images/crypto-wallet.png') }}" alt="Crypto Payments"
+                                         class="img-fluid" style="max-width: 70px; margin-right: 10px;">
+                                 @else
+                                     <img src="{{ asset('assets/images/debit-card.webp') }}" alt="Card Payment"
+                                         class="img-fluid" style="max-width: 60px; margin-right: 10px;">
+                                 @endif
+                             </div>
+                             <div class="col-6">
+                                 @if ($item->is_crypto)
+                                     <p class="fw-semibold mb-0">Pay with Crypto</p>
+                                 @else
+                                     <p class="fw-semibold mb-0">Pay with Card </p>
+                                 @endif
+                             </div>
                          </div>
                      </div>
                  </div>

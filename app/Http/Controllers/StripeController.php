@@ -12,12 +12,15 @@ use App\Models\Service;
 use App\Models\StripeUser;
 use App\Models\User;
 use App\Models\UserActivities;
+use App\Models\UserInfo;
 use App\Models\UserSubscription;
+use App\Notifications\NewAccountCreated;
 use App\Services\StripeService;
 use App\Services\SubscriptionService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Stripe\Stripe;
 
@@ -42,31 +45,6 @@ class StripeController extends Controller
 
             $provider = $validated['provider'];
 
-            // check if user exist on stripe
-            // $stripUser = StripeUser::where('user_id', $user->id)->first();
-
-            // if (!$stripUser) {
-            // $userData = [
-            //     'email'  => $user->email,
-            //     'name'  => $user->full_name,
-            // ];
-
-            // $createUser = $this->stripeService->createCustomer($userData);
-
-            // if (empty($createUser)) {
-            //     sendToLog($createUser);
-
-            //     return throw new HttpResponseException(response()->json([
-            //         'success' => false,
-            //         'message' => serviceDownMessage(),
-            //     ], Response::HTTP_UNPROCESSABLE_ENTITY));
-            // }
-
-            // $stripUser = StripeUser::create([
-            //     'user_id'       => $user->id,
-            //     'customer_id'   => $createUser->id
-            // ]);
-
             $data = [
                 'amount'        => $service->price * 100,
                 'product_data'  => [
@@ -74,10 +52,10 @@ class StripeController extends Controller
                     'images'     => [$service->product_image_url],
                     // 'description' => $service->description,
                 ],
-                // 'customer_email' => $user->email,
-                'customer_name' => $user->name,
+                'customer_email' => $validated['email'],
+                // 'customer_name' => $user->name,
                 // 'customer_id'    => $stripUser->customer_id,
-                'metadata'       => ['user_id' => $user->uuid, 'service_id' => $service->uuid, 'invoice' => $invoice->uuid],
+                'metadata'       => ['email' => $validated['email'], 'service_id' => $service->uuid, 'invoice' => $invoice->uuid],
                 'success_url'    => route('payment.success') . '?session_id={CHECKOUT_SESSION_ID}',
                 'cancel_url'     => route('payment.cancel')
             ];
@@ -94,32 +72,6 @@ class StripeController extends Controller
             }
 
             return $response->url;
-            // } else {
-
-            //     // Get active payment method for provider
-            //     $paymentMethod = PaymentMethod::where('user_id', $user->id)->where('provider_id', $provider->id)->where('is_default', true)->first();
-
-            //     if (!$paymentMethod) {
-            //         sendToLog("Payment method not found for provider {$provider->name}");
-
-            //         return throw new HttpResponseException(response()->json([
-            //             'success' => false,
-            //             'message' => "Kindly Select a Default Payment Method",
-            //         ], Response::HTTP_UNPROCESSABLE_ENTITY));
-            //     }
-
-            //     $data = [
-            //         'amount' => $service->price * 100,
-            //         'customer'    => $stripUser->customer_id,
-            //         'payment_method' => $paymentMethod->pm_id,
-            //         'metadata'       => ['user_id' => $user->uuid, 'service_id' => $service->uuid, 'invoice' => $invoice->uuid],
-            //         'success_url'    => route('payment.success') . '?session_id={CHECKOUT_SESSION_ID}',
-            //     ];
-
-            //     $response  = $this->stripeService->paymentIntent($data);
-
-            //     return route('payment.success');
-            // }
 
             return throw new HttpResponseException(response()->json([
                 'success' => false,
@@ -234,7 +186,6 @@ class StripeController extends Controller
             case 'setup_intent.canceled':
                 $setupIntent = $event->data->object;
             case 'setup_intent.created':
-                logger("setup intent");
                 $setupIntent = $event->data->object;
             case 'setup_intent.requires_action':
                 $setupIntent = $event->data->object;
@@ -337,11 +288,39 @@ class StripeController extends Controller
 
         if (!$invoice->is_paid) {
 
-            $user = User::whereUuid($metadata->user_id)->first();
+            // check if invoice has a user
+            if (!empty($invoice->user_id)) {
+                $user = User::whereUuid($metadata->user_id)->first();
+            } else {
+                $userPayload = json_decode($invoice->user_payload);
+
+                $password = \Illuminate\Support\Str::random(5);
+
+                $user = User::create([
+                    'first_name' => $userPayload->first_name,
+                    'last_name' => $userPayload->last_name,
+                    'email' => $userPayload->email,
+                    'username' => $userPayload->username,
+                    'parent_id'  => $userPayload->parent_id,
+                    'password' => Hash::make($password)
+                ]);
+
+                UserInfo::where('user_id', $user->id)->update([
+                    'country_code' => $userPayload->country,
+                ]);
+
+                $mailData = [
+                    'username' => $user->username,
+                    'name' => $user->first_name,
+                    'password' => $password
+                ];
+
+                $user->notify(new NewAccountCreated($mailData));
+            }
 
             // get the service
             if (!$user) {
-                sendToLog("user {$metadata->user_id} not found");
+                sendToLog("user {$metadata->email} not found");
                 return false;
             }
 
@@ -357,6 +336,7 @@ class StripeController extends Controller
             $subscriptionService->startService($service, $user);
 
             $invoice->update([
+                'user_id' => $user->id,
                 'is_paid' => true,
                 'external_reference' => $externalReference
             ]);

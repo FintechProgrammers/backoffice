@@ -41,6 +41,10 @@ class ServiceAdsCheckoutController extends Controller
 
             $providerId = null;
 
+            $userPayload = null;
+
+            $user = null;
+
             if ($request->payment_provider === 'commission_wallet') {
                 $shortName = "commission_wallet";
             } else {
@@ -63,46 +67,40 @@ class ServiceAdsCheckoutController extends Controller
                     return $this->sendError(serviceDownMessage(), [], 404);
                 }
 
-                $password = \Illuminate\Support\Str::random(5);
+                // check if email already exists
+                $checkEmail = User::where('email', $validated['email'])->first();
+
+                if ($checkEmail) {
+                    return $this->sendError("An account with this email already exists. Please log in to complete your payment. If you don't remember your credentials, check your email for login details or reset your password.", [], 400);
+                }
+
+                $validated['email'] = $request->email;
 
                 // create user account
-                $user = User::create([
+                $userPayload = [
                     'first_name' => $request->first_name,
                     'last_name' => $request->last_name,
                     'email' => $request->email,
                     'username' => $request->username,
-                    'password' => Hash::make($password),
-                    'parent_id'  => $referral->id
-                ]);
-
-                UserInfo::where('user_id', $user->id)->update([
-                    'country_code' => $request->country,
-                ]);
-
-                $validated['referral'] = $referral;
-
-                $validated['payer'] = $referral->id;
-
-                $mailData = [
-                    'username' => $request->username,
-                    'name' => $request->first_name,
-                    'password' => $password
+                    'parent_id'  => $referral->id,
+                    'country' => $request->country
                 ];
-
-                $user->notify(new NewAccountCreated($mailData));
             } else {
                 $user = auth()->user();
+
+                $validated['email'] = $user->email;
 
                 $validated['payer'] = $user->id;
             }
 
             // create invoice
             $invoice = Invoice::create([
-                'user_id' => $user->id,
+                'user_id' => !empty($user->id) ? $user->id : null,
                 'service_id' => !empty($package->id) ? $package->id : null,
                 'provider_id' => $providerId,
                 'order_id'   => generateReference(),
-                'is_paid' => false
+                'is_paid' => false,
+                'user_payload' => !empty($userPayload) ? json_encode($userPayload) : null
             ]);
 
             $validated['invoice'] = $invoice;
