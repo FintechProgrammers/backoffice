@@ -42,12 +42,13 @@
             <div class="col-lg-4">
                 <div class="card custom-card card-bg-white text-fixed-white">
                     <div class="card-body p-4">
-                        <p class="op-7  text-dark">Highest Rank</p>
+                        <p class="op-7 text-dark">Highest Rank</p>
                         <div class="d-flex align-items-center w-100">
                             <div class="me-2">
                                 @if (!empty(Auth::user()->highestRank))
                                     <span class="avatar avatar-rounded">
-                                        <img src="{{ Auth::user()->highestRank->file_url }}" alt="img">
+                                        <img src="{{ Auth::user()->highestRank->file_url }}" height="200px"
+                                            width="200px" alt="img">
                                     </span>
                                 @else
                                     <span class="avatar avatar-md avatar-rounded">
@@ -57,13 +58,13 @@
                             </div>
 
                             <div class="flex-fill">
-                                <h3 class="fw-semibold mb-0 text-fixed-white">
+                                <h5 class="fw-semibold mb-0 text-fixed-white">
                                     @if (!empty(Auth::user()->highestRank))
                                         <span class="text-dark">{{ Auth::user()->highestRank->name }}</span>
                                     @else
                                         <small class="text-dark">no rank</small>
                                     @endif
-                                </h3>
+                                </h5>
                             </div>
                         </div>
                     </div>

@@ -39,6 +39,7 @@ class BannerController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'image' => 'required|image|max:2048',
+            'link' => 'required|url'
         ]);
 
         // Handle validation errors
@@ -51,7 +52,8 @@ class BannerController extends Controller
             $image = uploadFile($request->file('image'), "uploads/banner", "do_spaces");
 
             Banner::create([
-                'file_url' => $image
+                'file_url' => $image,
+                'banner_url' => $request->link
             ]);
 
             return response()->json(['success' => false, 'message' => 'Successfully uploaded.']);
@@ -88,7 +90,8 @@ class BannerController extends Controller
     public function update(Request $request, Banner $banner)
     {
         $validator = Validator::make($request->all(), [
-            'image' => 'required|image|max:2048',
+            'image' => 'nullable|image|max:2048',
+            'link' => 'required|url'
         ]);
 
         // Handle validation errors
@@ -106,7 +109,8 @@ class BannerController extends Controller
             }
 
             $banner->update([
-                'file_url' => $image
+                'file_url' => $image,
+                'banner_url' => $request->link
             ]);
 
             return response()->json(['success' => false, 'message' => 'Successfully uploaded.']);
