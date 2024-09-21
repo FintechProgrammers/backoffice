@@ -15,7 +15,34 @@
                 </a>
             @endif
         </div>
-
+    </div>
+    <div class="card custom-card">
+        <div class="p-3">
+            <div class="row align-items-end ">
+                <div class="col-lg-3 mb-lg-0 mb-4">
+                    <label for="searchInputSearch">Search User</label>
+                    <input type="search" class="form-control" placeholder="Search by email,name and account type"
+                        id="search" aria-describedby="emailHelp">
+                </div>
+                <div class="col-lg-3 mb-lg-0 mb-4">
+                    <label for="searchInputSearch">Search Sponsor</label>
+                    <input type="search" class="form-control" placeholder="Search by email,name and account type"
+                        id="search_sponsor" aria-describedby="emailHelp">
+                </div>
+                <div class="col-lg-2 mb-lg-0 mb-4">
+                    <label for="searchInputSearch">Date Joined</label>
+                    <input type="text" name="datepicker" id="search-date" class="form-control" value="" />
+                </div>
+                <div class="col-lg-2 mb-lg-0">
+                    <button id="filter"
+                        class="btn btn-size btn-primary btn-hover-effect-1 rounded-pill make-text-bold w-100">Filter</button>
+                </div>
+                <div class="col-lg-2 mb-lg-0">
+                    <button id="reset"
+                        class="btn btn-size btn-outline-dark btn-hover-effect-1 rounded-pill make-text-bold w-100">Reset</button>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="row">
         <div class="col-xl-12">
@@ -26,6 +53,7 @@
                             <thead>
                                 <tr>
                                     <th>User</th>
+                                    <th>Sponsor</th>
                                     <th>Service Name</th>
                                     <th class="text-center">Amount</th>
                                     <th class="text-center">Date</th>
