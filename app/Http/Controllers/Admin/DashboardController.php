@@ -29,15 +29,17 @@ class DashboardController extends Controller
 
     function filter(Request $request)
     {
-        $dateFrom = ($request->filled('startDate')) ? Carbon::parse($request->date_from)->startOfDay() : null;
+        $dateFrom = ($request->filled('startDate')) ? Carbon::parse($request->startDate)->startOfDay() : null;
 
-        $dateTo = ($request->filled('endDate')) ? Carbon::parse($request->date_to)->endOfDay() : null;
+        $dateTo = ($request->filled('endDate')) ? Carbon::parse($request->endDate)->endOfDay() : null;
 
         $data['stats'] = $this->statistics($dateFrom, $dateTo);
 
         $topSellingServices = DB::table('sales')
             ->select('service_id', DB::raw('COUNT(*) AS total_sales_count'), DB::raw('SUM(amount) AS total_amount_sold'))
-            ->when(!empty($dateFrom) && !empty($dateTo), fn($query) => $query->whereBetween('created_at', [$dateFrom, $dateTo]))
+            ->when(!empty($dateFrom) && !empty($dateTo), function ($query) use ($dateFrom, $dateTo) {
+                $query->whereBetween('created_at', [$dateFrom, $dateTo]);
+            })
             ->groupBy('service_id')
             ->orderBy('total_amount_sold', 'desc')
             ->limit(10) // Adjust limit as needed
