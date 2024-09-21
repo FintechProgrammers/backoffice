@@ -118,7 +118,7 @@
 
                 salesPerService(response.salesPerService)
 
-                console.log(response);
+                // console.log(response);
             },
             error: function(xhr, status, error) {
                 // Handle error response
