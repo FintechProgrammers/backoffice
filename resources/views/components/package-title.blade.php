@@ -6,6 +6,6 @@
     </div>
     <div>
         <span class="d-block fw-semibold mb-1">{{ $title }}</span>
-        <span class="text-muted fs-12">${{ number_format($price, 2, '.', ',') }}</span>
+        <span class="text-muted fs-12">${{ $price }}</span>
     </div>
 </div>

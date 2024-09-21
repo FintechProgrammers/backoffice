@@ -34,66 +34,7 @@ class ReleaseCommissions extends Command
         try {
             DB::beginTransaction();
 
-            $now = Carbon::now();
-            $startOfMonth = $now->copy()->startOfMonth();
-            $endOfMonth = $now->copy()->endOfMonth();
-            $endOfPreviousMonth = $now->copy()->subMonth()->endOfMonth();  // Last day of the previous month
-            $currentDay = $now->day;
-
-            $commissions = CommissionTransaction::where('is_converted', false);
-
-            if ($currentDay == 14) {
-                // Get commissions for 1st to 7th of the month
-                $commissionStartDate = $startOfMonth->copy();
-                $commissionEndDate = $startOfMonth->copy()->addDays(7);
-                $settlementWeek = 'Week 1';
-
-                // Fetch commissions from 1st to 7th
-                $commissions = $commissions->where('level', 0)->whereHas('sale', function ($query) use ($commissionStartDate, $commissionEndDate) {
-                    $query->where('is_refunded', false)
-                        ->whereBetween('created_at', [$commissionStartDate, $commissionEndDate]);
-                })->get()
-                    ->groupBy('user_id');
-            } elseif ($currentDay == 21) {
-                // Get commissions for 8th to 14th of the month
-                $commissionStartDate = $startOfMonth->copy()->addDays(7);
-                $commissionEndDate = $startOfMonth->copy()->addDays(14);
-                $closingDate = $startOfMonth->copy()->addDays(14);
-                $paymentDate = $startOfMonth->copy()->addDays(21);
-                $settlementWeek = 'Week 2';
-
-                // Fetch commissions from 8th to 14th
-                $commissions = $commissions->where('level', 0)->whereHas('sale', function ($query) use ($commissionStartDate, $commissionEndDate) {
-                    $query->where('is_refunded', false)
-                        ->whereBetween('created_at', [$commissionStartDate, $commissionEndDate]);
-                })->get()->groupBy('user_id');
-            } elseif ($currentDay == 28) {
-                // Get commissions for 15th to 21st of the month
-                $commissionStartDate = $startOfMonth->copy()->addDays(14);
-                $commissionEndDate = $startOfMonth->copy()->addDays(21);
-                $settlementWeek = 'Week 3';
-
-                // Fetch commissions from 15th to 21st
-                $commissions = $commissions->where('level', 0)->whereHas('sale', function ($query) use ($commissionStartDate, $commissionEndDate) {
-                    $query->where('is_refunded', false)
-                        ->whereBetween('created_at', [$commissionStartDate, $commissionEndDate]);
-                })->get()->groupBy('user_id');
-            } elseif (
-                $currentDay == 7
-            ) {
-                // Get commissions for 22nd to the last day of the previous month
-                $commissionStartDate = $endOfPreviousMonth->copy()->subDays($endOfPreviousMonth->day - 22);
-                $commissionEndDate = $endOfPreviousMonth;
-                $settlementWeek = 'End of Month';
-
-                $commissions = $commissions->whereHas('sale', function ($query) use ($commissionStartDate, $commissionEndDate) {
-                    $query->where('is_refunded', false)
-                        ->whereBetween('created_at', [$commissionStartDate, $commissionEndDate]);
-                })->get()->groupBy('user_id');
-            } else {
-                $this->info('No commissions to release today.');
-                return;
-            }
+            $commissions = paymentsOfTheWeek();
 
             if (!empty($commissions)) {
                 foreach ($commissions as $userId => $userCommissions) {
@@ -123,7 +64,7 @@ class ReleaseCommissions extends Command
                             'type' => 'commission',
                             'status' => 'completed',
                             'narration' => "Total sales commission",
-                            'settlement_week' => $settlementWeek
+                            'settlement_week' => ""
                         ]);
 
                         // Mark all user commissions as released

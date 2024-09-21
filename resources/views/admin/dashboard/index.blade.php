@@ -5,13 +5,23 @@
         <div>
             <p class="fw-semibold fs-18 mb-0">Welcome back, {{ Auth::guard('admin')->user()->name }} !</p>
         </div>
-    </div>
-    <div class="row">
-        @foreach ($stats as $item)
-            <div class="col-lg-4" style="display: {{ !$item->show ? 'none' : 'block' }}">
-                @include('admin.dashboard._stats')
+        <div class="row align-items-end">
+            <div class="col-lg-6 mb-lg-0 mb-4">
+                <label for="searchInputSearch">Filter by Date</label>
+                <input type="text" name="datepicker" id="search-date" class="form-control" value="" />
             </div>
-        @endforeach
+            <div class="col-lg-3 mb-lg-0">
+                <button id="filter"
+                    class="btn btn-size btn-primary btn-hover-effect-1 rounded-pill make-text-bold w-100">Filter</button>
+            </div>
+            <div class="col-lg-3 mb-lg-0">
+                <button id="reset"
+                    class="btn btn-size btn-outline-dark btn-hover-effect-1 rounded-pill make-text-bold w-100">Reset</button>
+            </div>
+        </div>
+    </div>
+    <div class="row stats-container">
+        {{-- @include('admin.dashboard._stats') --}}
     </div>
     <div class="row">
         <div class="col-xxl-12 col-xl-12">
@@ -34,7 +44,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="top-selling">
-                                    @if (count($topSellingServices) > 0)
+                                    {{-- @if (count($topSellingServices) > 0)
                                         @foreach ($topSellingServices as $key => $item)
                                             <tr>
                                                 <td class="text-center">{{ $key + 1 }}</td>
@@ -66,7 +76,7 @@
                                         <tr>
                                             <td colspan="4">No top-selling services found.</td>
                                         </tr>
-                                    @endif
+                                    @endif --}}
                                 </tbody>
                             </table>
                         </div>
@@ -74,36 +84,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-4">
-            <div class="card custom-card">
-                <div class="card-header">
-                    <div class="card-title">Active User</div>
-                </div>
-                <div class="card-body">
-                    <div id="activeUsersChart"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-4">
-            <div class="card custom-card">
-                <div class="card-header">
-                    <div class="card-title">inactive Users</div>
-                </div>
-                <div class="card-body">
-                    <div id="inactiveUsersChart"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-4">
-            <div class="card custom-card">
-                <div class="card-header">
-                    <div class="card-title">Ambassadors</div>
-                </div>
-                <div class="card-body">
-                    <div id="ambassadorsC"></div>
-                </div>
-            </div>
-        </div>
+
         <div class="col-xxl-6 col-xl-6">
             <div class="card custom-card">
                 <div class="card-header">
@@ -125,7 +106,7 @@
             </div>
         </div>
     </div>
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-xl-12">
             <div class="card custom-card">
                 <div class="card-header">
@@ -245,16 +226,16 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 @endsection
 @push('scripts')
     <!-- Apex Charts JS -->
     <script src="{{ asset('assets/libs/apexcharts/apexcharts.min.js') }}"></script>
     <script src="{{ asset('assets/libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
     <script src="{{ asset('assets/libs/jsvectormap/maps/world-merc.js') }}"></script>
-
-    @include('admin.dashboard.scripts._earning-charts')
-    @include('admin.dashboard.scripts._sales-per-service')
-    @include('admin.dashboard.scripts._avaerage_sub')
-    @include('admin.dashboard.scripts._user-by_country-map')
+    @include('admin.dashboard.scripts._load-data')
+    {{-- @include('admin.dashboard.scripts._earning-charts') --}}
+    {{-- @include('admin.dashboard.scripts._sales-per-service') --}}
+    {{-- @include('admin.dashboard.scripts._avaerage_sub') --}}
+    {{-- @include('admin.dashboard.scripts._user-by_country-map') --}}
 @endpush

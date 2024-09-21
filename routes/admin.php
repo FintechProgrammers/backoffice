@@ -46,6 +46,7 @@ Route::middleware('admin.guest')->group(function () {
 Route::middleware('admin.auth')->group(function () {
     Route::controller(DashboardController::class)->prefix('dashboard')->name('dashboard.')->group(function () {
         Route::get('', 'index')->name('index');
+        Route::get('/filter', 'filter')->name('filter');
     });
 
     Route::controller(UserManagementController::class)->prefix('users')->name('users.')->group(function () {

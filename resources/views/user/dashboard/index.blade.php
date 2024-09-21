@@ -106,59 +106,130 @@
     </script>
     {{-- @include('partials.scripts.initiate-payin') --}}
     <script>
-        $.ajax({
-            url: "{{ route('week.clock') }}",
-            type: 'GET',
-            success: function(response) {
-                const weekStart = new Date(response.data.week_start);
-                const weekEnd = new Date(response.data.week_end);
-                startTimer(weekStart, weekEnd);
-                setInterval(() => updateClock(weekEnd), 1000); // Update clock every second
-            },
-            error: function(xhr, status, error) {
-                console.log(error)
+        // $.ajax({
+        //     url: "{{ route('week.clock') }}",
+        //     type: 'GET',
+        //     success: function(response) {
+        //         const weekStart = new Date(response.data.week_start);
+        //         const weekEnd = new Date(response.data.week_end);
+        //         startTimer(weekStart, weekEnd);
+        //         setInterval(() => updateClock(weekEnd), 1000); // Update clock every second
+        //     },
+        //     error: function(xhr, status, error) {
+        //         console.log(error)
+        //     }
+        // });
+
+        // function startTimer(weekStart, weekEnd) {
+        //     const now = new Date();
+        //     const totalTime = weekEnd.getTime() - weekStart.getTime();
+        //     const elapsedTime = now.getTime() - weekStart.getTime();
+
+        //     // Calculate remaining time
+        //     const remainingTime = Math.max(weekEnd.getTime() - now.getTime(), 0); // Ensure non-negative value
+
+        //     const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+        //     const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        //     const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+        //     const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
+        //     // Update clock display
+        //     document.getElementById('days').textContent = days.toString().padStart(2, '0');
+        //     document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+        //     document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+        //     document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+
+        //     // Update progress bar (percentage)
+        //     const progress = Math.min(elapsedTime / totalTime, 1) * 100;
+        //     document.getElementById('progress-bar').style.width = `${progress}%`;
+        // }
+
+        // function updateClock(weekEnd) {
+        //     const now = new Date();
+        //     const remainingTime = Math.max(weekEnd.getTime() - now.getTime(), 0); // Ensure non-negative value
+
+        //     const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+        //     const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        //     const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+        //     const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
+        //     // Update clock display
+        //     document.getElementById('days').textContent = days.toString().padStart(2, '0');
+        //     document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+        //     document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+        //     document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        // }
+
+
+
+        let currentDate = new Date();
+        let currentWeekNumber = getWeekNumberForMonth(currentDate);
+        let countdownDate = getMonthEndDate(currentDate);
+
+        let daysElement = document.getElementById('days');
+        let hoursElement = document.getElementById('hours');
+        let minutesElement = document.getElementById('minutes');
+        let secondsElement = document.getElementById('seconds');
+        let weekNumberElement = document.getElementById('week-number');
+        let progressBarElement = document.getElementById('progress-bar');
+
+        function getCurrentWeekOfMonth() {
+            const today = new Date(); // Current date
+            const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1); // First day of the current month
+
+            // Calculate the difference in days between today and the first day of the month
+            const dayOfMonth = today.getDate();
+
+            // Calculate the current week number within the month
+            const weekOfMonth = Math.ceil(dayOfMonth / 7);
+
+            $('#week-number').html(weekOfMonth)
+        }
+
+        getCurrentWeekOfMonth()
+
+        function getWeekNumberForMonth(date) {
+            let firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+            let dayOfWeek = date.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+            let weekNumber = Math.ceil(((date.getDate() + (dayOfWeek === 0 ? 6 : dayOfWeek - 1)) / 7));
+            return weekNumber;
+        }
+
+        function getMonthEndDate(date) {
+            let weekNumber = getWeekNumberForMonth(date);
+            let firstDayOfWeek = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 1);
+            let lastDayOfWeek = new Date(firstDayOfWeek.getTime() + 6 * 86400000);
+            return lastDayOfWeek;
+        }
+
+        function updateCountdown() {
+            let now = new Date();
+            let timeRemaining = countdownDate - now;
+
+            if (timeRemaining <= 0) {
+                // Reset the countdown for the next month
+                currentDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+                currentWeekNumber = getWeekNumberForMonth(currentDate);
+                countdownDate = getMonthEndDate(currentDate);
+                timeRemaining = countdownDate - now;
             }
-        });
 
-        function startTimer(weekStart, weekEnd) {
-            const now = new Date();
-            const totalTime = weekEnd.getTime() - weekStart.getTime();
-            const elapsedTime = now.getTime() - weekStart.getTime();
+            let days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+            let hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            let minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            let seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
 
-            // Calculate remaining time
-            const remainingTime = Math.max(weekEnd.getTime() - now.getTime(), 0); // Ensure non-negative value
+            daysElement.textContent = days.toString().padStart(2, '0');
+            hoursElement.textContent = hours.toString().padStart(2, '0');
+            minutesElement.textContent = minutes.toString().padStart(2, '0');
+            secondsElement.textContent = seconds.toString().padStart(2, '0');
 
-            const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
-
-            // Update clock display
-            document.getElementById('days').textContent = days.toString().padStart(2, '0');
-            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-
-            // Update progress bar (percentage)
-            const progress = Math.min(elapsedTime / totalTime, 1) * 100;
-            document.getElementById('progress-bar').style.width = `${progress}%`;
+            let progress = (1 - (timeRemaining / (1000 * 60 * 60 * 24 * 7))) * 100;
+            progressBarElement.style.width = `${progress}%`;
+            progressBarElement.ariaValueNow = progress;
         }
 
-        function updateClock(weekEnd) {
-            const now = new Date();
-            const remainingTime = Math.max(weekEnd.getTime() - now.getTime(), 0); // Ensure non-negative value
-
-            const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
-
-            // Update clock display
-            document.getElementById('days').textContent = days.toString().padStart(2, '0');
-            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-        }
+        setInterval(updateCountdown, 1000); // Update the countdown every second
     </script>
     <script>
         var smioptions = {
