@@ -184,7 +184,12 @@ class DashboardController extends Controller
 
         $weekCommissionPayment = paymentsOfTheWeek();
 
-        $weekCommissionPayment = $weekCommissionPayment->sum('amount');
+        if (!empty($weekCommissionPayment)) {
+            $weekCommissionPayment = $weekCommissionPayment->sum('amount');
+        } else {
+            $weekCommissionPayment = 0;
+        }
+
 
         return  [
             (object) [
