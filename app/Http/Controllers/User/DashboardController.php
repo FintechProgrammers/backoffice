@@ -44,14 +44,12 @@ class DashboardController extends Controller
             $endOfWeek = $now->copy()->endOfWeek();
 
             if ($weekOfMonth == 4) {
-                $weeklyIndirectCommission = $indirectCommission->whereBetween('created_at', [$startOfWeek, $endOfWeek])
-                    ->select('amount')
-                    ->sum('amount');
+                $monthlyIndirectCommission = $user->getTeamCommissions();
             } else {
-                $weeklyIndirectCommission = 0;
+                $monthlyIndirectCommission = 0;
             }
 
-            $currentWeekCommissions = $weeklyDirectCommission + $weeklyIndirectCommission;
+            $currentWeekCommissions = $weeklyDirectCommission + $monthlyIndirectCommission;
 
             $data['currentRank'] = $user->rank;
             $data['nextRank'] = $user->nextRank();
