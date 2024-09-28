@@ -290,7 +290,7 @@ class StripeController extends Controller
 
             // check if invoice has a user
             if (!empty($invoice->user_id)) {
-                $user = User::whereUuid($metadata->user_id)->first();
+                $user = User::where('email', $metadata->email)->first();
             } else {
                 $userPayload = json_decode($invoice->user_payload);
 
