@@ -72,6 +72,8 @@ Route::middleware('admin.auth')->group(function () {
         Route::post('/change-email/{user}', 'changeEmail')->name('change-email.post');
         Route::get('setupNexio/{user}', 'setupNexio')->name('setupNexio');
         Route::post('/save-nexio-id/{user}', 'nexioSetUp')->name('nexioSetUp.post');
+        Route::get('membership-form/{subscription}', 'membershipDetails')->name('membership.form');
+        Route::post('membership/{subscription}', 'updateMembership')->name('membership.update');
     });
 
     Route::controller(CommisionController::class)->prefix('commission/pay')->name('commission.pay.')->group(function () {

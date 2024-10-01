@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ActivatePlanRequest;
 use App\Http\Requests\ImportUserRequest;
 use App\Http\Requests\SetupAmbassadorRequest;
+use App\Http\Requests\UpdateMembershipRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Bonus;
 use App\Models\Country;
@@ -489,5 +490,46 @@ class UserManagementController extends Controller
         ]);
 
         return $this->sendResponse([], "NEXIO ID updated successfully");
+    }
+
+    function membershipDetails(UserSubscription $subscription)
+    {
+        $data['subscription'] = $subscription;
+
+        $data['user'] = $subscription->user;
+
+        return view('admin.users._update-plan-form', $data);
+    }
+
+    function updateMembership(UpdateMembershipRequest $request, UserSubscription $subscription)
+    {
+        $validated = (object) $request->validated();
+
+        DB::beginTransaction();
+
+        try {
+            if ($request->duration_unit === "infinite") {
+                $duration = 0;
+            } else {
+                $duration =  $validated->duration === 0 ? 0 : getDurationInDays($validated->duration, $request->duration_unit);
+            }
+
+            $currentEndDate = Carbon::parse($subscription->end_date);
+
+            $newDate = $currentEndDate->addDays($duration);
+
+            $subscription->update([
+                'end_date' => $newDate,
+                'is_active' => true
+            ]);
+
+            DB::commit();
+
+            return response()->json(['success' => true, 'message' => 'Subscription Updated successfully.']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            logger($e);
+            return response()->json(['success' => false, 'message' => serviceDownMessage()], 500);
+        }
     }
 }

@@ -40,7 +40,7 @@
                         </div>
                     </div>
                     <div class="p-4 border-bottom border-block-end-dashed">
-                        <div class="d-flex justify-content-center gap-3 mb-3">
+                        <div class="d-flex justify-content-center gap-3 mb-3 align-items-end">
                             @if (Auth::guard('admin')->user()->can('edit user'))
                                 <a href="#" class="btn btn-sm btn-dark trigerModal"
                                     data-url="{{ route('admin.users.change-username', $user->uuid) }}"
@@ -64,14 +64,14 @@
                                 data-bs-target="#primaryModal" data-url="{{ route('admin.users.plan.form', $user->uuid) }}"
                                 data-action="Set user as Ambassador">Activate Plan</a>
                         </div>
-                        <div class="d-flex justify-content-center gap-3">
+                        <div class="d-flex justify-content-center gap-3 align-items-end">
                             @if (Auth::guard('admin')->user()->can('can impersonate'))
                                 <form id="impersonate-form" action="{{ route('admin.impersonate.index', $user->uuid) }}"
                                     method="POST" target="_blank">
                                     @csrf
                                     {{-- onclick="impersonateUser()" --}}
                                     <a href="{{ route('admin.impersonate.index', $user->uuid) }}" type="button"
-                                        class="btn btn-dark">Impersonate</a>
+                                        class="btn btn-dark btn-sm">Impersonate</a>
                                 </form>
                             @endif
                             <a href="#" class="btn btn-sm btn-dark trigerModal" type="button" data-bs-toggle="modal"
@@ -130,7 +130,7 @@
                             <ul class="list-group">
                                 @forelse ($user->subscriptions as $item)
                                     <li class="list-group-item  mb-3">
-                                        <div class="d-sm-flex">
+                                        <div class="d-flex align-items-end">
                                             <span class="avatar avatar-sm">
                                                 <img src="{{ $item->service->image }}" alt="img">
                                             </span>
@@ -145,9 +145,9 @@
                                                 </span>
                                             </div>
                                             @if ($item->end_date->isPast())
-                                                <span class="bg-warning">{{ __('Expired') }}</span>
+                                                <span class="badge bg-warning-transparent">{{ __('Expired') }}</span>
                                             @else
-                                                <span class="text-success">{{ __('Running') }}</span>
+                                                <span class="badge bg-success-transparent">{{ __('Running') }}</span>
                                             @endif
                                         </div>
                                     </li>
@@ -200,6 +200,12 @@
                                         aria-controls="referrals-pan" aria-selected="false"><i
                                             class="ri-exchange-box-line me-1 align-middle d-inline-block"></i>Referrals</button>
                                 </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="memberships-tab" data-bs-toggle="tab"
+                                        data-bs-target="#memberships" type="button" role="tab"
+                                        aria-controls="memberships" aria-selected="false"><i
+                                            class="ri-exchange-box-line me-1 align-middle d-inline-block"></i>Memberships</button>
+                                </li>
                             </ul>
                         </div>
                         <div>
@@ -233,6 +239,11 @@
                                 aria-labelledby="gallery-tab" tabindex="0">
                                 @include('admin.users._referrals')
                             </div>
+                            <div class="tab-pane fade p-0 border-0" id="memberships" role="tabpanel"
+                                aria-labelledby="memberships" tabindex="0">
+                                @include('admin.users._memberships')
+                            </div>
+
                         </div>
                     </div>
                 </div>

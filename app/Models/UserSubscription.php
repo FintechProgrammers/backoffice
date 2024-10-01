@@ -13,6 +13,14 @@ class UserSubscription extends Model
 
     protected $guarded = [];
 
+    /**
+     * Define the route model binding key for a given model.
+     */
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
+
     function user()
     {
         return $this->belongsTo(User::class, 'user_id')->withTrashed();
