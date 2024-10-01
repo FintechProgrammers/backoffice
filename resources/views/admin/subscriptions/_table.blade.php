@@ -1,9 +1,11 @@
 @forelse ($subscriptions as $item)
     <tr>
         <td>
-            <a href="{{ route('admin.users.show', $item->user->uuid) }}">
-                <x-profile-component name="{{ $item->user->full_name }}" email="{{ $item->user->email }}"
-                    image="{{ $item->user->profile_picture }}" />
+            @if (!empty($item->user))
+                <a href="{{ route('admin.users.show', $item->user->uuid) }}">
+                    <x-profile-component name="{{ $item->user->full_name }}" email="{{ $item->user->email }}"
+                        image="{{ $item->user->profile_picture }}" />
+            @endif
             </a>
         </td>
         <td>
