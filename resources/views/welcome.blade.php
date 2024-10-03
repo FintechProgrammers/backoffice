@@ -246,15 +246,7 @@
                         Get to know how fantastic we are
                     </h3>
                 </div>
-                <img src="{{ asset('frontend/assets/mockups/stream.webp') }}" loading="eager"
-                    style="max-width: 300px; object-fit: contain"
-                    sizes="(max-width: 479px) 47vw, (max-width: 767px) 21vw, (max-width: 991px) 14vw, 11vw"
-                    srcset="
-              assets/mockups/stream.webp  500w,
-              assets/mockups/stream.webp  800w,
-              assets/mockups/stream.webp 1000w
-            "
-                    alt="" class="_100-width" />
+
             </div>
             <div id="w-node-_97974888-3e39-12c4-88fa-baba6d91b4c8-300a5180" class="small-feature no-botton-padding">
                 <div class="text-wrap inside-card _4vw-margin">
@@ -263,15 +255,7 @@
                         Questions? Get in touch for help!
                     </h3>
                 </div>
-                <img src="{{ asset('frontend/assets/mockups/signal-mockup.webp') }}" loading="eager"
-                    style="max-width: 300px; object-fit: contain"
-                    sizes="(max-width: 479px) 62vw, (max-width: 767px) 27vw, (max-width: 991px) 17vw, 14vw"
-                    srcset="
-              assets/mockups/signal-mockup.webp  500w,
-              assets/mockups/signal-mockup.webp  800w,
-              assets/mockups/signal-mockup.webp 1000w
-            "
-                    alt="" class="_100-width" />
+
             </div>
         </div>
     </div>

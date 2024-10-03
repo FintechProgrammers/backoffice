@@ -66,11 +66,7 @@
                      <div class="black-underline"></div>
                  </div>
              </div>
-             <div class="footer-column-right">
-                 <a href="#" class="footer-arrow w-inline-block"><img
-                         src="https://assets.website-files.com/613efe057ad6895481885868/613efe057ad6892efd885a71_BackTop_Arrow.svg"
-                         alt="" /></a>
-             </div>
+
          </div>
      </div>
      <div class="footer-bottom">
