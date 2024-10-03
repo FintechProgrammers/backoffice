@@ -3,17 +3,10 @@
      <div class="w-layout-grid footer-split-grid">
          <div id="w-node-_2d219e0c-505e-ea1e-47e6-fba1acda1af3-acda1af1" class="footer-column">
              <div class="div-block">
-                 <img src="https://cdn.deltadigital.pro/static/ecommerce/assets/img/project-img/logo.png"
-                     style="max-height: 80px" alt="" class="_2vw-margin brand-logo" />
                  <p class="footer-text">
                      Delta Digital offers the essential educational resources necessary to embark on your digital
                      journey with confidence and understanding
                  </p>
-             </div>
-             <div class="footer-social-wrapper">
-                 <a href="#" target="_blank" class="social-link w-inline-block"><img
-                         src="https://cdn.deltadigital.pro/static/ecommerce/assets/img/project-img/cards.png"
-                         alt="" /></a>
              </div>
          </div>
          <div id="w-node-_2d219e0c-505e-ea1e-47e6-fba1acda1aff-acda1af1" class="footer-3-columns-grid">
