@@ -32,7 +32,9 @@ class ProfileController extends Controller
                 return $this->sendError("Validation error", $validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
 
-            $request->user()->update(['push_token' => $request->token]);
+            $user = $request->user();
+
+            $user->update(['push_token' => $request->token]);
 
             return $this->sendResponse(null, "Token updated successfully", 201);
         } catch (\Exception $e) {
