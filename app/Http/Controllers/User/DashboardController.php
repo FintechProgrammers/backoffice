@@ -112,11 +112,13 @@ class DashboardController extends Controller
 
         $currentYear = $request->filled('year') ? $request->year : date('Y');
 
-        // Get sales grouped by month
-        $saleOvertime = $user->sales()->whereRaw('YEAR(created_at) = ?', [$currentYear])
+        $saleOvertime = Sale::where(function ($query) use ($user) {
+            $query->where('parent_id', $user->id);
+            // ->orWhereIn('parent_id', $descendantIds);
+        })->whereRaw('YEAR(created_at) = ?', [$currentYear])
             ->select(
                 DB::raw('MONTH(created_at) as month'), // Extract month from created_at
-                DB::raw('SUM(amount) / 100 as total_amount') // Divide the sum of amount by 100
+                DB::raw('SUM(amount) as total_amount') // Divide the sum of amount by 100
             )
             ->groupBy(DB::raw('MONTH(created_at)')) // Group by month
             ->orderByRaw('MONTH(created_at)') // Sort by month
