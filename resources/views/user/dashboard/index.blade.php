@@ -224,7 +224,7 @@
         fetch('{{ route('sales.data') }}') // Adjust the route to match your controller
             .then(response => response.json())
             .then(salesData => {
-                console.log(salesData);
+                // console.log(salesData);
                 const labels = salesData.labels;
                 const data = {
                     labels: labels,
