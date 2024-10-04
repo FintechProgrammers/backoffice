@@ -40,8 +40,7 @@
     <script src="{{ asset('assets/js/swiper.js') }}"></script>
     <!-- Apex Charts JS -->
     <script src="{{ asset('assets/libs/apexcharts/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/jsvectormap/maps/world-merc.js') }}"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var recentActivity = document.getElementById('latest-timeline');
@@ -75,162 +74,7 @@
             myModal.show();
         </script>
     @endif
-    <script>
-        Chart.defaults.borderColor = "rgba(142, 156, 173,0.1)", Chart.defaults.color = "#8c9097";
-        const labels = [
-            'January',
-            'February',
-            'March',
-            'April',
-            'May',
-            'June',
-        ];
-        const data = {
-            labels: labels,
-            datasets: [{
-                label: 'Sales Analytics',
-                backgroundColor: 'rgb(132, 90, 223)',
-                borderColor: 'rgb(132, 90, 223)',
-                data: [0, 10, 5, 2, 20, 30, 45],
-            }]
-        };
-        const config = {
-            type: 'line',
-            data: data,
-            options: {}
-        };
-        const myChart = new Chart(
-            document.getElementById('chartjs-line'),
-            config
-        );
-    </script>
-    {{-- @include('partials.scripts.initiate-payin') --}}
-    <script>
-        // $.ajax({
-        //     url: "{{ route('week.clock') }}",
-        //     type: 'GET',
-        //     success: function(response) {
-        //         const weekStart = new Date(response.data.week_start);
-        //         const weekEnd = new Date(response.data.week_end);
-        //         startTimer(weekStart, weekEnd);
-        //         setInterval(() => updateClock(weekEnd), 1000); // Update clock every second
-        //     },
-        //     error: function(xhr, status, error) {
-        //         console.log(error)
-        //     }
-        // });
 
-        // function startTimer(weekStart, weekEnd) {
-        //     const now = new Date();
-        //     const totalTime = weekEnd.getTime() - weekStart.getTime();
-        //     const elapsedTime = now.getTime() - weekStart.getTime();
-
-        //     // Calculate remaining time
-        //     const remainingTime = Math.max(weekEnd.getTime() - now.getTime(), 0); // Ensure non-negative value
-
-        //     const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
-        //     const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        //     const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
-        //     const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
-
-        //     // Update clock display
-        //     document.getElementById('days').textContent = days.toString().padStart(2, '0');
-        //     document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-        //     document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-        //     document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-
-        //     // Update progress bar (percentage)
-        //     const progress = Math.min(elapsedTime / totalTime, 1) * 100;
-        //     document.getElementById('progress-bar').style.width = `${progress}%`;
-        // }
-
-        // function updateClock(weekEnd) {
-        //     const now = new Date();
-        //     const remainingTime = Math.max(weekEnd.getTime() - now.getTime(), 0); // Ensure non-negative value
-
-        //     const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
-        //     const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        //     const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
-        //     const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
-
-        //     // Update clock display
-        //     document.getElementById('days').textContent = days.toString().padStart(2, '0');
-        //     document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-        //     document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-        //     document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-        // }
-
-
-
-        let currentDate = new Date();
-        let currentWeekNumber = getWeekNumberForMonth(currentDate);
-        let countdownDate = getMonthEndDate(currentDate);
-
-        let daysElement = document.getElementById('days');
-        let hoursElement = document.getElementById('hours');
-        let minutesElement = document.getElementById('minutes');
-        let secondsElement = document.getElementById('seconds');
-        let weekNumberElement = document.getElementById('week-number');
-        let progressBarElement = document.getElementById('progress-bar');
-
-        function getCurrentWeekOfMonth() {
-            const today = new Date(); // Current date
-            const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1); // First day of the current month
-
-            // Calculate the difference in days between today and the first day of the month
-            const dayOfMonth = today.getDate();
-
-            // Calculate the current week number within the month
-            const weekOfMonth = Math.ceil(dayOfMonth / 7);
-
-            $('#week-number').html(weekOfMonth)
-        }
-
-        getCurrentWeekOfMonth()
-
-        function getWeekNumberForMonth(date) {
-            let firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
-            let dayOfWeek = date.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-            let weekNumber = Math.ceil(((date.getDate() + (dayOfWeek === 0 ? 6 : dayOfWeek - 1)) / 7));
-            return weekNumber;
-        }
-
-        function getMonthEndDate(date) {
-            let weekNumber = getWeekNumberForMonth(date);
-            let firstDayOfWeek = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 1);
-            let lastDayOfWeek = new Date(firstDayOfWeek.getTime() + 6 * 86400000);
-            return lastDayOfWeek;
-        }
-
-        function updateCountdown() {
-            let now = new Date();
-            let timeRemaining = countdownDate - now;
-
-            if (timeRemaining <= 0) {
-                // Reset the countdown for the next month
-                currentDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-                currentWeekNumber = getWeekNumberForMonth(currentDate);
-                countdownDate = getMonthEndDate(currentDate);
-                timeRemaining = countdownDate - now;
-            }
-
-            let days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-            let hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            let minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-            let seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-
-            daysElement.textContent = days.toString().padStart(2, '0');
-            hoursElement.textContent = hours.toString().padStart(2, '0');
-            minutesElement.textContent = minutes.toString().padStart(2, '0');
-            secondsElement.textContent = seconds.toString().padStart(2, '0');
-
-            let progress = (1 - (timeRemaining / (1000 * 60 * 60 * 24 * 7))) * 100;
-            progressBarElement.style.width = `${progress}%`;
-            progressBarElement.ariaValueNow = progress;
-        }
-
-        setInterval(updateCountdown, 1000); // Update the countdown every second
-    </script>
     <script>
         var smioptions = {
             series: [{{ isset($progress) ? $progress : 0 }}],
@@ -292,82 +136,117 @@
         var chart = new ApexCharts(document.querySelector("#circular-semi"), smioptions);
         chart.render();
     </script>
+
+
     <script>
-        var markers = [{
-                name: 'Russia',
-                coords: [61, 105],
-                style: {
-                    fill: '#28d193'
-                }
-            },
-            {
-                name: 'Geenland',
-                coords: [72, -42],
-                style: {
-                    fill: '#ff8c33'
-                }
-            },
-            {
-                name: 'Canada',
-                coords: [56, -106],
-                style: {
-                    fill: '#ff534d'
-                }
-            },
-            {
-                name: 'Palestine',
-                coords: [31.5, 34.8],
-                style: {
-                    fill: '#ffbe14'
-                }
-            },
-            {
-                name: 'Brazil',
-                coords: [-14.2350, -51.9253],
-                style: {
-                    fill: '#4b9bfa'
-                }
-            },
-        ];
-        var map = new jsVectorMap({
-            map: 'world_merc',
-            selector: '#users-map',
-            markersSelectable: true,
+        // Convert current time to EST (accounting for daylight saving time)
+        function getESTDate() {
+            let now = new Date();
+            let utcOffset = now.getTimezoneOffset() * 60000; // Offset in milliseconds
+            let estOffset = -5 * 60 * 60 * 1000; // EST is UTC-5
+            let estDate = new Date(now.getTime() + utcOffset + estOffset);
 
-            onMarkerSelected(index, isSelected, selectedMarkers) {
-                console.log(index, isSelected, selectedMarkers);
-            },
+            // Adjust for Daylight Saving Time (if applicable)
+            let isDST = estDate.getTimezoneOffset() < now.getTimezoneOffset();
+            if (isDST) {
+                estDate = new Date(estDate.getTime() + (1 * 60 * 60 * 1000)); // Add one hour for DST
+            }
+            return estDate;
+        }
 
-            // -------- Labels --------
-            labels: {
-                markers: {
-                    render: function(marker) {
-                        return marker.name
-                    },
-                },
-            },
+        let currentDate = getESTDate();
+        let currentWeekNumber = getWeekNumberForMonth(currentDate);
+        let countdownDate = getMonthEndDate(currentDate);
 
-            // -------- Marker and label style --------
-            markers: markers,
-            markerStyle: {
-                hover: {
-                    stroke: "#DDD",
-                    strokeWidth: 3,
-                    fill: '#FFF'
-                },
-                selected: {
-                    fill: '#ff525d'
-                }
-            },
-            markerLabelStyle: {
-                initial: {
-                    fontFamily: 'Poppins',
-                    fontSize: 13,
-                    fontWeight: 500,
-                    fill: '#35373e',
-                },
-            },
-        })
+        let daysElement = document.getElementById('days');
+        let hoursElement = document.getElementById('hours');
+        let minutesElement = document.getElementById('minutes');
+        let secondsElement = document.getElementById('seconds');
+        let weekNumberElement = document.getElementById('week-number');
+
+
+        function getCurrentWeekOfMonth() {
+            let today = getESTDate(); // Get current EST date
+            let firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1); // First day of the current month
+
+            // Calculate the difference in days between today and the first day of the month
+            let dayOfMonth = today.getDate();
+
+            // Calculate the current week number within the month
+            let weekOfMonth = Math.ceil(dayOfMonth / 7);
+
+            $('#week-number').html(weekOfMonth);
+        }
+
+        getCurrentWeekOfMonth();
+
+        function getWeekNumberForMonth(date) {
+            let firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+            let dayOfWeek = date.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+            let weekNumber = Math.ceil(((date.getDate() + (dayOfWeek === 0 ? 6 : dayOfWeek - 1)) / 7));
+            return weekNumber;
+        }
+
+        function getMonthEndDate(date) {
+            let weekNumber = getWeekNumberForMonth(date);
+            let firstDayOfWeek = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 1);
+            let lastDayOfWeek = new Date(firstDayOfWeek.getTime() + 6 * 86400000);
+            return lastDayOfWeek;
+        }
+
+        function updateCountdown() {
+            let now = getESTDate();
+            let timeRemaining = countdownDate - now;
+
+            if (timeRemaining <= 0) {
+                // Reset the countdown for the next month
+                currentDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+                currentWeekNumber = getWeekNumberForMonth(currentDate);
+                countdownDate = getMonthEndDate(currentDate);
+                timeRemaining = countdownDate - now;
+            }
+
+            let days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+            let hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            let minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            let seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+            daysElement.textContent = days.toString().padStart(2, '0');
+            hoursElement.textContent = hours.toString().padStart(2, '0');
+            minutesElement.textContent = minutes.toString().padStart(2, '0');
+            secondsElement.textContent = seconds.toString().padStart(2, '0');
+        }
+
+        setInterval(updateCountdown, 1000); // Update the countdown every second
+    </script>
+
+    <script>
+        fetch('{{ route('sales.data') }}') // Adjust the route to match your controller
+            .then(response => response.json())
+            .then(salesData => {
+                console.log(salesData);
+                const labels = salesData.labels;
+                const data = {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Sales Analytics',
+                        backgroundColor: 'rgb(132, 90, 223)',
+                        borderColor: 'rgb(132, 90, 223)',
+                        data: salesData.total_amounts, // Use the data from your API
+                    }]
+                };
+
+                const config = {
+                    type: 'line',
+                    data: data,
+                    options: {}
+                };
+
+                const myChart = new Chart(
+                    document.getElementById('chartjs-line'),
+                    config
+                );
+            });
     </script>
 
 @endpush

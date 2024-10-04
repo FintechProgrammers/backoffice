@@ -14,6 +14,8 @@ use App\Models\UserSubscription;
 use App\Models\Wallet;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -102,5 +104,48 @@ class DashboardController extends Controller
         $data = getWeekStartAndEnd();
 
         return $this->sendResponse($data);
+    }
+
+    public function getSalesData(Request $request)
+    {
+        $user = $request->user();
+
+        $currentYear = $request->filled('year') ? $request->year : date('Y');
+
+        // Get sales grouped by month
+        $saleOvertime = $user->sales()->whereRaw('YEAR(created_at) = ?', [$currentYear])
+            ->select(
+                DB::raw('MONTH(created_at) as month'), // Extract month from created_at
+                DB::raw('SUM(amount) / 100 as total_amount') // Divide the sum of amount by 100
+            )
+            ->groupBy(DB::raw('MONTH(created_at)')) // Group by month
+            ->orderByRaw('MONTH(created_at)') // Sort by month
+            ->get();
+
+        // Define an array to map month numbers to month names
+        $monthsMap = [
+            1 => 'January',
+            2 => 'February',
+            3 => 'March',
+            4 => 'April',
+            5 => 'May',
+            6 => 'June',
+            7 => 'July',
+            8 => 'August',
+            9 => 'September',
+            10 => 'October',
+            11 => 'November',
+            12 => 'December',
+        ];
+
+        // Transform the sorted result to match the format needed for the chart
+        $salesData = [
+            'labels' => $saleOvertime->map(function ($item) use ($monthsMap) {
+                return $monthsMap[$item->month];
+            })->toArray(),
+            'total_amounts' => $saleOvertime->pluck('total_amount')->toArray(),
+        ];
+
+        return response()->json($salesData);
     }
 }

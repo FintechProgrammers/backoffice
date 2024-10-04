@@ -48,6 +48,7 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(DashboardController::class)->prefix('dashboard')->group(function () {
         Route::get('/', 'index')->name('dashboard');
         Route::get('/week-clock', 'weekClock')->name('week.clock');
+        Route::get('/sales-data', 'getSalesData')->name('sales.data');
     });
 
     Route::controller(SupportController::class)->prefix('tickets')->name('tickets.')->group(function () {
