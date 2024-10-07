@@ -192,6 +192,10 @@ Route::get('cron', function () {
 
 Route::get('test', function () {
 
+    $commission = new \App\Console\Commands\ReleaseCommissions();
+
+    $commission->handle();
+
     // $nexio = new \App\Services\NexioService();
 
     // $payoutPayload = [

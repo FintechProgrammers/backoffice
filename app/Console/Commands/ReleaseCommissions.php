@@ -85,11 +85,23 @@ class ReleaseCommissions extends Command
                 $commissionStartDate = $endOfPreviousMonth->copy()->subDays($endOfPreviousMonth->day - 22);
                 $commissionEndDate = $endOfPreviousMonth;
                 $settlementWeek = 'End of Month';
+                $firstOfPreviousMonth = Carbon::now()->subMonth()->startOfMonth();
 
-                $commissions = $commissions->whereHas('sale', function ($query) use ($commissionStartDate, $commissionEndDate) {
+                // Fetch level 1 commissions from previous month
+                $commissionsLevel1 = $commissions->where('level', 1)->whereHas('sale', function ($query) use ($firstOfPreviousMonth, $commissionEndDate) {
+                    $query->where('is_refunded', false)
+                        ->whereBetween('created_at', [$firstOfPreviousMonth, $commissionEndDate]);
+                })->get();
+
+                $commissionsLevel0 = $commissions->where('level', 0)->whereHas('sale', function ($query) use ($commissionStartDate, $commissionEndDate) {
                     $query->where('is_refunded', false)
                         ->whereBetween('created_at', [$commissionStartDate, $commissionEndDate]);
-                })->get()->groupBy('user_id');
+                })->get();
+
+                // Merge the two commission groups by user_id
+                $commissions = $commissionsLevel1->mergeRecursive($commissionsLevel0);
+
+                $commissions = $commissions->groupBy('user_id');
             } else {
 
                 return;
