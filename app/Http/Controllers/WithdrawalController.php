@@ -53,7 +53,7 @@ class WithdrawalController extends Controller
             ->when(!empty($status) && !empty($dateFrom) && !empty($dateTo), fn($query) => $query->where('status', $status)->whereBetween('created_at', [$dateFrom, $dateTo]))
             ->when(!empty($type) && !empty($dateFrom) && !empty($dateTo), fn($query) =>  $query->where('type', $type)->whereBetween('created_at', [$dateFrom, $dateTo]));
 
-        $data['withdrawals'] = $query->paginate(50);
+        $data['withdrawals'] = $query->latest()->paginate(50);
 
         return view('user.withdrawal._table', $data);
     }
