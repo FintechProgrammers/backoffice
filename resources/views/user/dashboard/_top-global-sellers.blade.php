@@ -19,7 +19,7 @@
                                     </div>
                                     <div>
                                         <h4 class="fs-10 fw-semibold text-white mb-0">
-                                            ${{ number_format($item->total_sales, 2, '.', ',') }}
+                                            ${{ number_format($item->sale_total, 2, '.', ',') }}
                                         </h4>
                                     </div>
                                 </div>

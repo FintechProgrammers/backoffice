@@ -448,13 +448,13 @@ if (!function_exists('topGlobalSellers')) {
             $totalSales = $user->pmonthlySales->sum('amount');
 
             if ($totalSales > 0) {
-                $user->total_sales = $totalSales;
+                $user->sale_total = $totalSales;
                 return $user;
             }
 
             return null;
         })->filter() // Remove null values (users with zero sales)
-            ->sortByDesc('total_sales')
+            ->sortByDesc('sale_total')
             ->take($limit);
 
         return $topSellers;
