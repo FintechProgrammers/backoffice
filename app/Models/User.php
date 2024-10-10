@@ -653,6 +653,15 @@ class User extends Authenticatable
     {
         return $this->hasOne(NexioUser::class, 'user_id');
     }
+
+    function pmonthlySales()
+    {
+        $currentMonth = now()->month;
+        $currentYear = now()->year;
+
+        return $this->hasMany(Sale::class, 'parent_id', 'id')->whereYear('created_at', $currentYear)
+            ->whereMonth('created_at', $currentMonth);
+    }
     /**
      * The attributes that should be hidden for serialization.
      *

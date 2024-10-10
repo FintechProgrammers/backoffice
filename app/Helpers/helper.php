@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Sale;
 use App\Models\Settings;
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -437,16 +438,20 @@ if (!function_exists('topGlobalSellers')) {
     // Get top sellers across all users in the system
     function topGlobalSellers($limit = 20)
     {
+
         // Get all users
-        $users = User::all();
+        $users = User::whereHas('pmonthlySales')->get();
 
         // Calculate total sales for each user and exclude those with zero sales
         $topSellers = $users->map(function ($user) {
-            $totalSales = $user->getMonthlyTotalSales();
+
+            $totalSales = $user->pmonthlySales->sum('amount');
+
             if ($totalSales > 0) {
                 $user->total_sales = $totalSales;
                 return $user;
             }
+
             return null;
         })->filter() // Remove null values (users with zero sales)
             ->sortByDesc('total_sales')
