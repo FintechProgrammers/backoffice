@@ -45,7 +45,7 @@ class UserManagementController extends Controller
         $accountType = $request->filled('account_type') ? $request->account_type : null;
 
         // $query = User::withTrashed();
-        $query = User::query();
+        $query = User::where('is_streamer', false);
 
         $query = $query
             ->when(!empty($search), fn($query) => $query->where('first_name', 'LIKE', "%{$search}%")->orWhere('last_name', 'LIKE', "%{$search}%")->orWhere('email', 'LIKE', "%{$search}%")->orWhere('username', 'LIKE', "%{$search}%"))

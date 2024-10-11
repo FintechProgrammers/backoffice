@@ -49,6 +49,12 @@ class Navigation
                 'hasPermission' => true
             ],
             (object) [
+                'name'  => 'Asset',
+                'route' => 'admin.assets.index',
+                'icon'  => 'bx bx-home',
+                'hasPermission' => true
+            ],
+            (object) [
                 'name'  => 'Streamers',
                 'route' => 'admin.dashboard.index',
                 'icon'  => 'bx bx-home',

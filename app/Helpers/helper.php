@@ -440,7 +440,7 @@ if (!function_exists('topGlobalSellers')) {
     {
 
         // Get all users
-        $users = User::whereHas('pmonthlySales')->get();
+        $users = User::where('is_streamer', false)->whereHas('pmonthlySales')->get();
 
         // Calculate total sales for each user and exclude those with zero sales
         $topSellers = $users->map(function ($user) {

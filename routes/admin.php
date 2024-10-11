@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdministrativeUserController;
+use App\Http\Controllers\Admin\AssetController;
 use App\Http\Controllers\Admin\Auth\AdminForgotPasswordController;
 use App\Http\Controllers\Admin\Auth\AdminResetPasswordController;
 use App\Http\Controllers\Admin\BannerController;
@@ -266,5 +267,14 @@ Route::middleware('admin.auth')->group(function () {
         Route::post('/store', 'store')->name('store');
         Route::get('/show/{category}', 'show')->name('show');
         Route::post('/update/{category}', 'update')->name('update');
+    });
+
+    Route::controller(AssetController::class)->prefix('assets')->name('assets.')->group(function () {
+        Route::get('', 'index')->name('index');
+        Route::get('/filter', 'filter')->name('filter');
+        Route::get('create', 'create')->name('create');
+        Route::post('/store', 'store')->name('store');
+        Route::get('/show/{asset}', 'show')->name('show');
+        Route::post('/update/{asset}', 'update')->name('update');
     });
 });
