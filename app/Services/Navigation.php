@@ -43,6 +43,18 @@ class Navigation
                 ]
             ],
             (object) [
+                'name'  => 'Categories',
+                'route' => 'admin.category.index',
+                'icon'  => 'bx bx-home',
+                'hasPermission' => true
+            ],
+            (object) [
+                'name'  => 'Streamers',
+                'route' => 'admin.dashboard.index',
+                'icon'  => 'bx bx-home',
+                'hasPermission' => true
+            ],
+            (object) [
                 'name'  => 'Products',
                 'route' => 'admin.product.index',
                 'icon'  => 'bx bx-box',

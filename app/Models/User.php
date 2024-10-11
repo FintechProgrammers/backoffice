@@ -459,23 +459,6 @@ class User extends Authenticatable
     // Get top sellers in the user's team
     public function getTopSellers($limit = 10)
     {
-        // $descendants = $this->getDescendants();
-
-        // // Calculate total sales for each descendant and exclude those with zero sales
-        // $topSellers = $descendants->map(function ($user) {
-        //     $totalSales = $user->getMonthlyTotalSales();
-
-        //     if ($totalSales > 0) {
-        //         $user->total_sales = $totalSales;
-        //         return $user;
-        //     }
-        //     return null;
-        // })->filter() // Remove null values (users with zero sales)
-        //     ->sortByDesc('total_sales')
-        //     ->take($limit);
-
-        // return $topSellers;
-
         // Retrieve the descendants (direct children in this case)
         $descendants = User::where('parent_id', $this->id)->get();
 

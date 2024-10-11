@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\AuthenticationController;
+use App\Http\Controllers\Api\BannerController;
+use App\Http\Controllers\Api\PlanController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\SubscriptionController;
 use App\Http\Controllers\Api\UserController;
@@ -15,9 +17,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/subscriptions', [SubscriptionController::class, 'index']);
 
+    Route::get('banner', [BannerController::class, 'index']);
+
     Route::controller(ProfileController::class)->prefix('profile')->group(function () {
         Route::get('', 'index');
         Route::post('/update-push-token', 'updateToken');
+    });
+
+    Route::controller(PlanController::class)->prefix('products')->group(function () {
+        Route::get('', 'index');
+        Route::get('/show/{product}', 'show');
     });
 });
 

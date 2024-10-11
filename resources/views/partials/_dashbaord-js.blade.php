@@ -50,6 +50,12 @@
 
         const url = $(this).data('url');
 
+        let rateModalHeading = $('#primaryModal .modal-title');
+
+        const title = $(this).data('title');
+
+        rateModalHeading.text(title);
+
         $.ajax({
             url: url,
             method: "GET",

@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdministrativeUserController;
 use App\Http\Controllers\Admin\Auth\AdminForgotPasswordController;
 use App\Http\Controllers\Admin\Auth\AdminResetPasswordController;
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CommisionController;
 use App\Http\Controllers\Admin\CommisionPlanController;
 use App\Http\Controllers\Admin\CommissionsController;
@@ -27,6 +28,7 @@ use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Admin\WithdrawalController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
+use Spatie\Permission\Contracts\Role;
 
 Route::middleware('admin.guest')->group(function () {
     Route::get('', [LoginController::class, 'index'])->name('login');
@@ -255,5 +257,14 @@ Route::middleware('admin.auth')->group(function () {
         Route::get('/filter/total', 'calculateTotalCommission')->name('filter.total');
         Route::get('/settle', 'payview')->name('settle');
         Route::post('/settle', 'store')->name('settle.store');
+    });
+
+    Route::controller(CategoryController::class)->prefix('category')->name('category.')->group(function () {
+        Route::get('', 'index')->name('index');
+        Route::get('/filter', 'filter')->name('filter');
+        Route::get('create', 'create')->name('create');
+        Route::post('/store', 'store')->name('store');
+        Route::get('/show/{category}', 'show')->name('show');
+        Route::post('/update/{category}', 'update')->name('update');
     });
 });
