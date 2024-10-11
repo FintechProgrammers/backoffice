@@ -45,27 +45,27 @@ class Navigation
             (object) [
                 'name'  => 'Categories',
                 'route' => 'admin.category.index',
-                'icon'  => 'bx bx-home',
+                'icon'  => 'las la-stamp',
                 'hasPermission' => true
             ],
             (object) [
                 'name'  => 'Asset',
                 'route' => 'admin.assets.index',
-                'icon'  => 'bx bx-home',
+                'icon'  => 'las la-coins',
                 'hasPermission' => true
             ],
             (object) [
                 'name'  => 'Streamers',
-                'route' => 'admin.dashboard.index',
-                'icon'  => 'bx bx-home',
+                'route' => 'admin.streamers.index',
+                'icon'  => 'las la-user-tie',
                 'hasPermission' => true
             ],
-            (object) [
-                'name'  => 'Products',
-                'route' => 'admin.product.index',
-                'icon'  => 'bx bx-box',
-                'hasPermission' => $user->can('manage product') ? true : false,
-            ],
+            // (object) [
+            //     'name'  => 'Products',
+            //     'route' => 'admin.product.index',
+            //     'icon'  => 'bx bx-box',
+            //     'hasPermission' => $user->can('manage product') ? true : false,
+            // ],
             (object) [
                 'name'      => 'Business Plan',
                 'icon'      => 'bx bx-briefcase',

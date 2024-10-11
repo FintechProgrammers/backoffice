@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SalesController;
 use App\Http\Controllers\Admin\ServiceManagement;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\StreamersController;
 use App\Http\Controllers\Admin\SubscriptionsController;
 use App\Http\Controllers\Admin\SupportController;
 use App\Http\Controllers\Admin\UserManagementController;
@@ -276,5 +277,20 @@ Route::middleware('admin.auth')->group(function () {
         Route::post('/store', 'store')->name('store');
         Route::get('/show/{asset}', 'show')->name('show');
         Route::post('/update/{asset}', 'update')->name('update');
+    });
+
+    Route::controller(StreamersController::class)->prefix('streamers')->name('streamers.')->group(function () {
+        Route::get('', 'index')->name('index');
+        Route::get('/filter', 'filter')->name('filter');
+        Route::post('', 'store')->name('store');
+        Route::get('/create', 'create')->name('create');
+        Route::get('/show/{streamer}', 'show')->name('show');
+        Route::get('/edit/{streamer}', 'edit')->name('edit');
+        Route::post('/update/{streamer}', 'update')->name('update');
+        Route::post('/suspend/{streamer}', 'suspend')->name('suspend');
+        Route::post('/activate/{streamer}', 'activate')->name('activate');
+        Route::post('/delete/{streamer}', 'destroy')->name('delete');
+        Route::get('/change-email/{streamer}', 'emailForm')->name('change-email');
+        Route::post('/change-email/{streamer}', 'changeEmail')->name('change-email.post');
     });
 });
