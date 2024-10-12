@@ -27,6 +27,7 @@ use App\Models\Wallet;
 use App\Services\NexioService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Stripe\Balance;
 
 Route::get('/', function () {
     return view('welcome');
@@ -190,72 +191,6 @@ Route::get('cron', function () {
     return Illuminate\Support\Facades\Artisan::call('schedule:run');
 })->name('cron');
 
-Route::get('test', function () {
-
-    // $commission = new \App\Console\Commands\ReleaseCommissions();
-
-    // $commission->handle();
-
-    // $nexio = new \App\Services\NexioService();
-
-    // $payoutPayload = [
-    //     'amount' => 0.05,
-    //     'narration' => 'External withdrawal',
-    //     'reference' => generateReference(),
-    //     'recipientId' => 137724
-    // ];
-
-    // $response = $nexio->payouts($payoutPayload);
-
-    // dD($response);
-
-
-    // if ($response['error'] === 427 && $response['message'] === "Duplicate email for nexio") {
-    //     dD("hello");
-    // }
-
-
-
-    // dd($response);
-
-    // ini_set('max_execution_time', '0');
-
-    // $chunkSize = 100; // Adjust the chunk size as needed
-
-    // \App\Models\User::chunk($chunkSize, function ($users) {
-    //     logger($users->count());
-    //     // Dispatch each chunk to the job queue
-    //     \App\Jobs\MigrateUserJob::dispatch($users);
-    // });
-
-    // return response()->json(["success"]);
-
-    $date = "2024-09-14";
-
-    // CommissionTransaction::whereDate('updated_at', $date)->update([
-    //     'is_converted' => false,
-    //     'transaction_id' => null,
-    // ]);
-
-    // $transaction = Transaction::whereDate('created_at', $date)->get();
-
-    // foreach ($transaction as $transaction) {
-    //     // get user wallet
-    //     $wallet = Wallet::where('user_id', $transaction->user_id)->first();
-
-    //     $newBalance = $wallet->balance - $transaction->amount;
-
-    //     $wallet->update([
-    //         'balance' => $newBalance
-    //     ]);
-
-    //     $transaction->delete();
-    // }
-
-    dd("done");
-
-
-    // dd($commission);
-});
+Route::get('test', function () {});
 
 require __DIR__ . '/auth.php';
