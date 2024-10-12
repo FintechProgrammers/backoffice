@@ -3,15 +3,21 @@
     <input type="text" class="form-control" id="form-text" value="{{ isset($service) ? $service->name : '' }}"
         placeholder="Enter package name" name="name">
 </div>
-<div class="mb-3">
-    <label for="form-text" class="form-label fs-14 text-dark">Price ($)</label>
-    <input type="number" min="0" step="any" class="form-control" id="form-text"
-        value="{{ isset($service) ? $service->price : '' }}" placeholder="Enter package price" name="price">
-</div>
-<div class="mb-3">
-    <label for="form-text" class="form-label fs-14 text-dark">BV</label>
-    <input type="number" min="0" step="any" class="form-control" id="form-text"
-        value="{{ isset($service) ? $service->bv_amount : '' }}" placeholder="Enter BV" name="bv">
+<div class="row">
+    <div class="col-lg-6">
+        <div class="mb-3">
+            <label for="form-text" class="form-label fs-14 text-dark">Price ($)</label>
+            <input type="number" min="0" step="any" class="form-control" id="form-text"
+                value="{{ isset($service) ? $service->price : '' }}" placeholder="Enter package price" name="price">
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="mb-3">
+            <label for="form-text" class="form-label fs-14 text-dark">BV</label>
+            <input type="number" min="0" step="any" class="form-control" id="form-text"
+                value="{{ isset($service) ? $service->bv_amount : '' }}" placeholder="Enter BV" name="bv">
+        </div>
+    </div>
 </div>
 <div class="row">
     <div class="col-lg-6">
@@ -67,31 +73,40 @@
         {{ isset($service) ? $service->description : '' }}
     </textarea>
 </div>
-<div class="text-center" id="photoContent">
-    <img src="{{ isset($service) ? $service->image : asset('assets/images/default.jpg') }}" class="img-fluid rounded"
-        width="150px" height="50px" alt="...">
-</div>
-<div class="mb-3">
-    <label for="form-text" class="form-label fs-14 text-dark">Icon</label>
-    <input type="file" name="icon" id="photo" class="form-control">
-</div>
-<div class="text-center" id="bannerContent">
-    <img src="{{ isset($service) ? $service->banner_url : asset('assets/images/default.jpg') }}"
-        class="img-fluid rounded" width="150px" height="50px" alt="...">
-</div>
-<div class="mb-3">
-    <label for="form-text" class="form-label fs-14 text-dark">Banner</label>
-    <input type="file" name="banner" id="banner" class="form-control">
+<div class="row">
+    <div class="col-lg-4">
+        <div class="text-center" id="photoContent">
+            <img src="{{ isset($service) ? $service->image : asset('assets/images/default.jpg') }}"
+                class="img-fluid rounded" width="150px" height="50px" alt="...">
+        </div>
+        <div class="mb-3">
+            <label for="form-text" class="form-label fs-14 text-dark">Icon</label>
+            <input type="file" name="icon" id="photo" class="form-control">
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="text-center" id="bannerContent">
+            <img src="{{ isset($service) ? $service->banner_url : asset('assets/images/default.jpg') }}"
+                class="img-fluid rounded" width="150px" height="50px" alt="...">
+        </div>
+        <div class="mb-3">
+            <label for="form-text" class="form-label fs-14 text-dark">Banner</label>
+            <input type="file" name="banner" id="banner" class="form-control">
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="text-center" id="productImageContent">
+            <img src="{{ isset($service) ? $service->product_image_url : asset('assets/images/default.jpg') }}"
+                class="img-fluid rounded" width="150px" height="50px" alt="...">
+        </div>
+        <div class="mb-3">
+            <label for="form-text" class="form-label fs-14 text-dark">Product Image</label>
+            <input type="file" name="product_image" id="product-image" class="form-control">
+        </div>
+    </div>
 </div>
 
-<div class="text-center" id="productImageContent">
-    <img src="{{ isset($service) ? $service->product_image_url : asset('assets/images/default.jpg') }}"
-        class="img-fluid rounded" width="150px" height="50px" alt="...">
-</div>
-<div class="mb-3">
-    <label for="form-text" class="form-label fs-14 text-dark">Product Image</label>
-    <input type="file" name="product_image" id="product-image" class="form-control">
-</div>
+
 
 <div class="form-check form-check-lg form-switch mb-3">
     <input class="form-check-input" type="checkbox" role="switch" id="switch-lg" name="auto_renewal"
