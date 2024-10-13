@@ -26,8 +26,8 @@
         <td>
             @if ($item->status === 'completed')
                 <span class="badge bg-success">Completed</span>
-            @elseif ($item->status === 'declined')
-                <span class="badge bg-danger">Declined</span>
+            @elseif ($item->status === 'failed')
+                <span class="badge bg-danger">Failed</span>
             @else
                 <span class="badge bg-warning">Pending</span>
             @endif

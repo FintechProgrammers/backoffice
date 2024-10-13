@@ -173,7 +173,13 @@ class NexioController extends Controller
                     ]);
 
                     if ($status === "failed") {
-                        refundWallet($transaction->amount);
+                        $wallet = \App\Models\Wallet::where('user_id', $user->id)->first();
+
+                        $newBalance = $wallet->balance + $transaction->amount;
+
+                        $wallet->update([
+                            'balance' => $newBalance,
+                        ]);
                     }
 
                     $user->notify(new WithdrawalNotification($data));

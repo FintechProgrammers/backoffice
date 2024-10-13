@@ -11,7 +11,7 @@
         @forelse ($user->withdrawals as $item)
             <tr>
                 <td>
-                    <span class="text-success fw-semibold">{{ $item->reference }}</span>
+                    <span class="text-success fw-semibold">{{ $item->internal_reference }}</span>
                 </td>
                 <td>
                     ${{ $item->amount }}
@@ -19,8 +19,8 @@
                 <td>
                     @if ($item->status === 'completed')
                         <span class="badge bg-success">Completed</span>
-                    @elseif ($item->status === 'declined')
-                        <span class="badge bg-danger">Declined</span>
+                    @elseif ($item->status === 'failed')
+                        <span class="badge bg-danger">Failed</span>
                     @else
                         <span class="badge bg-warning">Pending</span>
                     @endif
