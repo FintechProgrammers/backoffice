@@ -7,6 +7,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Support\Facades\Route;
+use PragmaRX\Google2FA\Vendor\Laravel\Middlewares\Google2FA;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -23,7 +24,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin.guest' => AdminRedirectIfAuthenticated::class,
             'admin.auth' => AdminAuthenticate::class,
-            'kyc.verified' => KycVerified::class
+            'kyc.verified' => KycVerified::class,
+            '2faCheck' => \App\Http\Middleware\Verify2FA::class,
+            // '2fa' => Google2FA::class,
         ])->validateCsrfTokens(except: [
             'webhook/*',
             'ipn/*'

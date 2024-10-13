@@ -624,3 +624,16 @@ if (!function_exists('paymentsOfTheWeek')) {
         return $commissions;
     }
 }
+if (!function_exists('generateTemporaryLink')) {
+    function generateTemporatyLink($user, $route, $duration)
+    {
+        return \Illuminate\Support\Facades\URL::temporarySignedRoute(
+            $route,
+            Carbon::now()->addMinutes(\Illuminate\Support\Facades\Config::get('auth.verification.expire', $duration)),
+            [
+                'id' => $user->uuid,
+                'hash' => sha1($user->email),
+            ]
+        );
+    }
+}

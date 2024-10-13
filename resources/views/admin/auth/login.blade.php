@@ -2,6 +2,9 @@
 
 @section('content')
     <p class="h5 fw-semibold mb-2 text-center">{{ __('Administrative Sign In') }}</p>
+    @if (Session::has('warning'))
+        <p class="alert alert-warning">{{ Session::get('warning') }}</p>
+    @endif
     <form action="{{ route('admin.login.post') }}" method="POST" id="loginForm">
         @csrf
         <div class="row gy-3">
@@ -56,7 +59,6 @@
         $('#loginForm').submit(function(e) {
             e.preventDefault();
 
-
             // Remove any existing error messages
             $('.error-message').remove();
 
@@ -81,9 +83,15 @@
 
                     displayMessage(response.message, "success")
 
-                    setTimeout(function() {
-                        location.href = response.route
-                    }, 2000); // 2000 milliseconds = 2 seconds
+                    if (response.route) {
+                        setTimeout(function() {
+                            location.href = response.route
+                        }, 2000); // 2000 milliseconds = 2 seconds
+                    } else {
+                        setTimeout(function() {
+                            location.reload()
+                        }, 2000);
+                    }
 
                 },
                 error: function(xhr, status, error) {
