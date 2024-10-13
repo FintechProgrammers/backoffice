@@ -72,4 +72,9 @@ class Service extends Model
     {
         return $this->sales()->sum('amount');
     }
+
+    public function streamers()
+    {
+        return $this->belongsToMany(Streamer::class, 'service_streamers', 'service_id', 'streamer_id');
+    }
 }

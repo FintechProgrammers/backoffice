@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Service;
 use App\Models\ServiceProduct;
+use App\Models\ServiceStreamer;
+use App\Models\Streamer;
+use App\Models\StreamerCategory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -30,6 +33,7 @@ class ServiceManagement extends Controller
     function create()
     {
         $data['products'] = Product::get();
+        $data['streamers'] = Streamer::get();
 
         return view('admin.services.create', $data);
     }
@@ -49,6 +53,8 @@ class ServiceManagement extends Controller
             'icon' => 'required|image',
             'banner' => 'required|image',
             'product_image' => 'required|image',
+            'streamers' => 'nullable',
+            'streamers.*' => 'required|exists:streamers,id',
         ]);
 
         // Handle validation errors
@@ -86,6 +92,8 @@ class ServiceManagement extends Controller
                 }
             }
 
+            $service->streamers()->sync($request->streamers);
+
             DB::commit();
 
             return response()->json(['success' => true, 'message' => 'Service created successfully']);
@@ -100,6 +108,7 @@ class ServiceManagement extends Controller
     {
         $data['service'] = $service;
         $data['products'] = Product::get();
+        $data['streamers'] = Streamer::get();
         $data['serviceProducts'] = ServiceProduct::where('service_id', $service->id)->pluck('product_id')->toArray();
 
         return view('admin.services.edit', $data);
@@ -127,6 +136,8 @@ class ServiceManagement extends Controller
             'image' => 'nullable|image',
             'banner' => 'nullable|image',
             'product_image' => 'nullable|image',
+            'streamers' => 'nullable',
+            'streamers.*' => 'required|exists:streamers,id',
         ]);
 
         // Handle validation errors
@@ -176,6 +187,8 @@ class ServiceManagement extends Controller
             } else {
                 ServiceProduct::where('service_id', $service->id)->delete();
             }
+
+            $service->streamers()->sync($request->streamers);
 
             DB::commit();
 

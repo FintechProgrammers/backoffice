@@ -34,7 +34,8 @@
             <select id="inputCountry" class="form-select" name="duration_unit">
                 <option value="">--select--</option>
                 @foreach (durationUnit() as $item)
-                    <option value="{{ $item }}" @selected(isset($service) && $service->duration_unit == $item)>{{ Str::upper($item) }}</option>
+                    <option value="{{ $item }}" @selected(isset($service) && $service->duration_unit == $item)>{{ Str::upper($item) }}
+                    </option>
                 @endforeach
             </select>
         </div>
@@ -73,6 +74,20 @@
         {{ isset($service) ? $service->description : '' }}
     </textarea>
 </div>
+<div class="mb-3">
+    <h6>Streamers</h6>
+    <hr />
+    <select class="form-control sponsors" data-trigger name="streamers[]" multiple>
+        <option value="">Select</option>
+        @foreach ($streamers as $item)
+            <option value="{{ $item->id }}" data-streamerid="{{ $item->id }}"
+                data-profile="{{ $item->profile_picture }}" @if (isset($service) && in_array($item->id, $service->streamers->pluck('id')->toArray())) selected @endif>
+                {{ $item->full_name }}
+            </option>
+        @endforeach
+    </select>
+</div>
+<hr />
 <div class="row">
     <div class="col-lg-4">
         <div class="text-center" id="photoContent">
@@ -105,20 +120,24 @@
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="col-lg-6">
+        <div class="form-check form-check-lg form-switch mb-3">
+            <input class="form-check-input" type="checkbox" role="switch" id="switch-lg" name="auto_renewal"
+                @checked(isset($service) && $service->auto_renewal)>
+            <label class="form-check-label" for="switch-lg">Auto Renewal</label>
+        </div>
 
-
-
-<div class="form-check form-check-lg form-switch mb-3">
-    <input class="form-check-input" type="checkbox" role="switch" id="switch-lg" name="auto_renewal"
-        @checked(isset($service) && $service->auto_renewal)>
-    <label class="form-check-label" for="switch-lg">Auto Renewal</label>
+    </div>
+    <div class="col-lg-6">
+        <div class="form-check form-check-lg form-switch mb-3">
+            <input class="form-check-input" type="checkbox" role="switch" id="switch-lg" name="is_published"
+                @checked(isset($service) && $service->is_published)>
+            <label class="form-check-label" for="switch-lg">Publish</label>
+        </div>
+    </div>
 </div>
 
-<div class="form-check form-check-lg form-switch mb-3">
-    <input class="form-check-input" type="checkbox" role="switch" id="switch-lg" name="is_published"
-        @checked(isset($service) && $service->is_published)>
-    <label class="form-check-label" for="switch-lg">Publish</label>
-</div>
 
 <button class="btn btn-primary" type="submit">
     <div class="spinner-border" style="display: none" role="status">

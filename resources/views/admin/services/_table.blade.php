@@ -44,9 +44,7 @@
 
                 @if ($loggedInUser->can('edit package'))
                     <li class="mb-0">
-                        <a href="javascript:void(0);" class="dropdown-item trigerModal"
-                            data-url="{{ route('admin.package.edit', $item->uuid) }}" data-bs-toggle="modal"
-                            data-bs-target="#primaryModal">Edit</a>
+                        <a href="{{ route('admin.package.edit', $item->uuid) }}" class="dropdown-item">Edit</a>
                     </li>
                 @endif
                 @if ($loggedInUser->can('delete package'))
