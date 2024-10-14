@@ -15,7 +15,7 @@ class SubscriptionResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'uuid' => $this->uuid,
+            'id' => $this->service->uuid,
             'name' => $this->service->name,
             'is_expired' => $this->end_date->isPast(),
             'logo_url' => $this->service->image,

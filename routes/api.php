@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthenticationController;
 use App\Http\Controllers\Api\BannerController;
 use App\Http\Controllers\Api\PlanController;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\StreamersController;
 use App\Http\Controllers\Api\SubscriptionController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
@@ -25,6 +26,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::controller(PlanController::class)->prefix('products')->group(function () {
         Route::get('', 'index');
         Route::get('/show/{product}', 'show');
+    });
+
+    Route::controller(StreamersController::class)->prefix('streamers')->group(function () {
+        Route::get('/{service}', 'index');
+        Route::get('/show/{streamer}', 'details');
     });
 });
 
