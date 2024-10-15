@@ -13,6 +13,7 @@ use App\Models\Service;
 use App\Models\Ticket;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Models\Wallet;
 use App\Models\Withdrawal;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -182,13 +183,15 @@ class DashboardController extends Controller
 
         $inactiveUsers = $inactiveUsers + $usersWithInactiveSubscriptions;
 
-        $weekCommissionPayment = paymentsOfTheWeek();
+        // $weekCommissionPayment = paymentsOfTheWeek();
 
-        if (!empty($weekCommissionPayment)) {
-            $weekCommissionPayment = $weekCommissionPayment->sum('amount');
-        } else {
-            $weekCommissionPayment = 0;
-        }
+        // if (!empty($weekCommissionPayment)) {
+        //     $weekCommissionPayment = $weekCommissionPayment->sum('amount');
+        // } else {
+        //     $weekCommissionPayment = 0;
+        // }
+
+        $walletBalance = Wallet::sum('balance');
 
 
         return  [
@@ -217,8 +220,8 @@ class DashboardController extends Controller
                 'show' => $user->can('manage finance report'),
             ],
             (object) [
-                'title' => 'Payments this week',
-                'value' =>  "$" . number_format($weekCommissionPayment, 2, '.', ','),
+                'title' => 'Wallet Balance',
+                'value' =>  "$" . number_format($walletBalance / 100, 2, '.', ','),
                 'color' => 'text-bg-danger',
                 'icon' => 'las la-money-bill-wave-alt',
                 'link' => null,
