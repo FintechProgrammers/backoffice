@@ -262,6 +262,39 @@ Route::middleware('admin.auth')->group(function () {
             Route::get('/settle', 'payview')->name('settle');
             Route::post('/settle', 'store')->name('settle.store');
         });
+
+        Route::controller(CategoryController::class)->prefix('category')->name('category.')->group(function () {
+            Route::get('', 'index')->name('index');
+            Route::get('/filter', 'filter')->name('filter');
+            Route::get('create', 'create')->name('create');
+            Route::post('/store', 'store')->name('store');
+            Route::get('/show/{category}', 'show')->name('show');
+            Route::post('/update/{category}', 'update')->name('update');
+        });
+
+        Route::controller(AssetController::class)->prefix('assets')->name('assets.')->group(function () {
+            Route::get('', 'index')->name('index');
+            Route::get('/filter', 'filter')->name('filter');
+            Route::get('create', 'create')->name('create');
+            Route::post('/store', 'store')->name('store');
+            Route::get('/show/{asset}', 'show')->name('show');
+            Route::post('/update/{asset}', 'update')->name('update');
+        });
+
+        Route::controller(StreamersController::class)->prefix('streamers')->name('streamers.')->group(function () {
+            Route::get('', 'index')->name('index');
+            Route::get('/filter', 'filter')->name('filter');
+            Route::post('', 'store')->name('store');
+            Route::get('/create', 'create')->name('create');
+            Route::get('/show/{streamer}', 'show')->name('show');
+            Route::get('/edit/{streamer}', 'edit')->name('edit');
+            Route::post('/update/{streamer}', 'update')->name('update');
+            Route::post('/suspend/{streamer}', 'suspend')->name('suspend');
+            Route::post('/activate/{streamer}', 'activate')->name('activate');
+            Route::post('/delete/{streamer}', 'destroy')->name('delete');
+            Route::get('/change-email/{streamer}', 'emailForm')->name('change-email');
+            Route::post('/change-email/{streamer}', 'changeEmail')->name('change-email.post');
+        });
     });
 
     Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function () {
@@ -275,38 +308,5 @@ Route::prefix('security')->name('security.')->group(function () {
         Route::post('/verify', 'verify2faPost')->name('verify2fa.post')->middleware(['throttle:60,1', 'auth:admin']);
         Route::get('/enable-2fa', 'enable2fa')->name('enable-2fa');
         Route::post('/enable-2fa/{admin}', 'enable2faPost')->name('enable-2fa.post');
-    });
-
-    Route::controller(CategoryController::class)->prefix('category')->name('category.')->group(function () {
-        Route::get('', 'index')->name('index');
-        Route::get('/filter', 'filter')->name('filter');
-        Route::get('create', 'create')->name('create');
-        Route::post('/store', 'store')->name('store');
-        Route::get('/show/{category}', 'show')->name('show');
-        Route::post('/update/{category}', 'update')->name('update');
-    });
-
-    Route::controller(AssetController::class)->prefix('assets')->name('assets.')->group(function () {
-        Route::get('', 'index')->name('index');
-        Route::get('/filter', 'filter')->name('filter');
-        Route::get('create', 'create')->name('create');
-        Route::post('/store', 'store')->name('store');
-        Route::get('/show/{asset}', 'show')->name('show');
-        Route::post('/update/{asset}', 'update')->name('update');
-    });
-
-    Route::controller(StreamersController::class)->prefix('streamers')->name('streamers.')->group(function () {
-        Route::get('', 'index')->name('index');
-        Route::get('/filter', 'filter')->name('filter');
-        Route::post('', 'store')->name('store');
-        Route::get('/create', 'create')->name('create');
-        Route::get('/show/{streamer}', 'show')->name('show');
-        Route::get('/edit/{streamer}', 'edit')->name('edit');
-        Route::post('/update/{streamer}', 'update')->name('update');
-        Route::post('/suspend/{streamer}', 'suspend')->name('suspend');
-        Route::post('/activate/{streamer}', 'activate')->name('activate');
-        Route::post('/delete/{streamer}', 'destroy')->name('delete');
-        Route::get('/change-email/{streamer}', 'emailForm')->name('change-email');
-        Route::post('/change-email/{streamer}', 'changeEmail')->name('change-email.post');
     });
 });

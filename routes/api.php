@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthenticationController;
 use App\Http\Controllers\Api\BannerController;
 use App\Http\Controllers\Api\PlanController;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\SignalController as ApiSignalController;
 use App\Http\Controllers\Api\StreamersController;
 use App\Http\Controllers\Api\SubscriptionController;
 use App\Http\Controllers\Api\UserController;
@@ -31,6 +32,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::controller(StreamersController::class)->prefix('streamers')->group(function () {
         Route::get('/{service}', 'index');
         Route::get('/show/{streamer}', 'details');
+    });
+
+    Route::controller(ApiSignalController::class)->prefix('signals')->group(function () {
+        Route::get('', 'index');
+        Route::get('show/{signal}', 'show');
     });
 });
 

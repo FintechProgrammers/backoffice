@@ -48,6 +48,10 @@ return [
             'driver' => 'passport',
             'provider' => 'users',
         ],
+        'streamer' => [
+            'driver' => 'session',
+            'provider' => 'streamers',
+        ],
     ],
 
     /*
@@ -75,6 +79,10 @@ return [
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
+        ],
+        'streamers' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Streamer::class,
         ],
         // 'users' => [
         //     'driver' => 'database',

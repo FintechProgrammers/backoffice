@@ -637,3 +637,20 @@ if (!function_exists('generateTemporaryLink')) {
         );
     }
 }
+
+if (!function_exists('followersPushTokens')) {
+    function followersPushTokens($educator)
+    {
+        // $followers = \App\Models\UserFollower::with('user')->where('admin_id', $educator)
+        //     ->whereHas('user', function ($query) {
+        //         $query->whereNotNull('fcm_token')
+        //             // ->where('iseligible', 1)
+        //             ->select('fcm_token');
+        //     })
+        //     ->get();
+
+        // $fcmTokens = $followers->pluck('user.fcm_token')->toArray();
+
+        return [];
+    }
+}

@@ -17,6 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
         then: function () {
             Route::middleware('web')->prefix('admin')->name('admin.')->group(base_path('routes/admin.php'));
+            // Streamer API routes
+            Route::middleware('api')->prefix('api/streamer')->group(base_path('routes/streamer.php'));
         }
     )
     ->withMiddleware(function (Middleware $middleware) {
