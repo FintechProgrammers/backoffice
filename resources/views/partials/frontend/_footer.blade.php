@@ -1,14 +1,6 @@
  <div class="footer black">
      <div class="home"></div>
      <div class="w-layout-grid footer-split-grid">
-         <div id="w-node-_2d219e0c-505e-ea1e-47e6-fba1acda1af3-acda1af1" class="footer-column">
-             <div class="div-block">
-                 <p class="footer-text">
-                     Delta Digital offers the essential educational resources necessary to embark on your digital
-                     journey with confidence and understanding
-                 </p>
-             </div>
-         </div>
          <div id="w-node-_2d219e0c-505e-ea1e-47e6-fba1acda1aff-acda1af1" class="footer-3-columns-grid">
              <div class="align-left-and-vertical">
                  <div class="footer-title">Quick Links</div>
@@ -34,21 +26,18 @@
              <div class="align-left-and-vertical">
                  <div class="footer-title">Company</div>
                  <div class="black-link-wrap margins">
-                     <a href="https://www.deltadigital.pro/en/user/ng/delta/page/privacy-policy"
-                         class="black-footer-link">Privacy Policy</a>
+                     <a href="{{ route('privacy.policy') }}" class="black-footer-link">Privacy Policy</a>
                      <div class="black-underline"></div>
                  </div>
                  <div class="black-link-wrap margins">
-                     <a href="https://www.deltadigital.pro/en/user/ng/delta/page/terms-conditions"
-                         class="black-footer-link">Terms of use</a>
+                     <a href="{{ route('service.terms') }}" class="black-footer-link">Terms of use</a>
                      <div class="black-underline"></div>
                  </div>
                  <div class="black-link-wrap margins">
-                     <a href="https://www.deltadigital.pro/en/user/ng/delta/page/refund-policy"
-                         class="black-footer-link">Refund Policy</a>
+                     <a href="{{ route('refund.policy') }}" class="black-footer-link">Refund Policy</a>
                      <div class="black-underline"></div>
                  </div>
-                 <div class="black-link-wrap margins">
+                 {{-- <div class="black-link-wrap margins">
                      <a href="https://www.deltadigital.pro/en/user/ng/delta/page/ambassador-terms"
                          class="black-footer-link">Ambassador Terms</a>
                      <div class="black-underline"></div>
@@ -57,9 +46,14 @@
                      <a href="https://www.deltadigital.pro/en/user/ng/delta/page/income-disclosure"
                          class="black-footer-link">Income Disclosure</a>
                      <div class="black-underline"></div>
-                 </div>
+                 </div> --}}
              </div>
 
+         </div>
+         <div id="w-node-_2d219e0c-505e-ea1e-47e6-fba1acda1af3-acda1af1" class="footer-column">
+             <div class="container">
+                 <img src="{{ asset('assets/images/foot.png') }}" alt="">
+             </div>
          </div>
      </div>
      <div class="footer-bottom">

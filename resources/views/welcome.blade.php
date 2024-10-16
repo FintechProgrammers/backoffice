@@ -222,7 +222,7 @@
             <div id="w-node-_97974888-3e39-12c4-88fa-baba6d91b4a8-300a5180" class="small-feature only-right-padding">
                 <div id="w-node-_97974888-3e39-12c4-88fa-baba6d91b4aa-300a5180" class="text-wrap inside-card">
                     <p class="eyebrow">Our Intention</p>
-                    <h3 class="h3-title _2vw-margin">We help <br />drives growth</h3>
+                    <h4 class="h3-title _2vw-margin">We help <br />drive growth</h4>
                     <p class="paragraph _4vw-margin">
                         We aim to spark personal growth and build transformative habits, equipping individuals with
                         crucial financial and self-improvement skills to elevate their quality of life.

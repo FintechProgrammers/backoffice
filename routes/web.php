@@ -45,6 +45,18 @@ Route::get('/contact', function () {
     return view('contact');
 })->name('contact');
 
+Route::get('/privacy/policy', function () {
+    return view('privacy-policy');
+})->name('privacy.policy');
+
+Route::get('/service/terms', function () {
+    return view('terms-of-service');
+})->name('service.terms');
+
+Route::get('/refund/policy', function () {
+    return view('refund-policy');
+})->name('refund.policy');
+
 Route::middleware(['auth'])->group(function () {
     Route::controller(DashboardController::class)->prefix('dashboard')->group(function () {
         Route::get('/', 'index')->name('dashboard');
