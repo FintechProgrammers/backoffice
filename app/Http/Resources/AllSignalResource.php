@@ -21,6 +21,7 @@ class AllSignalResource extends JsonResource
             'streamer' => new StreamerUserResource($this->streamer),
             'asset' => new AssetResource($this->asset),
             'category' => new CategoryResource($this->category),
+            'type' => $this->category->type,
             'order_type' => $this->order_type,
             'entry_price' => $this->entry_price,
             'stop_loss' => $this->stop_loss,

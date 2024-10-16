@@ -33,6 +33,11 @@ class Streamer extends Authenticatable
         return !empty($this->first_name) ? \Illuminate\Support\Str::title($this->first_name . ' ' . $this->last_name) : 'Unavailable';
     }
 
+    function chatGroup()
+    {
+        return $this->hasOne(ChatGroup::class, 'streamer_id', 'id');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

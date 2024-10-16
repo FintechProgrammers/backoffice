@@ -639,18 +639,24 @@ if (!function_exists('generateTemporaryLink')) {
 }
 
 if (!function_exists('followersPushTokens')) {
-    function followersPushTokens($educator)
+    function followersPushTokens($streamerId)
     {
-        // $followers = \App\Models\UserFollower::with('user')->where('admin_id', $educator)
-        //     ->whereHas('user', function ($query) {
-        //         $query->whereNotNull('fcm_token')
-        //             // ->where('iseligible', 1)
-        //             ->select('fcm_token');
-        //     })
-        //     ->get();
+        // Get all unique user IDs who subscribed to any package that the streamer is part of
+        $userIds = \App\Models\UserSubscription::whereIn('service_id', function ($query) use ($streamerId) {
+            $query->select('service_id')
+                ->from('service_streamers')
+                ->where('streamer_id', $streamerId);
+        })->distinct()->pluck('user_id');
 
-        // $fcmTokens = $followers->pluck('user.fcm_token')->toArray();
+        // Get the users with FCM tokens from the collected user IDs
+        $followers = \App\Models\User::whereIn('id', $userIds)
+            ->whereNotNull('push_token')
+            ->select('push_token') // Select only the FCM token
+            ->get();
 
-        return [];
+        // Collect the FCM tokens into an array
+        $fcmTokens = $followers->pluck('push_token')->toArray();
+
+        return $fcmTokens;
     }
 }

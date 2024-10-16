@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Streamer\AuthenticateController;
 use App\Http\Controllers\Api\Streamer\CategoryController;
+use App\Http\Controllers\Api\Streamer\MessageController;
 use App\Http\Controllers\Api\Streamer\SignalController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,5 +18,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/update/{id}', 'update');
         Route::post('update-market-status', 'updateMarketStatus');
         Route::post('update-status', 'updateStatus');
+    });
+
+    Route::controller(MessageController::class)->prefix('inbox')->group(function () {
+        Route::get('messages', 'getMessages')->name('messages');
+        Route::post('messages', 'sendMessage')->name('messages.send');
     });
 });

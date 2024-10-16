@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthenticationController;
 use App\Http\Controllers\Api\BannerController;
+use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\PlanController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\SignalController as ApiSignalController;
@@ -37,6 +38,26 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::controller(ApiSignalController::class)->prefix('signals')->group(function () {
         Route::get('', 'index');
         Route::get('show/{signal}', 'show');
+    });
+
+    Route::controller(ChatController::class)->prefix('chat')->group(function () {
+        Route::get('messages/{streamer}', 'messages');
+        Route::post('send/{streamer}', 'sendMessage');
+    });
+
+    Route::controller(ScheduleController::class)->prefix('schedules')->group(function () {
+        Route::get('', 'index');
+        Route::get('/{schedule}', 'show');
+        Route::get('/join-live/{schedule}', 'setViewers');
+        Route::post('/leave-live/{schedule}', 'leaveStream');
+        Route::get('{educator}/educator-schedules', 'educatorSchedules');
+        Route::get('/live/educators', 'educatorsOnLive');
+        Route::get('/live/viewers/{schedule}', 'getViewers');
+    });
+
+    Route::controller(LiveChatController::class)->prefix('live')->group(function () {
+        Route::get('messages/{educator}', 'messages');
+        Route::post('send/{educator}', 'sendMessage');
     });
 });
 
