@@ -63,8 +63,8 @@ class ProviderController extends Controller
                 'can_payin'     => $request->can_payin == 'on' ? true : false,
                 'can_payout'    => $request->can_payout == 'on' ? true : false,
                 'is_active'     => $request->is_active == 'on' ? true : false,
-                'min_amount' => $request->min_amount,
-                'max_amount' => $request->max_amount,
+                'min_amount' => $request->mininum_amount,
+                'max_amount' => $request->maximum_amount,
                 'charge' => $request->charge
             ]);
 
@@ -107,8 +107,8 @@ class ProviderController extends Controller
                 // 'is_default'    => $request->is_default == 'on' ? true : false,
                 'can_payin'     => $request->can_payin == 'on' ? true : false,
                 'can_payout'    => $request->can_payout == 'on' ? true : false,
-                'min_amount' => $request->min_amount,
-                'max_amount' => $request->max_amount,
+                'min_amount' => $request->mininum_amount,
+                'max_amount' => $request->maximum_amount,
                 'charge' => $request->charge
             ]);
 

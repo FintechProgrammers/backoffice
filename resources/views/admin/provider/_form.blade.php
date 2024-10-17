@@ -25,19 +25,19 @@
 <div class="mb-3">
     <label for="form-text" class="form-label fs-14 text-dark">Minimum Amount</label>
     <input type="number" step="any" class="form-control" id="form-text"
-        value="{{ isset($provider) ? $provider->min_amount : '' }}" placeholder="Enter mininum amount"
+        value="{{ isset($provider) ? $provider->min_amount : '' }}" min="0" placeholder="Enter mininum amount"
         name="mininum_amount">
 </div>
 <div class="mb-3">
     <label for="form-text" class="form-label fs-14 text-dark">Maximum Amount</label>
     <input type="number" step="any" class="form-control" id="form-text"
-        value="{{ isset($provider) ? $provider->max_amount : '' }}" placeholder="Enter maxinum amount"
+        value="{{ isset($provider) ? $provider->max_amount : '' }}" min="0" placeholder="Enter maxinum amount"
         name="maximum_amount">
 </div>
 <div class="mb-3">
     <label for="form-text" class="form-label fs-14 text-dark">Charge</label>
     <input type="number" step="any" class="form-control" id="form-text"
-        value="{{ isset($provider) ? $provider->charge : '' }}" placeholder="charge" name="charge">
+        value="{{ isset($provider) ? $provider->charge : '' }}" min="0" placeholder="charge" name="charge">
 </div>
 <div class="mb-3">
     <label for="form-text" class="form-label fs-14 text-dark">Image</label>
