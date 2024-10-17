@@ -80,9 +80,8 @@ class NowpaymentsService
 
     function payout(array $data)
     {
-
         $payload = [
-            "payout_description" => "Payout request of  {$data['amount']} USD",
+            // "payout_description" => "Payout request of  {$data['amount']} USD",
             "ipn_callback_url" => $data['ipn_callback_url'],
             "withdrawals"      =>  [
                 [
@@ -171,15 +170,21 @@ class NowpaymentsService
 
             $res = $client->send($request);
 
-            return json_decode($res->getBody()->getContents(), true);
+            return [
+                'success' => true,
+                'data' => json_decode($res->getBody()->getContents(), true)
+            ];
         } catch (\GuzzleHttp\Exception\RequestException $e) {
             // Log the exception message
+
             sendToLog($e->getMessage());
 
             // Get the response body from the exception
             if ($e->hasResponse()) {
                 $responseBody = $e->getResponse()->getBody()->getContents();
                 $responseArray = json_decode($responseBody, true);
+
+                $responseArray['success'] = false;
 
                 // Check if the JSON decoding was successful
                 if (json_last_error() === JSON_ERROR_NONE) {
