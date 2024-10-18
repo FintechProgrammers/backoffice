@@ -49,6 +49,15 @@
                         data-url="{{ route('admin.provider.edit', $item->uuid) }}" data-bs-toggle="modal"
                         data-bs-target="#primaryModal">Edit</a>
                 </li>
+                @if (Auth::guard('admin')->user()->hasRole('super admin'))
+                    <li class="mb-0">
+                        <a href="#" class="dropdown-item trigerModal"
+                            data-url="{{ route('admin.provider.config.form', $item->uuid) }}" data-bs-toggle="modal"
+                            data-bs-target="#primaryModal">
+                            Configure
+                        </a>
+                    </li>
+                @endif
                 @if (!$item->is_default)
                     <li class="mb-0">
                         <a href="javascript:void(0);" class="dropdown-item btn-action"

@@ -232,6 +232,8 @@ Route::middleware('admin.auth')->group(function () {
             Route::post('/enable/{provider}', 'enable')->name('enable');
             Route::post('/disable/{provider}', 'disable')->name('disable');
             Route::post('/default/{provider}', 'default')->name('default');
+            Route::get('/config/{provider}', 'configForm')->name('config.form');
+            Route::post('/config/{provider}', 'configPost')->name('config.post');
         });
 
         Route::controller(CycleController::class)->prefix('cycle')->name('cycle.')->group(function () {

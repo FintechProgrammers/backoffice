@@ -4,6 +4,7 @@ namespace App\Services;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class NowpaymentsService
 {
@@ -125,9 +126,16 @@ class NowpaymentsService
         try {
             $client = new Client();
 
+            $provider = \App\Models\Provider::where('short_name', 'nowpayment')->first();
+
+            $config = $provider->config;
+
+            $email = Crypt::decryptString($config->email);
+            $password = Crypt::decryptString($config->password);
+
             $params = [
-                'email' => config('constants.nowpayment.email'),
-                'password' => config('constants.nowpayment.password')
+                'email' => $email,
+                'password' => $password
             ];
 
             $headers = [

@@ -30,4 +30,9 @@ class Provider extends Model
 
         return $type;
     }
+
+    function config()
+    {
+        return $this->hasOne(ProviderConfig::class, 'provider_id', 'id');
+    }
 }
