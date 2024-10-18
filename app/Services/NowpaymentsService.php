@@ -130,7 +130,7 @@ class NowpaymentsService
 
             $config = \App\Models\ProviderConfig::where('provider_id', $provider->id)->first();
 
-            $email = Crypt::decryptString($config->email);
+            $email = Crypt::decryptString($config->username);
             $password = Crypt::decryptString($config->password);
 
             logger($email);
