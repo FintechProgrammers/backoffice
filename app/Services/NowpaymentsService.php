@@ -128,7 +128,7 @@ class NowpaymentsService
 
             $provider = \App\Models\Provider::where('short_name', 'nowpayment')->first();
 
-            $config = $provider->config;
+            $config = \App\Models\ProviderConfig::where('provider_id', $provider->id)->first();
 
             $email = Crypt::decryptString($config->email);
             $password = Crypt::decryptString($config->password);

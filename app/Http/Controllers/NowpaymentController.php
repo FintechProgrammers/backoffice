@@ -133,7 +133,7 @@ class NowpaymentController extends Controller
             if (!$response['success']) {
                 sendToLog($response);
 
-                $payload['status'] = 'declined';
+                $payload['status'] = 'failed';
                 $payload['external_reference'] = '';
             } else {
 
