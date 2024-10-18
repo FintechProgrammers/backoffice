@@ -96,8 +96,8 @@
                 const maxAmount = parseFloat(selectedOption.getAttribute('data-max-amount'));
 
                 // Validate if the amount falls within the specified range
-                const isAmountValid = !isNaN(amount) && (amount < minAmount || (maxAmount > 0 && amount >
-                    maxAmount));
+                const isAmountValid = !isNaN(amount) && amount >= minAmount && (maxAmount === 0 || amount <=
+                    maxAmount);
 
                 // Disable the button if the amount is invalid or if payment method or wallet address is missing
                 if (isAmountValid && paymentMethod && (dataType !== 'crypto' || walletAddress)) {
