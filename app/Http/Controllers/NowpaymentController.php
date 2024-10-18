@@ -154,7 +154,7 @@ class NowpaymentController extends Controller
                 }
             }
 
-            $payload['details'] = json_encode([
+            $payload['payload'] = json_encode([
                 'wallet_address' => $validated->wallet_address,
                 'coin'           => 'USDT',
                 'network'       =>  $validated->currency

@@ -133,6 +133,8 @@ class NowpaymentsService
             $email = Crypt::decryptString($config->email);
             $password = Crypt::decryptString($config->password);
 
+            logger($email);
+
             $params = [
                 'email' => $email,
                 'password' => $password
