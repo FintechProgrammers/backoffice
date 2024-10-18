@@ -55,30 +55,30 @@ class WithdrawalRequest extends FormRequest
             ], Response::HTTP_UNPROCESSABLE_ENTITY));
         }
 
-        if ($provider->short_name == 'nowpayment') {
+        // if ($provider->short_name == 'nowpayment') {
 
-            $validated = $this->validated();
+        //     $validated = $this->validated();
 
-            $validated['currency'] = 'usdttrc20';
+        //     $validated['currency'] = 'usdttrc20';
 
-            // Call the validateAddress method and pass the validated data and currency
-            $nowpaymentService = new \App\Services\NowpaymentsService();
+        //     // Call the validateAddress method and pass the validated data and currency
+        //     $nowpaymentService = new \App\Services\NowpaymentsService();
 
-            $validateAddress = [
-                'address'     => $validated['wallet_address'],
-                'currency'    => $validated['currency']
-            ];
+        //     $validateAddress = [
+        //         'address'     => $validated['wallet_address'],
+        //         'currency'    => $validated['currency']
+        //     ];
 
-            $verifyAddress = $nowpaymentService->validateAddress($validateAddress);
+        //     $verifyAddress = $nowpaymentService->validateAddress($validateAddress);
 
-            if ($verifyAddress['code'] == 'BAD_ADDRESS_VALIDATION_REQUEST') {
-                throw new HttpResponseException(response()->json([
-                    'success' => false,
-                    'message' => $verifyAddress['message'],
-                    'errors' => [],
-                ], Response::HTTP_UNPROCESSABLE_ENTITY));
-            }
-        }
+        //     if ($verifyAddress['code'] == 'BAD_ADDRESS_VALIDATION_REQUEST') {
+        //         throw new HttpResponseException(response()->json([
+        //             'success' => false,
+        //             'message' => $verifyAddress['message'],
+        //             'errors' => [],
+        //         ], Response::HTTP_UNPROCESSABLE_ENTITY));
+        //     }
+        // }
     }
 
     protected function failedValidation(Validator $validator)
