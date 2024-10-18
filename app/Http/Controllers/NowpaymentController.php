@@ -109,9 +109,11 @@ class NowpaymentController extends Controller
         }
     }
 
-    function payout($validated, $transaction)
+    function payout($validated)
     {
         try {
+
+            $payload = $validated->transaction_payload;
 
             $payoutPayload = [
                 'address'  => $validated->wallet_address,
@@ -158,14 +160,17 @@ class NowpaymentController extends Controller
                 'network'       =>  $validated->currency
             ]);
 
+            $wallet = $validated->wallet;
+
             // Set `success` to false before DB transaction
             (bool) $success = false;
 
-            \Illuminate\Support\Facades\DB::transaction(function () use ($payload, $validated, $transaction, &$success) {
+            \Illuminate\Support\Facades\DB::transaction(function () use ($payload, $validated, $wallet, &$success) {
 
-                $transaction->update([
-                    'status' => $payload['status'],
-                    'external_reference' => $payload['external_reference']
+                Transaction::create($payload);
+
+                $wallet->update([
+                    'balance' => $payload['closing_balance']
                 ]);
 
                 if (strtolower($payload['status']) === 'failed') {

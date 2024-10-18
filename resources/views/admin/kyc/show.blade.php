@@ -18,7 +18,7 @@
                 <div class="card-body p-4">
                     <div class="text-center">
                         <span class="avatar avatar-xl avatar-rounded">
-                            <img src="{{ $user->profile_image }}" alt="">
+                            <img src="{{ $user->profile_picture }}" alt="">
                         </span>
                         <div class="mt-2">
                             <p class="mb-0 fw-semibold">{{ $user->full_name }}</p>
