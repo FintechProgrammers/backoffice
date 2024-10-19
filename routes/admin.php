@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\SubscriptionsController;
 use App\Http\Controllers\Admin\SupportController;
 use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\Admin\WalletAddressController;
 use App\Http\Controllers\Admin\WithdrawalController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
@@ -264,6 +265,12 @@ Route::middleware('admin.auth')->group(function () {
 
     Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function () {
         Route::get('logout', 'logout')->name('logout');
+    });
+
+    Route::controller(WalletAddressController::class)->prefix('wallet/address')->name('wallet.address.')->group(function () {
+        Route::get('', 'index')->name('index');
+        Route::get('/filter', 'filter')->name('filter');
+        Route::post('/approve/{address}', 'approve')->name('approve');
     });
 });
 

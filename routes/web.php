@@ -114,6 +114,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/create', 'create')->name('create');
         Route::post('/store', 'store')->name('store')->middleware('kyc.verified');
         Route::get('/send-otp', 'sendOTP')->name('send.otp');
+        Route::get('/address-form', 'cryptoAddressForm')->name('address.form');
+        Route::post('/list-address', 'listAddress')->name('address.store');
     });
 
     Route::controller(AcademyController::class)->prefix('academy')->name('academy.')->group(function () {

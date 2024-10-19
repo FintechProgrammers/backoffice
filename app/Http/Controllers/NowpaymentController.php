@@ -83,26 +83,37 @@ class NowpaymentController extends Controller
     function validateAddress($validated)
     {
         try {
-
             $validateAddress = [
-                'address'     => $validated->wallet_address,
-                'currency'    => $validated->currency
+                'address'  => $validated->wallet_address,
+                'currency' => $validated->currency
             ];
 
             $verifyAddress = $this->nowpaymentService->validateAddress($validateAddress);
 
             if (!$verifyAddress['success'] && $verifyAddress['code'] == 'BAD_ADDRESS_VALIDATION_REQUEST') {
-                throw new HttpResponseException($this->sendError($validateAddress['message'], [], Response::HTTP_UNPROCESSABLE_ENTITY));
+                // throw new HttpResponseException(
+                //     response()->json([
+                //         'success' => false,
+                //         'message' => $verifyAddress['message'],
+                //     ], Response::HTTP_INTERNAL_SERVER_ERROR)
+                // );
+
+                return false;
             }
 
-            if (!$validateAddress['success']) {
-                throw new HttpResponseException($this->sendError(serviceDownMessage(), [], Response::HTTP_INTERNAL_SERVER_ERROR));
+            if (!$verifyAddress['success']) { // Ensure you're checking the correct variable here
+                throw new HttpResponseException(
+                    response()->json([
+                        'success' => false,
+                        'message' => serviceDownMessage(),
+                    ], Response::HTTP_INTERNAL_SERVER_ERROR)
+                );
             }
 
-            return true;
+            return true; // If everything passes, return true
         } catch (\Exception $e) {
-            sendToLog($e->getMessage());
-            return throw new HttpResponseException(response()->json([
+            sendToLog($e);
+            throw new HttpResponseException(response()->json([
                 'success' => false,
                 'message' => serviceDownMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR));

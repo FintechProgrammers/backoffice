@@ -37,8 +37,23 @@
 
                             <div class="mb-3 form-group" id="crypto" style="display: none">
                                 <label for="wallet_address" class="form-label">Address (USDTTRC20)</label>
-                                <input type="text" class="form-control" name="wallet_address" id="wallet_address"
-                                    placeholder="Enter destination address">
+                                <select name="wallet_address" class="form-select" id="wallet_address">
+                                    <option value="">--select-wallet-address</option>
+                                    @forelse ($walletAddresses as $item)
+                                        <option value="{{ $item->address }}">{{ $item->address }}</option>
+                                    @empty
+                                        <option value="">no wallet</option>
+                                    @endforelse
+                                </select>
+                                @if (count($walletAddresses) == 0)
+                                    <small>Please add a
+                                        USDT (TRC20) wallet address for whitelisting before proceeding. <a
+                                            class="text-success trigerModal" href="#"
+                                            data-url="{{ route('wallet.address.form') }}" data-bs-toggle="modal"
+                                            data-bs-target="#primaryModal">Add Address</a></small>
+                                @endif
+
+
                             </div>
                             <div class="px-4 py-3 border-top border-block-start-dashed d-sm-flex">
                                 <button type="submit" class="btn btn-primary m-1 trigerModal" data-bs-toggle="modal"

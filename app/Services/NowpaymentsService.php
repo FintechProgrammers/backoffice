@@ -94,7 +94,6 @@ class NowpaymentsService
             ]
         ];
 
-
         $token = self::authenticate();
 
         return self::handle('/v1/payout', "POST", $payload, $token);
@@ -132,8 +131,6 @@ class NowpaymentsService
 
             $email = Crypt::decryptString($config->username);
             $password = Crypt::decryptString($config->password);
-
-            logger($email);
 
             $params = [
                 'email' => $email,
