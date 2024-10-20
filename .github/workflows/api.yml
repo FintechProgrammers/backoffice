@@ -1,8 +1,8 @@
-name: Production Deployment
+name: Api Deployment
 
 on:
   push:
-    branches: ["production"]
+    branches: ["api"]
 
 jobs:
   create-deployment-artifacts:
@@ -36,7 +36,7 @@ jobs:
       - name: Export deployment matrix
         id: export-deployment-matrix
         run: |
-          JSON="$(cat ./deployment-config.json)"
+          JSON="$(cat ./stage-deployment-config.json)"
           JSON="${JSON//'%'/'%25'}"
           JSON="${JSON//$'\n'/'%0A'}"
           JSON="${JSON//$'\r'/'%0D'}"
@@ -127,7 +127,7 @@ jobs:
           ACTIVE_RELEASE_PATH: ${{ matrix.server.path }}/current
           STORAGE_PATH: ${{ matrix.server.path }}/storage
           BASE_PATH: ${{ matrix.server.path }}
-          STAGE_ENV: ${{ secrets.PROD_ENV }}
+          STAGE_ENV: ${{ secrets.API_STAGE }}
         with:
           host: ${{ matrix.server.ip }}
           username: ${{ matrix.server.username }}
@@ -164,8 +164,8 @@ jobs:
                     # Force HTTPS redirection
                     RewriteEngine On
                     RewriteCond %{HTTPS} !=on
-                    RewriteCond %{HTTP_HOST} ^www\.deltadigital\.pro [NC]
-                    RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R=301,L]
+                    #RewriteCond %{HTTP_HOST} ^www\.deltadigital\.pro [NC]
+                    #RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R=301,L]
                 </VirtualHost>" > /etc/apache2/sites-available/000-default.conf
             sudo a2enmod rewrite
             service apache2 restart

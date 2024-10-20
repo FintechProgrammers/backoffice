@@ -1,12 +1,12 @@
 [
     {
-      "name": "stage-server",
-      "ip": "157.230.98.7",
-      "username": "root",
-      "password":"Delta2022Digital",
-      "port": "22",
-      "beforeHooks": "",
-      "afterHooks": "",
-      "path": "/var/www/html"
+        "name": "stage-server",
+        "ip": "64.226.118.138",
+        "username": "root",
+        "password": "7!AkaWHWFg*dwcF",
+        "port": "22",
+        "beforeHooks": "",
+        "afterHooks": "",
+        "path": "/var/www/html"
     }
-  ]
+]
