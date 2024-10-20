@@ -114,6 +114,12 @@ class Navigation
                 'icon'  => 'las la-wallet',
                 'hasPermission' => $user->can('manage transactions') ? true : false
             ],
+            (object) [
+                'name'  => 'Wallet Address',
+                'route' => 'admin.wallet.address.index',
+                'icon'  => 'las la-wallet',
+                'hasPermission' => $user->can('manage address') ? true : false
+            ],
             // (object) [
             //     'name'  => 'Cycles',
             //     'route' => 'admin.cycle.index',

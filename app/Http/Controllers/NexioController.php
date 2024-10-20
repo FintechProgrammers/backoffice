@@ -162,7 +162,7 @@ class NexioController extends Controller
                     $user = $transaction->user;
 
                     $data = [
-                        'name' => $user->name,
+                        'name' => $user->full_name,
                         'amount' => $transaction->amount,
                         'status' => $status, // 'success' or 'failed'
                     ];

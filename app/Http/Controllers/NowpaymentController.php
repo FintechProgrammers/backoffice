@@ -6,11 +6,13 @@ use App\Models\AmbassedorPayments;
 use App\Models\Bonus;
 use App\Models\Invoice;
 use App\Models\Service;
+use App\Models\Transaction;
 use App\Models\User;
 use App\Models\UserActivities;
 use App\Models\UserInfo;
 use App\Models\UserSubscription;
 use App\Notifications\NewAccountCreated;
+use App\Notifications\WithdrawalNotification;
 use App\Services\SubscriptionService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,7 +58,7 @@ class NowpaymentController extends Controller
 
             $response = $this->nowpaymentService->createInvoice($payload);
 
-            if (empty($response)) {
+            if (!$response['success']) {
                 sendToLog($response);
 
                 return throw new HttpResponseException(response()->json([
@@ -64,6 +66,8 @@ class NowpaymentController extends Controller
                     'message' => serviceDownMessage(),
                 ], Response::HTTP_UNPROCESSABLE_ENTITY));
             }
+
+            $response = $response['data'];
 
             return $response['invoice_url'];
         } catch (\Exception $e) {
@@ -79,34 +83,48 @@ class NowpaymentController extends Controller
     function validateAddress($validated)
     {
         try {
-
             $validateAddress = [
-                'address'     => $validated->wallet_address,
-                'currency'    => $validated->currency
+                'address'  => $validated->wallet_address,
+                'currency' => $validated->currency
             ];
 
             $verifyAddress = $this->nowpaymentService->validateAddress($validateAddress);
 
-            if ($verifyAddress['code'] == 'BAD_ADDRESS_VALIDATION_REQUEST') {
-                throw new HttpResponseException($this->sendError("hello", [], Response::HTTP_UNPROCESSABLE_ENTITY));
+            if (!$verifyAddress['success'] && $verifyAddress['code'] == 'BAD_ADDRESS_VALIDATION_REQUEST') {
+                // throw new HttpResponseException(
+                //     response()->json([
+                //         'success' => false,
+                //         'message' => $verifyAddress['message'],
+                //     ], Response::HTTP_INTERNAL_SERVER_ERROR)
+                // );
+
+                return false;
             }
 
-            return true;
+            if (!$verifyAddress['success']) { // Ensure you're checking the correct variable here
+                throw new HttpResponseException(
+                    response()->json([
+                        'success' => false,
+                        'message' => serviceDownMessage(),
+                    ], Response::HTTP_INTERNAL_SERVER_ERROR)
+                );
+            }
+
+            return true; // If everything passes, return true
         } catch (\Exception $e) {
-            sendToLog($e->getMessage());
-            return throw new HttpResponseException(response()->json([
+            sendToLog($e);
+            throw new HttpResponseException(response()->json([
                 'success' => false,
                 'message' => serviceDownMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR));
         }
     }
 
-    function payout($validated, $transaction)
+    function payout($validated)
     {
         try {
 
-            // Variable to hold to the response data
-            $response = [];
+            $payload = $validated->transaction_payload;
 
             $payoutPayload = [
                 'address'  => $validated->wallet_address,
@@ -115,14 +133,23 @@ class NowpaymentController extends Controller
                 'ipn_callback_url' => config('constants.nowpayment.ipn_base_url') . '/ipn/nowpayment/payout'
             ];
 
+            $addressValidation = $this->nowpaymentService->validateAddress($payoutPayload);
+
+            if (!$addressValidation) {
+                return $this->sendError("Invalid payment address");
+            }
+
             $response = $this->nowpaymentService->payout($payoutPayload);
 
-            if (empty($response) || isset($response['status'])) {
+            if (!$response['success']) {
                 sendToLog($response);
 
-                $payload['status'] = 'declined';
+                $payload['status'] = 'failed';
                 $payload['external_reference'] = '';
             } else {
+
+                $response = $response['data'];
+
                 // check payment status
                 $withdrawal = $response['withdrawals']['0'];
 
@@ -138,20 +165,23 @@ class NowpaymentController extends Controller
                 }
             }
 
-            $payload['details'] = json_encode([
+            $payload['payload'] = json_encode([
                 'wallet_address' => $validated->wallet_address,
                 'coin'           => 'USDT',
                 'network'       =>  $validated->currency
             ]);
 
+            $wallet = $validated->wallet;
+
             // Set `success` to false before DB transaction
             (bool) $success = false;
 
-            \Illuminate\Support\Facades\DB::transaction(function () use ($payload, $validated, $transaction, &$success) {
+            \Illuminate\Support\Facades\DB::transaction(function () use ($payload, $validated, $wallet, &$success) {
 
-                $transaction->update([
-                    'status' => $payload['status'],
-                    'external_reference' => $payload['external_reference']
+                Transaction::create($payload);
+
+                $wallet->update([
+                    'balance' => $payload['closing_balance']
                 ]);
 
                 if (strtolower($payload['status']) === 'failed') {
@@ -190,12 +220,60 @@ class NowpaymentController extends Controller
         $headerKey = $request->headers->get('x-nowpayments-sig');
 
         // Verify signature
-        // if ($headerKey !== $signature) {
-        //     sendToLog('Nowpayment payout webhook unauthorized access.');
-        //     sendToLog('Nowpayment payout response: ' . json_encode($decoded));
+        if ($headerKey !== $signature) {
+            sendToLog('Nowpayment payout webhook unauthorized access.');
+            sendToLog('Nowpayment payout response: ' . json_encode($decoded));
 
-        //     return response()->json([], Response::HTTP_UNAUTHORIZED);
-        // }
+            return response()->json([], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $transaction = Transaction::where('external_reference', $decoded['id'])->where('status', 'pending')->first();
+
+        if (!$transaction) {
+            sendToLog('Nowpayment transaction not fund: ' . json_encode($decoded));
+
+            return response('Successful', Response::HTTP_OK)->header('Content-Type', 'text/plain');
+        }
+
+        if ($decoded['status'] === 'FINISHED') {
+            $status = "completed";
+        } else if (in_array($decoded['status'], ['FAILED', 'REJECTED'])) {
+            $status = "failed";
+        } else {
+            $status = "pending";
+        }
+
+        $transaction->update([
+            'status' => $status,
+            'response' => json_encode($decoded)
+        ]);
+
+        $user = $transaction->user;
+
+        $data = [
+            'name' => $user->full_name,
+            'amount' => $transaction->amount,
+            'status' => $status, // 'success' or 'failed'
+        ];
+
+        $transaction->update([
+            'status' => $status,
+            'response' => json_encode($decoded)
+        ]);
+
+        if ($status === "failed") {
+            $wallet = \App\Models\Wallet::where('user_id', $user->id)->first();
+
+            $newBalance = $wallet->balance + $transaction->amount;
+
+            $wallet->update([
+                'balance' => $newBalance,
+            ]);
+        }
+
+        if (in_array($status, ['completed', 'failed'])) {
+            $user->notify(new WithdrawalNotification($data));
+        }
 
         return response('Successful', Response::HTTP_OK)->header('Content-Type', 'text/plain');
     }

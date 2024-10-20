@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\WithdrawalRequest;
+use App\Models\Admin;
+use App\Models\CryptoAddress;
 use App\Models\Provider;
 use App\Models\Transaction;
 use App\Models\User;
@@ -10,6 +12,7 @@ use App\Models\UserActivities;
 use App\Models\UserOtp;
 use App\Models\Wallet;
 use App\Models\Withdrawal;
+use App\Notifications\AddressAddedForWhitelisting;
 use App\Notifications\WithdrawalToken;
 use App\Traits\RecursiveActions;
 use Carbon\Carbon;
@@ -17,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
 class WithdrawalController extends Controller
@@ -58,9 +62,12 @@ class WithdrawalController extends Controller
         return view('user.withdrawal._table', $data);
     }
 
-    function create()
+    function create(Request $request)
     {
+        $user = $request->user();
+
         $data['paymentMethods'] = Provider::where('is_active', true)->where('can_payout', true)->get();
+        $data['walletAddresses'] = CryptoAddress::where('user_id', $user->id)->where('is_listed', true)->get();
 
         return view('user.withdrawal.create', $data);
     }
@@ -97,7 +104,6 @@ class WithdrawalController extends Controller
             ->where('user_id', $user->id)
             ->where('created_at', '>', now()->subMinutes(15))
             ->first();
-
 
         if (!$code) {
             return $this->sendError('Invalid token', Response::HTTP_UNAUTHORIZED);
@@ -152,19 +158,66 @@ class WithdrawalController extends Controller
 
             $validated->currency = 'usdttrc20';
 
-            return ($nowpyamnet->payout($validated, $Withdrawal)) ? $this->sendResponse([], self::TRANSACTION_PENDING) : $this->sendError(serviceDownMessage(), [], 500);
-        }
-        // elseif ($provider->short_name === 'masspay') {
-        //     $masspay = new \App\Http\Controllers\MassPaymentController();
-
-        //     return $masspay->makeWithdrawal($validated);
-        // }
-        elseif ($provider->short_name === 'masspaynexio') {
+            return ($nowpyamnet->payout($validated)) ? $this->sendResponse([], self::TRANSACTION_PENDING) : $this->sendError(serviceDownMessage(), [], 500);
+        } elseif ($provider->short_name === 'masspaynexio') {
             $nexio = new \App\Http\Controllers\NexioController();
 
             return $nexio->payout($validated);
         }
 
         return $this->sendError(serviceDownMessage(), [], 500);
+    }
+
+    function cryptoAddressForm()
+    {
+        return view('user.withdrawal._address-form');
+    }
+
+    function listAddress(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'address' => ['required'],
+        ]);
+
+        // Handle validation errors
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
+        }
+
+        try {
+
+            $user = $request->user();
+
+            $payoutPayload = (object) [
+                'wallet_address'  => $request->address,
+                'currency' => "usdttrc20",
+            ];
+
+            $nowpyamnet = new \App\Http\Controllers\NowpaymentController();
+
+            $addressValidation = $nowpyamnet->validateAddress($payoutPayload);
+
+            if (!$addressValidation) {
+                return $this->sendError("Invalid payout address: USDTTRC20");
+            }
+
+            CryptoAddress::create([
+                'user_id' => $user->id,
+                'address' => $request->address
+            ]);
+
+            $superAdmins = Admin::role('super admin')->get(); // Retrieve all super admins
+            $address = $request->address; // This is the address added for whitelisting
+
+            foreach ($superAdmins as $admin) {
+                $admin->notify(new AddressAddedForWhitelisting($address)); // Notify each admin
+            }
+
+            return $this->sendResponse([], "Address added successfully. You will be notified once it has been whitelisted.");
+        } catch (\Exception $e) {
+            sendToLog($e);
+            return $this->sendError(serviceDownMessage(), [], 500);
+        }
     }
 }

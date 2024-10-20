@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Provider;
+use App\Models\ProviderConfig;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -63,6 +65,9 @@ class ProviderController extends Controller
                 'can_payin'     => $request->can_payin == 'on' ? true : false,
                 'can_payout'    => $request->can_payout == 'on' ? true : false,
                 'is_active'     => $request->is_active == 'on' ? true : false,
+                'min_amount' => $request->mininum_amount,
+                'max_amount' => $request->maximum_amount,
+                'charge' => $request->charge
             ]);
 
             DB::commit();
@@ -104,6 +109,9 @@ class ProviderController extends Controller
                 // 'is_default'    => $request->is_default == 'on' ? true : false,
                 'can_payin'     => $request->can_payin == 'on' ? true : false,
                 'can_payout'    => $request->can_payout == 'on' ? true : false,
+                'min_amount' => $request->mininum_amount,
+                'max_amount' => $request->maximum_amount,
+                'charge' => $request->charge
             ]);
 
             DB::commit();
@@ -145,5 +153,41 @@ class ProviderController extends Controller
         ]);
 
         return $this->sendResponse([], "Set as default successfully.");
+    }
+
+    function configForm(Provider $provider)
+    {
+        $data['provider'] = $provider;
+        $data['config'] = ProviderConfig::where('provider_id', $provider->id)->first();
+
+        return view('admin.provider._config-form', $data);
+    }
+
+    function configPost(Request $request, Provider $provider)
+    {
+        DB::beginTransaction();
+        try {
+
+            ProviderConfig::updateOrCreate(
+                ['provider_id' => $provider->id], // Condition to find existing record
+                [
+                    'api_key' => $request->filled('api_key') ? Crypt::encryptString($request->input('api_key')) : null,
+                    'secret' => $request->filled('secret') ? Crypt::encryptString($request->input('secret')) : null,
+                    'password' => $request->filled('password') ? Crypt::encryptString($request->input('password')) : null,
+                    'merchant_id' => $request->filled('merchant_id') ? Crypt::encryptString($request->input('merchant_id')) : null,
+                    'account_id' => $request->filled('account_id') ? Crypt::encryptString($request->input('account_id')) : null,
+                    'username' => $request->filled('username') ? Crypt::encryptString($request->input('username')) : null,
+                    'webhook_secret' => $request->filled('webhook_secret') ? Crypt::encryptString($request->input('webhook_secret')) : null
+                ]
+            );
+
+            DB::commit();
+
+            return $this->sendResponse([], "{$provider->name} configured successfully");
+        } catch (\Exception $e) {
+            DB::rollBack();
+            logger($e);
+            return response()->json(['success' => false, 'message' => serviceDownMessage()], 500);
+        }
     }
 }

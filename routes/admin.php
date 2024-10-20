@@ -28,6 +28,7 @@ use App\Http\Controllers\Admin\StreamersController;
 use App\Http\Controllers\Admin\SubscriptionsController;
 use App\Http\Controllers\Admin\SupportController;
 use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\Admin\WalletAddressController;
 use App\Http\Controllers\Admin\WithdrawalController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
@@ -236,6 +237,8 @@ Route::middleware('admin.auth')->group(function () {
             Route::post('/enable/{provider}', 'enable')->name('enable');
             Route::post('/disable/{provider}', 'disable')->name('disable');
             Route::post('/default/{provider}', 'default')->name('default');
+            Route::get('/config/{provider}', 'configForm')->name('config.form');
+            Route::post('/config/{provider}', 'configPost')->name('config.post');
         });
 
         Route::controller(CycleController::class)->prefix('cycle')->name('cycle.')->group(function () {
@@ -299,6 +302,12 @@ Route::middleware('admin.auth')->group(function () {
 
     Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function () {
         Route::get('logout', 'logout')->name('logout');
+    });
+
+    Route::controller(WalletAddressController::class)->prefix('wallet/address')->name('wallet.address.')->group(function () {
+        Route::get('', 'index')->name('index');
+        Route::get('/filter', 'filter')->name('filter');
+        Route::post('/approve/{address}', 'approve')->name('approve');
     });
 });
 
