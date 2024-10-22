@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Api\Academy\AcademyController;
+use App\Http\Controllers\Api\Academy\AcademyEnrolController;
+use App\Http\Controllers\Api\Academy\AcademyModuleController;
+use App\Http\Controllers\Api\Academy\AcademyVideoController;
 use App\Http\Controllers\Api\AuthenticationController;
 use App\Http\Controllers\Api\BannerController;
 use App\Http\Controllers\Api\ChatController;
@@ -9,6 +13,8 @@ use App\Http\Controllers\Api\SignalController as ApiSignalController;
 use App\Http\Controllers\Api\StreamersController;
 use App\Http\Controllers\Api\SubscriptionController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\LiveChatController;
+use App\Http\Controllers\ScheduleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -58,6 +64,21 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::controller(LiveChatController::class)->prefix('live')->group(function () {
         Route::get('messages/{educator}', 'messages');
         Route::post('send/{educator}', 'sendMessage');
+    });
+
+    Route::group(['prefix' => 'academy'], function () {
+        Route::get('/', [AcademyController::class, 'index']);
+        Route::get('modules', [AcademyModuleController::class, 'index']);
+        Route::get('{academy}', [AcademyModuleController::class, 'categoryModule']); // This endpoint list all module under a category
+        Route::get('modules/show/{module}', [AcademyModuleController::class, 'show']); // This endpoint list all video under a module
+        Route::get('video/{video}', [AcademyVideoController::class, 'index']);
+        Route::post('enrolments', [AcademyEnrolController::class, 'store']);
+        Route::get('enrolments', [AcademyEnrolController::class, 'index']);
+        Route::get('enrolments/{enrolment}', [AcademyEnrolController::class, 'show']);
+        Route::delete('enrolments/{enrolment}', [AcademyEnrolController::class, 'delete']);
+        Route::post('rating', [AcademyModuleController::class, 'rating']);
+        Route::get('rating/{academy}', [AcademyModuleController::class, 'getRating']);
+        Route::patch('watch-time/{module}', [AcademyEnrolController::class, 'watchTime']);
     });
 });
 

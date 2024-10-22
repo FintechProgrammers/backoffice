@@ -660,3 +660,42 @@ if (!function_exists('followersPushTokens')) {
         return $fcmTokens;
     }
 }
+
+if (!function_exists('formatFirstToLast')) {
+    function formatFirstToLast($array)
+    {
+
+        if (empty($array)) {
+            return '';
+        }
+
+        $result = implode(', ', $array);
+
+        return $result;
+    }
+}
+
+// create caption
+if (!function_exists('createCaption')) {
+    function createCaption($content)
+    {
+        // Remove HTML tags
+        $plainText = strip_tags($content);
+
+        // Remove shortcodes (if any)
+        $plainText = preg_replace('/\[.*?\]/', '', $plainText);
+
+        // Set the desired maximum length for the caption
+        $maxCaptionLength = 150;
+
+        // Create the caption from the content
+        $caption = Str::limit($plainText, $maxCaptionLength);
+
+        // If the content exceeds the maximum length, add an ellipsis at the end
+        if (strlen($plainText) > $maxCaptionLength) {
+            $caption .= '...';
+        }
+
+        return $caption;
+    }
+}
