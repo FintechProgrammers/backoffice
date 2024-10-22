@@ -20,8 +20,8 @@
                             opportunities, partnership, and more.</p>
                         <p class="large-paragraph _2vw-margin">Email:<a href="mailto:support@deltadigital.pro"
                                 class="contact-email text-white">Support@deltadigital.pro</a></p>
-                        <p class="large-paragraph _2vw-margin">Support Number: <a href="tel:+1 (888) 216-2132"
-                                class="contact-email">+1 (888) 216-2132</a></p>
+                        {{-- <p class="large-paragraph _2vw-margin">Support Number: <a href="tel:+1 (888) 216-2132"
+                                class="contact-email">+1 (888) 216-2132</a></p> --}}
                         <p class="large-paragraph _2vw-margin">Office: <br />3343 Peachtree Rd NE Ste 145-688 Atlanta,
                             GA 30326</p>
 
