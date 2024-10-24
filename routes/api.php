@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Academy\AcademyModuleController;
 use App\Http\Controllers\Api\Academy\AcademyVideoController;
 use App\Http\Controllers\Api\AuthenticationController;
 use App\Http\Controllers\Api\BannerController;
+use App\Http\Controllers\Api\BusinessVolumeController;
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\PlanController;
 use App\Http\Controllers\Api\ProfileController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Api\StreamersController;
 use App\Http\Controllers\Api\SubscriptionController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\LiveChatController;
+use App\Http\Controllers\ProfileController as ControllersProfileController;
 use App\Http\Controllers\ScheduleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -28,7 +30,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::controller(ProfileController::class)->prefix('profile')->group(function () {
         Route::get('', 'index');
-        Route::post('/update-push-token', 'updateToken');
+    });
+
+    Route::post('password/update', [ControllersProfileController::class, 'updatePassword']);
+
+    Route::controller(BusinessVolumeController::class)->prefix('business')->group(function () {
+        Route::get('volume', 'index');
     });
 
     Route::controller(PlanController::class)->prefix('products')->group(function () {

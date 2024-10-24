@@ -34,6 +34,9 @@ class UserResource extends JsonResource
                 'level3' => !empty($thirdParent) ? new SponsorResource($thirdParent) : null,
             ],
             'push_token' => $this->push_token,
+            'life_time_earnings' => '$' . number_format($this->total_earnings, 2, '.', ','),
+            'referral_link' => route('register') . '?code=' . $this->referral_code,
+            'rank' => $this->rank,
             'created_at' => $this->created_at,
         ];
     }
