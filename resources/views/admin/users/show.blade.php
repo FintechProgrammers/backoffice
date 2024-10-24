@@ -32,6 +32,11 @@
                                     <span class="badge bg-black">Customer</span>
                                 @endif
                             </p>
+                            <p class="mb-1 text-muted text-fixed-white op-7">
+                                @if ($user->is_streamer)
+                                    <span class="badge bg-success">Creator</span>
+                                @endif
+                            </p>
                             <p class="fs-12 text-fixed-white mb-4 op-5">
                                 <span class="me-3"><i class="fe fe-mail me-1 align-middle"></i>{{ $user->email }}</span>
                                 <span class="me-3"><i
@@ -169,7 +174,8 @@
                     <div
                         class="p-3 border-bottom border-block-end-dashed d-flex align-items-center justify-content-between">
                         <div>
-                            <ul class="nav nav-tabs mb-0 tab-style-6 justify-content-start" id="myTab" role="tablist">
+                            <ul class="nav nav-tabs mb-0 tab-style-6 justify-content-start" id="myTab"
+                                role="tablist">
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link active" id="activity-tab" data-bs-toggle="tab"
                                         data-bs-target="#activity-tab-pane" type="button" role="tab"
@@ -188,18 +194,21 @@
                                         aria-controls="withdrawals-pan" aria-selected="false"><i
                                             class="ri-money-dollar-box-line me-1 align-middle d-inline-block"></i>Withdrawals</button>
                                 </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="bonuses" data-bs-toggle="tab"
-                                        data-bs-target="#bonuses-pan" type="button" role="tab"
-                                        aria-controls="bonuses-pan" aria-selected="false"><i
-                                            class="ri-exchange-box-line me-1 align-middle d-inline-block"></i>Commisions</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="referrals" data-bs-toggle="tab"
-                                        data-bs-target="#referrals-pan" type="button" role="tab"
-                                        aria-controls="referrals-pan" aria-selected="false"><i
-                                            class="ri-exchange-box-line me-1 align-middle d-inline-block"></i>Referrals</button>
-                                </li>
+                                @if ($user->is_ambassador)
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="bonuses" data-bs-toggle="tab"
+                                            data-bs-target="#bonuses-pan" type="button" role="tab"
+                                            aria-controls="bonuses-pan" aria-selected="false"><i
+                                                class="ri-exchange-box-line me-1 align-middle d-inline-block"></i>Commisions</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="referrals" data-bs-toggle="tab"
+                                            data-bs-target="#referrals-pan" type="button" role="tab"
+                                            aria-controls="referrals-pan" aria-selected="false"><i
+                                                class="ri-exchange-box-line me-1 align-middle d-inline-block"></i>Referrals</button>
+                                    </li>
+                                @endif
+
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link" id="memberships-tab" data-bs-toggle="tab"
                                         data-bs-target="#memberships" type="button" role="tab"

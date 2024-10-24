@@ -21,38 +21,45 @@
             </a>
             <ul class="dropdown-menu" style="">
                 <li class="mb-0">
-                    <a href="{{ route('admin.streamers.show', $item->uuid) }}" class="dropdown-item">Profile</a>
+                    <a href="{{ route('admin.users.show', $item->uuid) }}" class="dropdown-item">Profile</a>
                 </li>
+                {{-- @if (Auth::guard('admin')->user()->can('set user as ambassador'))
+                    @if (!$item->is_ambassador)
+                        <li class="mb-0">
+                            <a href="javascript:void(0);" class="dropdown-item trigerModal" data-bs-toggle="modal"
+                                data-bs-target="#primaryModal"
+                                data-url="{{ route('admin.users.ambassador.form', $item->uuid) }}"
+                                data-action="Set user as Ambassador">Set as Ambassador</a>
+                        </li>
+                    @endif
+                @endif --}}
 
-                @if (Auth::guard('admin')->user()->can('create streamer'))
-                    <li class="mb-0">
-                        <a href="#" class="dropdown-item trigerModal"
-                            data-url="{{ route('admin.streamers.edit', $item->uuid) }}" data-bs-toggle="modal"
-                            data-bs-target="#primaryModal" data-title="Update Streamer">Edit</a>
-                    </li>
-                @endif
+                {{-- <li class="mb-0">
+                    <a href="javascript:void(0);" class="dropdown-item trigerModal" data-bs-toggle="modal"
+                        data-bs-target="#primaryModal" data-url="{{ route('admin.users.plan.form', $item->uuid) }}"
+                        data-action="Set user as Ambassador">Activate Plan</a>
+                </li> --}}
 
-                @if (Auth::guard('admin')->user()->can('banned streamer'))
+                @if (Auth::guard('admin')->user()->can('banned user'))
                     @if ($item->status === 'suspended')
                         <li class="mb-0">
-                            <a href="javascript:void(0);" class="dropdown-item btn-action "
-                                data-url="{{ route('admin.streamers.activate', $item->uuid) }}"
+                            <a href="javascript:void(0);" class="dropdown-item btn-action"
+                                data-url="{{ route('admin.users.activate', $item->uuid) }}"
                                 data-action="activate">Activate</a>
                         </li>
                     @else
                         <li class="mb-0">
                             <a href="javascript:void(0);" class="dropdown-item btn-action"
-                                data-url="{{ route('admin.streamers.suspend', $item->uuid) }}"
+                                data-url="{{ route('admin.users.suspend', $item->uuid) }}"
                                 data-action="suspend">Suspend</a>
                         </li>
                     @endif
                 @endif
 
-                @if (Auth::guard('admin')->user()->can('delete streamer'))
+                @if (Auth::guard('admin')->user()->can('delete user'))
                     <li class="mb-0">
                         <a href="javascript:void(0);" class="dropdown-item btn-action"
-                            data-url="{{ route('admin.streamers.delete', $item->uuid) }}"
-                            data-action="delete">Delete</a>
+                            data-url="{{ route('admin.users.delete', $item->uuid) }}" data-action="delete">Delete</a>
                     </li>
                 @endif
 

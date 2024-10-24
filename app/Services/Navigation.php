@@ -274,6 +274,30 @@ class Navigation
                     ],
                 ]
             ],
+            // (object) [
+            //     'name'  => 'Creatives',
+            //     'route' => 'creative.index',
+            //     'icon'  => 'fe fe-bar-chart',
+            //     'hasPermission' => $user->is_streamer ?? false
+            // ],
+            (object) [
+                'name'  => 'Signals',
+                'route' => 'signals.index',
+                'icon'  => 'fe fe-bar-chart',
+                'hasPermission' => $user->is_streamer ?? false
+            ],
+            (object) [
+                'name'  => 'Academy',
+                'route' => 'academy.index',
+                'icon'  => 'fe fe-book',
+                'hasPermission' => $user->is_streamer ?? false
+            ],
+            (object) [
+                'name'  => 'Schedules',
+                'route' => 'schedule.index',
+                'icon'  => 'fe fe-calendar',
+                'hasPermission' => $user->is_streamer ?? false
+            ],
             (object) [
                 'name'  => 'Tickets',
                 'route' => 'tickets.index',

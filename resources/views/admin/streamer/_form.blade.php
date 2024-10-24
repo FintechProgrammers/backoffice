@@ -15,6 +15,14 @@
     </div>
 </div>
 <div class="mb-3">
+    <label for="form-text1" class="form-label fs-14 text-dark">Username</label>
+    <div class="input-group">
+        <div class="input-group-text"><i class="ri-mail-line"></i></div>
+        <input type="text" class="form-control" id="form-text1" name="username"
+            value="{{ isset($streamer) ? $streamer->username : '' }}" placeholder="Enter username">
+    </div>
+</div>
+<div class="mb-3">
     <label for="form-text1" class="form-label fs-14 text-dark">Email</label>
     <div class="input-group">
         <div class="input-group-text"><i class="ri-mail-line"></i></div>

@@ -1,7 +1,16 @@
 import './bootstrap';
+import router from './router'; // Import router
 
-import Alpine from 'alpinejs';
+import { createApp } from 'vue'
+import Signals from './views/Signals.vue';
 
-window.Alpine = Alpine;
+// import App from './App.vue'
 
-Alpine.start();
+// const app = createApp(App)
+
+// app.use(router)
+// app.mount('#app')
+
+createApp({})
+    .component('SignalComponent', Signals)
+    .mount('#app')

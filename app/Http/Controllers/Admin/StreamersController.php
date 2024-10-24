@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\ChatGroup;
 use App\Models\Streamer;
 use App\Models\StreamerCategory;
+use App\Models\User;
 use App\Notifications\StreamerNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -33,10 +34,10 @@ class StreamersController extends Controller
         $status = $request->filled('status')  ? $request->status : null;
 
         // $query = User::withTrashed();
-        $query = Streamer::query();
+        $query = User::query()->where('is_streamer', true);
 
         $query = $query
-            ->when(!empty($search), fn($query) => $query->where('first_name', 'LIKE', "%{$search}%")->orWhere('last_name', 'LIKE', "%{$search}%")->orWhere('email', 'LIKE', "%{$search}%")->orWhere('username', 'LIKE', "%{$search}%"))
+            ->when(!empty($search), fn($query) => $query->where('first_name', 'LIKE', "%{$search}%")->orWhere('last_name', 'LIKE', "%{$search}%")->orWhere('email', 'LIKE', "%{$search}%")->orWhere('username', 'LIKE', "%{$search}%")->orWhere('username', 'LIKE', "%{$search}%"))
             ->when(!empty($status), fn($query) => $query->where('status', $status))
             ->when(!empty($dateFrom) && !empty($dateTo), fn($query) => $query->whereBetween('created_at', [$dateFrom, $dateTo]))
             ->when(!empty($status) && !empty($dateFrom) && !empty($dateTo), fn($query) => $query->where('status', $status)->whereBetween('created_at', [$dateFrom, $dateTo]));
@@ -58,6 +59,7 @@ class StreamersController extends Controller
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string',
             'last_name' => 'required|string',
+            'username' => ['required', 'unique:users,username'],
             'email' => 'required|email|unique:users,email',
             'categories' => 'required',
             'categories.*' => 'required|exists:categories,id',
@@ -74,11 +76,13 @@ class StreamersController extends Controller
 
             $password = \Illuminate\Support\Str::random(5);
 
-            $user = Streamer::create([
+            $user = User::create([
+                'username' => $request->username,
                 'email' => $request->email,
                 'first_name'  => $request->first_name,
                 'last_name' => $request->last_name,
-                'password' => $password
+                'password' => $password,
+                'is_streamer' => true
             ]);
 
             ChatGroup::create([

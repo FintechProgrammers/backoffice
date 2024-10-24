@@ -1,0 +1,512 @@
+<?php
+
+namespace App\Http\Controllers\Api\Streamer;
+
+use App\Http\Controllers\Controller;
+use App\Http\Resources\LiveChatResource;
+use App\Http\Resources\ScheduleResources;
+use App\Http\Resources\VideoResource;
+use App\Models\Category;
+use App\Models\LiveChat;
+use App\Models\LiveSessions;
+use App\Models\Schedule;
+use App\Models\Video;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+
+class ScheduleController extends Controller
+{
+    function show($id)
+    {
+        $schedule = Schedule::whereUuid($id)->first();
+
+        if (!$schedule) {
+            abort(404);
+        }
+
+        $data['schedule'] = $schedule;
+
+        return $this->sendResponse($data, "");
+    }
+
+    function getVideos($id)
+    {
+        $schedule = Schedule::whereUuid($id)->first();
+
+        if (!$schedule) {
+            return response()->json(['success' => false, 'message' => 'Schedule not found.']);
+        }
+
+        $videos = Video::where('schedule_id', $schedule->id)->orderBy('order', 'asc')->get();
+
+        $videos = VideoResource::collection($videos);
+
+        return response()->json(['success' => false, 'videos' => $videos]);
+    }
+
+    function videoDetails($id)
+    {
+        return view('admin.schedule.video');
+    }
+
+    function schedules(Request $request)
+    {
+        try {
+            $user = $request->user();
+
+            // $timezones = Timezone::all();
+            $schdedules = Schedule::where('streamer_id', $user->id)->get();
+
+
+            $schdedules = ScheduleResources::collection($schdedules);
+
+            return response()->json(['success' => true, 'schedules' => $schdedules]);
+        } catch (\Throwable $th) {
+
+            sendToLog($th);
+
+            return response()->json(['success' => false, 'message' => 'Ops Somthing went wrong. try again later.'], 500);
+        }
+    }
+
+    function uploadVideo(Request $request)
+    {
+        try {
+
+            $validator = Validator::make($request->all(), [
+                'schedule' => 'required|exists:schedules,uuid',
+                'title' => 'required|string',
+                'thumbnail' => ['required', 'mimes:png,jpg,jpeg,webp', 'max:5000'],
+                'file' => ['required', 'mimes:mp4,avi,flv,mov,wmvp', 'max:1048576'],
+            ]);
+
+            // Handle validation errors
+            if ($validator->fails()) {
+                return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
+            }
+
+            $user = $request->user();
+
+            $videoUrl = null;
+            $thumbnail = null;
+
+            if ($request->hasFile('thumbnail')) {
+                $thumbnail = uploadFile($request->file('thumbnail'), "schedule/thumbnails", 'do_spaces');
+            }
+
+            if ($request->hasFile('file')) {
+                // $videoUrl = $request->file('file')->store('recorded', 'do_spaces');
+                $videoUrl = uploadFile($request->file('file'), "recorded", 'do_spaces');
+            }
+
+            $schdedule = Schedule::where('uuid', $request->schedule)->first();
+
+            $record = Video::create([
+                'streamer_id' => $user->id,
+                'schedule_id' => $schdedule->id,
+                'title' => $request->title,
+                'thumbnail' => $thumbnail,
+                'video_file' => $videoUrl,
+            ]);
+
+            $record = new VideoResource($record);
+
+            return response()->json(['success' => true, 'record' => $record, 'message' => "Video uploaded successfully."]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            sendToLog($th);
+
+            return response()->json(['success' => false, 'message' => 'Ops Somthing went wrong. try again later.'], 500);
+        }
+    }
+
+    function startLive(Request $request, $id)
+    {
+        try {
+
+            $schdule = Schedule::whereUuid($id)->first();
+
+            if (!$schdule) {
+                return response()->json(['success' => false, 'message' => 'Schedule not found.'], 404);
+            }
+
+            $user = $request->user();
+
+            $user->update([
+                'is_live' => true,
+                'live_schedule' => $schdule->id
+            ]);
+
+            $fcmTokens =  followersPushTokens($user->id);
+
+            if (!empty($fcmTokens)) {
+
+                $name = ucfirst($user->first_name) . ' ' . ucfirst($user->last_name);
+
+                $data = [
+                    'push_tokens' =>  $fcmTokens,
+                    'title' => "Live started",
+                    'message' => "{$name} is live.",
+                    'data' => [
+                        'stream' => json_encode($user),
+                    ]
+                ];
+
+                dispatch(new \App\Jobs\PushNotificationJob($data));
+            }
+
+            $schdule->update(['viewers' => 0]);
+
+            LiveChat::where('streamer_id', $user->id)->delete();
+
+            // broadcast(new LiveStarted($schdule))->toOthers();
+
+            return response()->json(['success' => true, 'message' => 'your are now live ']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            sendToLog($th);
+
+            return response()->json(['success' => false, 'message' => 'Ops Somthing went wrong. try again later.'], 500);
+        }
+    }
+
+    function stopLive(Request $request, $id)
+    {
+        try {
+            $schdule = Schedule::whereUuid($id)->first();
+
+            if (!$schdule) {
+                return response()->json(['success' => false, 'message' => 'Schedule not found.'], 404);
+            }
+
+            LiveSessions::create([
+                'schedule_id' => $id,
+                'viewers' => $schdule->viewers
+            ]);
+
+            $user = $request->user();
+
+            $user->update([
+                'is_live' => false,
+                'live_schedule' => null
+            ]);
+
+            $schdule->update(['viewers' => 0]);
+
+            $fcmTokens =  followersPushTokens($user->id);
+
+            if (!empty($fcmTokens)) {
+
+                $name = ucfirst($user->first_name) . ' ' . ucfirst($user->last_name);
+
+                $data = [
+                    'push_tokens' =>  $fcmTokens,
+                    'title' => "Live ended",
+                    'message' => "{$name} live has ended.",
+                    'data' => [
+                        'stream' => ""
+                    ]
+                ];
+
+                dispatch(new \App\Jobs\PushNotificationJob($data));
+            }
+
+            $schdule->update(['viewers' => 0]);
+
+            LiveChat::where('streamer_id', $user->id)->delete();
+
+            // broadcast(new StopLive($schdule))->toOthers();
+
+            return response()->json(['success' => true, 'message' => 'live session have ended']);
+            // return redirect()->route('dashboard.educator.schedule.show',$id);
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            sendToLog($th);
+
+            return response()->json(['success' => false, 'message' => 'Ops Somthing went wrong. try again later.'], 500);
+        }
+    }
+
+    function store(Request $request)
+    {
+
+        $fields = [
+            'category' => 'required|exists:categories,id',
+            'schedule_day.*' => 'required',
+            'schedule_time' => 'required',
+            'schedule_name' => 'required',
+            'description' => 'nullable|string',
+            'streamer' => 'required'
+        ];
+
+        $validator = Validator::make($request->all(), $fields);
+
+        // Handle validation errors
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
+        }
+
+
+        try {
+            DB::beginTransaction();
+
+            $category = Category::where('id', $request->category)->first();
+
+            $schdedule = Schedule::create([
+                'streamer_id' => $request->streamer,
+                'category_id' => $category->id,
+                'schedule_time' =>  date("H:i a", strtotime($request->schedule_time)),
+                'schedule_day' => json_encode($request->schedule_day),
+                'name' => $request->schedule_name
+            ]);
+
+            $schdedule = new ScheduleResources($schdedule);
+
+            DB::commit();
+
+            return response()->json(['success' => true, 'schedule' => $schdedule, 'message' => 'Schedule created successfully.'], 201);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            sendToLog($th);
+
+            return response()->json(['success' => false, 'message' => 'Ops Somthing went wrong. try again later.'], 500);
+        }
+    }
+
+    function update(Request $request, $id)
+    {
+
+        $fields = [
+            'category' => 'required|exists:categories,id',
+            'schedule_day.*' => 'required',
+            'schedule_time' => 'required',
+            'schedule_name' => 'required',
+            'description' => 'nullable|string'
+        ];
+
+        $validator = Validator::make($request->all(), $fields);
+
+        // Handle validation errors
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $schdedule = Schedule::where('uuid', $id)->first();
+
+            if (!$schdedule) {
+                return response()->json(['success' => false, 'message' => 'Schedule not found.'], 404);
+            }
+
+            $category = Category::where('id', $request->category)->first();
+
+            $schdedule->update([
+                'category_id' => $category->id,
+                'schedule_time' => date("H:i a", strtotime($request->schedule_time)),
+                'schedule_day' => json_encode($request->schedule_day),
+                'name' => $request->schedule_name
+            ]);
+
+            DB::commit();
+
+            return response()->json(['success' => true, 'message' => 'Schedule updated successfully.'], 201);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            sendToLog($th);
+
+            return response()->json(['success' => false, 'message' => 'Ops Somthing went wrong. try again later.'], 500);
+        }
+    }
+
+    function getViewers($id)
+    {
+        $schdule = Schedule::findOrFail($id);
+
+        return response()->json(['data' => $schdule->viewers]);
+    }
+
+    function makeFavourite(Request $request, $id)
+    {
+        try {
+            $video = Video::where('uuid', $id)->first();
+
+            if (!$video) {
+                return response()->json(['success' => false, 'message' => 'Video not found.'], 404);
+            }
+
+            if ($video->is_favourite) {
+                $video->update([
+                    'is_favourite' => false
+                ]);
+            } else {
+                $video->update([
+                    'is_favourite' => true
+                ]);
+            }
+
+            return response()->json(['success' => true, 'message' => 'Successfull.']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            sendToLog($th);
+
+            return response()->json(['success' => false, 'message' => 'Ops Somthing went wrong. try again later.'], 500);
+        }
+    }
+
+    function deleteVideo(Request $request, $id)
+    {
+        try {
+            $video = Video::where('uuid', $id)->first();
+
+            if (!$video) {
+                return response()->json(['success' => false, 'message' => 'Video not found.'], 404);
+            }
+
+            $video->delete();
+
+            return response()->json(['success' => true, 'message' => 'Deleted Successfull.']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            sendToLog($th);
+
+            return response()->json(['success' => false, 'message' => 'Ops Somthing went wrong. try again later.'], 500);
+        }
+    }
+
+    function destroy($id)
+    {
+        try {
+            $schedule = Schedule::where('uuid', $id)->first();
+
+            if (!$schedule) {
+                return response()->json(['success' => false, 'message' => 'Schedule not found.'], 404);
+            }
+
+            $schedule->delete();
+
+            return response()->json(['success' => true, 'message' => 'Schedule deleted successfully.'], 201);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            sendToLog($th);
+
+            return response()->json(['success' => false, 'message' => 'Ops Somthing went wrong. try again later.'], 500);
+        }
+    }
+
+    function messages()
+    {
+        try {
+            $educator = auth()->guard('admin')->user();
+
+            $messages = LiveChat::where('admin_id', $educator->id)->latest()->get();
+
+            $messages = LiveChatResource::collection($messages);
+
+            return response()->json(['success' => true, 'messages' => $messages]);
+        } catch (\Exception $e) {
+            sendToLog($e);
+
+            return response()->json(["success'" > true, "message" => "Unable to complete your request at the moment."], 500);
+        }
+    }
+
+    function sendMessage(Request $request)
+    {
+        try {
+
+            $user = $request->user();
+
+            $validator = Validator::make($request->all(), [
+                'media' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+                'message' => 'nullable|string|required_if:media,null',
+            ]);
+
+            if ($request->message == 'null' && !$request->hasFile('media')) {
+                return response()->json(['success' => false, 'error' => "Cannot send null message."], 400);
+            }
+
+            // Handle validation errors
+            if ($validator->fails()) {
+                return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
+            }
+
+            if ($request->hasFile('media')) {
+                // $imageUrl = $this->uploadFile($request->file('photo'), "strategy");
+                $message = uploadFile($request->file('media'), "media", "do_spaces");
+                $type = "media";
+            } else {
+                $message = $request->message;
+                $type = "text";
+            }
+
+            $chat = LiveChat::create([
+                'streamer_id' => $user->id,
+                'sender_id' => $user->id,
+                'message' => $message,
+                'type' => $type
+            ]);
+
+            $chat = new LiveChatResource($chat);
+
+            // event(new ChatNotification($user->uuid, $chat));
+
+            return response()->json(['success' => true, 'message' => $chat]);
+        } catch (\Exception $e) {
+            sendToLog($e);
+
+            return response()->json(['success' => false, 'error' => "An error has occurred."], 500);
+        }
+    }
+
+    function getCounts($id)
+    {
+        try {
+
+            $schdule = Schedule::whereUuid($id)->first();
+
+            if (!$schdule) {
+                return response()->json(['success' => false, 'message' => 'Schedule not found.'], 404);
+            }
+
+            return response()->json(['success' => true, 'count' => $schdule->viewers]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            sendToLog($th);
+
+            return response()->json(['success' => false, 'message' => 'Ops Somthing went wrong. try again later.'], 500);
+        }
+    }
+
+    function sortVideos(Request $request)
+    {
+        $schedule = Schedule::whereUuid($request->schedule)->first();
+
+        $videos = Video::where('schedule_id', $schedule->id)->get();
+
+        foreach ($videos as $video) {
+            $video->timestamps = false;
+            $id = $video->uuid;
+
+            foreach ($request->videos as $frontVideo) {
+                if ($frontVideo['id'] == $id) {
+                    $video->update(['order' => $frontVideo['order']]);
+                }
+            }
+        }
+
+        return response('Update Successful.', 200);
+    }
+}

@@ -91,6 +91,11 @@ class User extends Authenticatable
         return $this->hasOne(UserInfo::class, 'user_id');
     }
 
+    function chatGroup()
+    {
+        return $this->hasOne(ChatGroup::class, 'streamer_id', 'id');
+    }
+
     function sponsor()
     {
         return $this->belongsTo(User::class, 'parent_id', 'id')->withTrashed();

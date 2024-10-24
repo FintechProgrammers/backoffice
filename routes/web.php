@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CreatorController;
 use App\Http\Controllers\NexioController;
 use App\Http\Controllers\NowpaymentController;
 use App\Http\Controllers\PaymentController;
@@ -169,6 +170,22 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/create', 'create')->name('create');
         Route::get('/stripe-success', 'stripeSuccess')->name('stripe.success');
         Route::post('/mark-default/{paymentMethod}', 'makeDefault')->name('mark.default');
+    });
+
+    Route::controller(\App\Http\Controllers\Streamer\SignalController::class)->prefix('signal')->name('signals.')->group(function () {
+        Route::get('', 'index')->name('index');
+    });
+
+    Route::controller(\App\Http\Controllers\Streamer\AcademyController::class)->prefix('academy')->name('academy.')->group(function () {
+        Route::get('', 'index')->name('index');
+    });
+
+    Route::controller(\App\Http\Controllers\Streamer\ScheduleController::class)->prefix('schedule')->name('schedule.')->group(function () {
+        Route::get('', 'index')->name('index');
+    });
+
+    Route::controller(CreatorController::class)->prefix('creative')->name('creative.')->group(function () {
+        Route::get('/{any?}', 'index')->name('index')->where('any', '.*');
     });
 });
 
