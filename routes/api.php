@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\LiveChatController;
 use App\Http\Controllers\ProfileController as ControllersProfileController;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\User\SupportController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -41,6 +42,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::controller(PlanController::class)->prefix('products')->group(function () {
         Route::get('', 'index');
         Route::get('/show/{product}', 'show');
+    });
+
+    Route::controller(SupportController::class)->prefix('tickets')->group(function () {
+        Route::get('', 'tickets')->name('filter');
+        Route::get('subjects', 'subjects');
+        Route::post('/', 'store');
+        Route::get('/show/{ticket}', 'show');
+        Route::get('/replies/{ticket}', 'getReplies');
+        Route::post('/reply/{ticket}', 'replyTicket');
+        Route::delete('/delete/{ticket}', 'destroy');
     });
 
     Route::controller(StreamersController::class)->prefix('streamers')->group(function () {

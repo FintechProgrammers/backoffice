@@ -28,10 +28,13 @@ class SupportController extends Controller
     function tickets(Request $request)
     {
         $user = $request->user();
+        $tickets = Ticket::where('user_id', $user->id)->latest()->paginate(50);
 
-        $data['tickets'] = Ticket::where('user_id', $user->id)->latest()->paginate(50);
+        if ($request->is('api/*') || $request->wantsJson()) {
+            return $this->sendResponse($tickets);
+        }
 
-        return view('user.support._table', $data);
+        return view('user.support._table', ['tickets' => $tickets]);
     }
 
     function create()
@@ -41,8 +44,20 @@ class SupportController extends Controller
         return view('user.support.create', $data);
     }
 
-    function show(Ticket $ticket)
+    function subjects()
     {
+        $subjects =  SupportSubject::latest()->get();
+
+        return $this->sendResponse($subjects);
+    }
+
+    function show(Request $request, Ticket $ticket)
+    {
+
+        if ($request->is('api/*') || $request->wantsJson()) {
+            return $this->sendResponse($ticket);
+        }
+
         $data['ticket'] = $ticket;
 
         return view('user.support.show', $data);
@@ -174,9 +189,15 @@ class SupportController extends Controller
         return response()->json(['success' => true, 'message' => 'Ticket updated successfully']);
     }
 
-    function getReplies(Ticket $ticket)
+    function getReplies(Request $request, Ticket $ticket)
     {
-        $data['replies'] = TicketReply::where('ticket_id', $ticket->id)->latest()->get();
+        $replies = TicketReply::where('ticket_id', $ticket->id)->latest()->get();
+
+        if ($request->is('api/*') || $request->wantsJson()) {
+            return $this->sendResponse($replies);
+        }
+        $data['replies'] =  $replies;
+
 
         return view('user.support._replies', $data);
     }
